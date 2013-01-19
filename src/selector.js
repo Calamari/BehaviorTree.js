@@ -1,14 +1,7 @@
 /*globals Base */
 
 (function(exports) {
-  var Selector = Base.extend({
-    constructor: function(config) {
-      this.children = [];
-    },
-    canRun: function() {},
-    start: function() {},
-    end: function() {},
-    run: function() {}
+  var Selector = exports.BranchNode.extend({
   });
 
   exports.Selector = Selector;

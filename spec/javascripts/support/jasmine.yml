@@ -1,6 +1,9 @@
 src_files:
   - "lib/**/*"
-  - "src/**/*"
+  - "src/behavior_tree.js"
+  - "src/node.js"
+  - "src/branch_node.js"
+  - "src/**.*"
 helpers:
   - helpers/**/*
 spec_files:
