@@ -44,6 +44,10 @@ describe('Node', function() {
       expect(node.canRun).toBeFunction();
     });
 
+    it('the canRun method returns true when not overridden', function() {
+      expect(node.canRun()).toBe(true);
+    });
+
     it('has a start method', function() {
       expect(node.start).toBeFunction();
     });

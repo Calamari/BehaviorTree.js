@@ -11,7 +11,6 @@
     },
     start: function() {
       this._actualTask = 0;
-
     },
     run: function() {
       this.start();
