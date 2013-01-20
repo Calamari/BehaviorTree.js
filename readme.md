@@ -5,7 +5,7 @@ An JavaScript implementation of Behavior Trees. They are useful for implementing
 ## Features
 
 * The needed: Sequences, Selectors, Tasks
-* The extended: Decorators, Filters, Lookup tables
+* The extended: Decorators, Filters, Lookup tables, Conditions
 
 ## Installation
 
@@ -37,5 +37,10 @@ or **directly in the shell** (if you have done step 1. or the full step 2.):
 
 ## License
 
-*coming soon*
+Copyright (C) 2013 Georg Tavonius
 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
