@@ -207,4 +207,63 @@ describe('BehaviorTree', function() {
       });
     });
   });
+
+  describe('when setting setObject to the tree', function() {
+    var obj, runCount;
+    beforeEach(function() {
+      runCount = 0;
+      obj = { foo: 'bar' };
+      btree = new BehaviorTree({
+        tree: new BehaviorTree.Task({
+          canRun: function(object) {
+            expect(object).toBe(obj);
+            ++runCount;
+            return true;
+          },
+          run: function(object) {
+            expect(object).toBe(obj);
+            ++runCount;
+          }
+        })
+      });
+      btree.setObject(obj);
+    });
+
+    it('both canRun and run have object as argument', function() {
+      btree.step();
+      expect(runCount).toBe(2);
+    });
+  });
+
+  describe('when setting object as config and having more then one node', function() {
+    var obj, runCount;
+    beforeEach(function() {
+      runCount = 0;
+      obj = { word: 'bird' };
+      btree = new BehaviorTree({
+        object: obj,
+        tree: new BehaviorTree.Sequence({
+          title: 'my sequence',
+          nodes: [
+            new BehaviorTree.Task({
+              canRun: function(object) {
+                expect(object).toBe(obj);
+                ++runCount;
+                return true;
+              },
+              run: function(object) {
+                expect(object).toBe(obj);
+                ++runCount;
+              }
+            })
+          ]
+        })
+      });
+    });
+
+    it('both canRun and run have object as argument', function() {
+      btree.step();
+      expect(runCount).toBe(2);
+    });
+  });
 });

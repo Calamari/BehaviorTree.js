@@ -60,13 +60,14 @@ describe('BranchNode', function() {
 
 
   describe('the run method', function() {
-    var node, mayRun, hasRun, beSuccess, startCalled, endCalled;
+    var node, mayRun, hasRun, beSuccess, startCalled, endCalled, canObj, runObj;
     beforeEach(function() {
       mayRun = true;
       hasRun = startCalled = endCalled = false;
       node = new BehaviorTree.Node({
-        canRun: function() { return mayRun; },
-        run: function() {
+        canRun: function(arg) { canObj = arg; return mayRun; },
+        run: function(arg) {
+          runObj = arg;
           hasRun = true;
           if (beSuccess) {
             this.success();
@@ -84,6 +85,19 @@ describe('BranchNode', function() {
         ]
       });
     });
+
+    it("canRun of task gets the object as argument we passed in", function() {
+      var testObj = 42;
+      selector.run(testObj);
+      expect(canObj).toBe(testObj);
+    });
+
+    it("run of task gets the object as argument we passed in", function() {
+      var testObj = 23;
+      selector.run(testObj);
+      expect(runObj).toBe(testObj);
+    });
+
 
     describe('calls canRun on next node and', function() {
       it("does not run the run method if canRun returns false", function() {

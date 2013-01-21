@@ -6,22 +6,26 @@
     constructor: function(config) {
       this.title = config.title || 'btree' + (++countUnnamed);
       this._rootNode = config.tree;
+      this._object = config.object;
     },
-    setObject: function() {},
+    setObject: function(obj) {
+      this._object = obj;
+    },
     step: function() {
       if (this._started) {
         console.log('the BehaviorTree "' + this.title + '" did call step but one Task did not finish on last call of step.');
       }
       this._started = true;
       if (this._nodeRunning) {
-        this._nodeRunning.run();
+        // TODO: test with mutliple, because setControl might be neccessary to be called here
+        this._nodeRunning.run(this._object);
         this._nodeRunning = null;
       } else {
         var node = this._rootNode;
-        if (node.canRun()) {
+        if (node.canRun(this._object)) {
           node.setControl(this);
           node.start();
-          node.run();
+          node.run(this._object);
         }
       }
     },

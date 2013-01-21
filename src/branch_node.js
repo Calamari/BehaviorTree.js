@@ -12,19 +12,19 @@
     start: function() {
       this._actualTask = 0;
     },
-    run: function() {
+    run: function(object) {
       this.start();
       if (this._actualTask < this.children.length) {
-        this._run();
+        this._run(object);
       }
       this.end();
     },
-    _run: function() {
+    _run: function(object) {
       var node = this.children[this._actualTask];
-      if (node.canRun()) {
+      if (node.canRun(object)) {
         node.setControl(this);
         node.start();
-        node.run();
+        node.run(object);
       }
     },
     running: function(node) {
