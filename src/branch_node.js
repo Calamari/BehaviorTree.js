@@ -27,6 +27,9 @@
         node.run();
       }
     },
+    running: function(node) {
+      this._control.running(node);
+    },
     success: function() {
       this.children[this._actualTask].end();
     },

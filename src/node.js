@@ -15,6 +15,9 @@
     setControl: function(control) {
       this._control = control;
     },
+    running: function() {
+      this._control.running(this);
+    },
     success: function() {
       this._control.success();
     },
