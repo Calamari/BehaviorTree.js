@@ -107,6 +107,12 @@ describe('BehaviorTree', function() {
           }
         })
       });
+      realLog = console.log;
+      console.log = function(m) { msg = m; };
+    });
+
+    afterEach(function() {
+      console.log = realLog;
     });
 
     it('does nothing', function() {
