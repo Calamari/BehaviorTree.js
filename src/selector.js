@@ -10,7 +10,7 @@
       this.base();
       ++this._actualTask;
       if (this._actualTask < this.children.length) {
-        this._run();
+        this._run(this._object);
       } else {
         this._control.fail();
       }

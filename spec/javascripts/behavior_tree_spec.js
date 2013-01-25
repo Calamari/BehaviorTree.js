@@ -272,4 +272,316 @@ describe('BehaviorTree', function() {
       expect(runCount).toBe(2);
     });
   });
+
+  describe('a minimal tree with a lookup task as root note', function() {
+    var hasRunObj, testObj1, msg, callSuccess;
+    beforeEach(function() {
+      hasRunObj = [];
+      testObj1 = { sim: 'ba' };
+      BehaviorTree.register('testtask', new BehaviorTree.Task({
+        run: function(obj) {
+          hasRunObj.push(obj);
+          if (callSuccess) {
+            this.success();
+          }
+        }
+      }));
+      btree = new BehaviorTree({
+        title: 'tree1',
+        tree: 'testtask'
+      });
+      realLog = console.log;
+      console.log = function(m) { msg = m; };
+    });
+
+    afterEach(function() {
+      console.log = realLog;
+    });
+
+    it('runs the registered task with right test obj', function() {
+      btree.setObject(testObj1);
+      btree.step();
+      expect(hasRunObj[0]).toBe(testObj1);
+    });
+
+    describe('and looking up the same task in another tree', function() {
+      var btree2, testObj2;
+      beforeEach(function() {
+        testObj2 = { sim: 'babwe' };
+        btree2 = new BehaviorTree({
+          title: 'tree2',
+          tree: 'testtask'
+        });
+      });
+
+      it('also runs the registered task with right test obj', function() {
+        btree2.setObject(testObj2);
+        btree2.step();
+        expect(hasRunObj[0]).toBe(testObj2);
+      });
+
+      describe('and setting up objects and calling both trees', function() {
+        beforeEach(function() {
+          btree2.setObject(testObj2);
+          btree.setObject(testObj1);
+          btree.step();
+          btree2.step();
+        });
+
+        it('does not log warnings into console', function() {
+          expect(msg).toBeFalsy();
+        });
+
+        it('gives the right objects', function() {
+          expect(hasRunObj[0]).toBe(testObj1);
+          expect(hasRunObj[1]).toBe(testObj2);
+        });
+      });
+    });
+  });
+
+  describe('with several tasks to lookup', function() {
+    var hasRunObj1, hasRunObj2, testObj1, msg, beSuccess;
+    beforeEach(function() {
+      beSuccess = true;
+      hasRunObj1 = [];
+      hasRunObj2 = [];
+      testObj1 = { sim: 'ba' };
+      BehaviorTree.register('testtask', new BehaviorTree.Task({
+        title: 1,
+        run: function(obj) {
+          hasRunObj1.push(obj);
+          if (beSuccess) {
+            this.success();
+          } else {
+            this.fail();
+          }
+        }
+      }));
+      BehaviorTree.register('testtask2', new BehaviorTree.Task({
+        title: 2,
+        run: function(obj) {
+          hasRunObj2.push(obj);
+        }
+      }));
+      btree = new BehaviorTree({
+        title: 'tree1',
+        tree: new BehaviorTree.Sequence({
+          title: 'my sequence',
+          nodes: [
+            'testtask',
+            'testtask2'
+          ]
+        })
+      });
+      realLog = console.log;
+ //     console.log = function(m) { msg = m; };
+    });
+
+    afterEach(function() {
+      console.log = realLog;
+    });
+
+    it('runs the registered tasks both with right test obj', function() {
+      btree.setObject(testObj1);
+      btree.step();
+      expect(hasRunObj1[0]).toBe(testObj1);
+      expect(hasRunObj2[0]).toBe(testObj1);
+    });
+
+    describe('and looking up the same tasks in another tree', function() {
+      var btree2, testObj2;
+      beforeEach(function() {
+        testObj2 = { sim: 'babwe' };
+        btree2 = new BehaviorTree({
+          title: 'tree2',
+          tree: new BehaviorTree.Sequence({
+            title: 'my sequence',
+            nodes: [
+              'testtask',
+              'testtask2'
+            ]
+          })
+        });
+      });
+
+      it('also runs the registered tasks with right test obj', function() {
+        btree2.setObject(testObj2);
+        btree2.step();
+        expect(hasRunObj1[0]).toBe(testObj2);
+        expect(hasRunObj2[0]).toBe(testObj2);
+      });
+
+      describe('and setting up objects and calling both trees', function() {
+        beforeEach(function() {
+          btree2.setObject(testObj2);
+          btree.setObject(testObj1);
+          btree.step();
+          btree2.step();
+        });
+
+        it('does not log warnings into console', function() {
+          expect(msg).toBeFalsy();
+        });
+
+        it('gives the right objects', function() {
+          expect(hasRunObj1[0]).toBe(testObj1);
+          expect(hasRunObj1[1]).toBe(testObj2);
+          expect(hasRunObj2[0]).toBe(testObj1);
+          expect(hasRunObj2[1]).toBe(testObj2);
+        });
+      });
+    });
+
+    describe('and if the sequence also is looked up', function() {
+      var btree3, testObj3;
+      beforeEach(function() {
+        testObj3 = { sim: 'foo' };
+        BehaviorTree.register('le sequence', new BehaviorTree.Sequence({
+          title: 'my sequence',
+          nodes: [
+            'testtask',
+            'testtask2'
+          ]
+        }));
+        btree3 = new BehaviorTree({
+          title: 'tree3',
+          tree: 'le sequence'
+        });
+      });
+
+      it('also runs the registered tasks with right test obj', function() {
+        btree3.setObject(testObj3);
+        btree3.step();
+        expect(hasRunObj1[0]).toBe(testObj3);
+        expect(hasRunObj2[0]).toBe(testObj3);
+      });
+
+      describe('and we call the sequence with several trees', function() {
+        beforeEach(function() {
+          btree.setObject(testObj1);
+          btree3.setObject(testObj3);
+          btree.step();
+          btree3.step();
+        });
+
+        it('does not log warnings into console', function() {
+          expect(msg).toBeFalsy();
+        });
+
+        it('gives the right objects', function() {
+          expect(hasRunObj1[0]).toBe(testObj1);
+          expect(hasRunObj1[1]).toBe(testObj3);
+          expect(hasRunObj2[0]).toBe(testObj1);
+          expect(hasRunObj2[1]).toBe(testObj3);
+        });
+      });
+    });
+
+    describe('and if the selector also is looked up', function() {
+      var btree3, testObj3;
+      beforeEach(function() {
+        testObj3 = { sim: 'bar' };
+        BehaviorTree.register('le selector', new BehaviorTree.Selector({
+          title: 'my selector',
+          nodes: [
+            'testtask',
+            'testtask2'
+          ]
+        }));
+        btree3 = new BehaviorTree({
+          title: 'tree3',
+          tree: 'le selector'
+        });
+      });
+
+      it('also runs the registered tasks with right test obj', function() {
+        beSuccess = false;
+        btree3.setObject(testObj3);
+        btree3.step();
+        expect(hasRunObj1[0]).toBe(testObj3);
+        expect(hasRunObj2[0]).toBe(testObj3);
+      });
+
+      describe('and we call the selector with several trees', function() {
+        beforeEach(function() {
+          btree.setObject(testObj1);
+          btree3.setObject(testObj3);
+          btree.step();
+          beSuccess = false;
+          btree3.step();
+        });
+
+        it('does not log warnings into console', function() {
+          expect(msg).toBeFalsy();
+        });
+
+        it('gives the right objects', function() {
+          expect(hasRunObj1[0]).toBe(testObj1);
+          expect(hasRunObj1[1]).toBe(testObj3);
+          expect(hasRunObj2[0]).toBe(testObj1);
+          expect(hasRunObj2[1]).toBe(testObj3);
+        });
+      });
+    });
+  });
+
+  describe('with a failing lookup task as root note', function() {
+    var hasRunObj, testObj1, msg, callSuccess;
+    beforeEach(function() {
+      hasRunObj = [];
+      testObj1 = { sim: 'ba' };
+      BehaviorTree.register('testtask', new BehaviorTree.Task({
+        run: function(obj) {
+          hasRunObj.push(obj);
+          this.fail();
+        }
+      }));
+      btree = new BehaviorTree({
+        title: 'tree1',
+        tree: 'testtask'
+      });
+    });
+
+    it('runs the registered task with right test obj', function() {
+      btree.setObject(testObj1);
+      btree.step();
+      expect(hasRunObj[0]).toBe(testObj1);
+    });
+  });
+
+  describe('with a failing lookup sequence', function() {
+    var hasRunObj, testObj1, msg, callSuccess;
+    beforeEach(function() {
+      hasRunObj = [];
+      testObj1 = { sim: 'ba' };
+      BehaviorTree.register('testtask', new BehaviorTree.Task({
+        run: function(obj) {
+          hasRunObj.push(obj);
+          this.fail();
+        }
+      }));
+      BehaviorTree.register('testseq', new BehaviorTree.Sequence({
+        nodes: [
+          'testtask',
+          new BehaviorTree.Task({
+            run: function(obj) {
+              // this should not run
+              expect(true).toBe(false);
+            }
+          })
+        ]
+      }));
+      btree = new BehaviorTree({
+        title: 'tree1',
+        tree: 'testseq'
+      });
+    });
+
+    it('runs the first task in sequence with right test obj', function() {
+      btree.setObject(testObj1);
+      btree.step();
+      expect(hasRunObj[0]).toBe(testObj1);
+    });
+  });
 });

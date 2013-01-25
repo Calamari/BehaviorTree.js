@@ -13,28 +13,30 @@
       this._actualTask = 0;
     },
     run: function(object) {
+      this._object = object;
       this.start();
       if (this._actualTask < this.children.length) {
         this._run(object);
       }
       this.end();
     },
-    _run: function(object) {
-      var node = this.children[this._actualTask];
-      if (node.canRun(object)) {
+    _run: function() {
+      var node = BehaviorTree.getNode(this.children[this._actualTask]);
+      this._runningNode = node;
+      if (node.canRun(this._object)) {
         node.setControl(this);
         node.start();
-        node.run(object);
+        node.run(this._object);
       }
     },
     running: function(node) {
       this._control.running(node);
     },
     success: function() {
-      this.children[this._actualTask].end();
+      this._runningNode.end();
     },
     fail: function() {
-      this.children[this._actualTask].end();
+      this._runningNode.end();
     }
   });
 

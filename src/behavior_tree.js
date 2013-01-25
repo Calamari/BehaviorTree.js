@@ -1,5 +1,9 @@
 /*globals Base */
 
+/**
+  TODO next things:
+    - (allow returning constants instead of success, fail and running methods)
+*/
 (function(exports) {
   var countUnnamed = 0;
   var BehaviorTree = Base.extend({
@@ -21,7 +25,8 @@
         this._nodeRunning.run(this._object);
         this._nodeRunning = null;
       } else {
-        var node = this._rootNode;
+        var node = BehaviorTree.getNode(this._rootNode);
+        this._actualNode = node;
         if (node.canRun(this._object)) {
           node.setControl(this);
           node.start();
@@ -34,11 +39,11 @@
       this._started = false;
     },
     success: function() {
-      this._rootNode.end();
+      this._actualNode.end();
       this._started = false;
     },
     fail: function() {
-      this._rootNode.end();
+      this._actualNode.end();
       this._started = false;
     }
   });
@@ -48,7 +53,11 @@
       this._registeredNodes[name] = node;
     },
     getNode: function(name) {
-      return this._registeredNodes[name];
+      var node = name instanceof BehaviorTree.Node ? name : this._registeredNodes[name];
+      if (!node) {
+        console.log('The node "' + name + '" could not be looked up. Maybe it was never registered?');
+      }
+      return node;
     }
   });
 
