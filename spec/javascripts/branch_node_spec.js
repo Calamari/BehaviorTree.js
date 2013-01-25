@@ -134,4 +134,76 @@ describe('BranchNode', function() {
     });
   });
 
+  describe('the start method', function() {
+    var node, runObj, testObj;
+    beforeEach(function() {
+      testObj = 123;
+      node = new BehaviorTree.Node({
+        run: function() {
+          this.success();
+        },
+        start: function(arg) {
+          runObj = arg;
+        }
+      });
+      selector = new BehaviorTree.BranchNode({
+        title: 'test me',
+        nodes: [
+          node
+        ]
+      });
+      selector.run(testObj);
+    });
+
+    it("gets the object as argument we passed in", function() {
+      expect(runObj).toBe(testObj);
+    });
+  });
+
+  describe('the end method', function() {
+    var node, runObj, testObj, beSuccess;
+    beforeEach(function() {
+      testObj = 123;
+      node = new BehaviorTree.Node({
+        run: function() {
+          if (beSuccess) {
+            this.success();
+          } else {
+            this.fail();
+          }
+        },
+        end: function(arg) {
+          runObj = arg;
+        }
+      });
+      selector = new BehaviorTree.BranchNode({
+        title: 'test me twice',
+        nodes: [
+          node
+        ]
+      });
+    });
+
+    describe('if success is called by task', function() {
+      beforeEach(function() {
+        beSuccess = true;
+        selector.run(testObj);
+      });
+
+      it("gets the object as argument we passed in", function() {
+        expect(runObj).toBe(testObj);
+      });
+    });
+
+    describe('if fail is called by task', function() {
+      beforeEach(function() {
+        beSuccess = false;
+        selector.run(testObj);
+      });
+
+      it("gets the object as argument we passed in", function() {
+        expect(runObj).toBe(testObj);
+      });
+    });
+  });
 });

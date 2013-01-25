@@ -25,7 +25,7 @@
       this._runningNode = node;
       if (node.canRun(this._object)) {
         node.setControl(this);
-        node.start();
+        node.start(this._object);
         node.run(this._object);
       }
     },
@@ -33,10 +33,10 @@
       this._control.running(node);
     },
     success: function() {
-      this._runningNode.end();
+      this._runningNode.end(this._object);
     },
     fail: function() {
-      this._runningNode.end();
+      this._runningNode.end(this._object);
     }
   });
 

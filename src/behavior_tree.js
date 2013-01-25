@@ -21,7 +21,6 @@
       }
       this._started = true;
       if (this._nodeRunning) {
-        // TODO: test with mutliple, because setControl might be neccessary to be called here
         this._nodeRunning.run(this._object);
         this._nodeRunning = null;
       } else {
@@ -29,7 +28,7 @@
         this._actualNode = node;
         if (node.canRun(this._object)) {
           node.setControl(this);
-          node.start();
+          node.start(this._object);
           node.run(this._object);
         }
       }
@@ -39,11 +38,11 @@
       this._started = false;
     },
     success: function() {
-      this._actualNode.end();
+      this._actualNode.end(this._object);
       this._started = false;
     },
     fail: function() {
-      this._actualNode.end();
+      this._actualNode.end(this._object);
       this._started = false;
     }
   });

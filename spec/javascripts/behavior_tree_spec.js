@@ -584,4 +584,123 @@ describe('BehaviorTree', function() {
       expect(hasRunObj[0]).toBe(testObj1);
     });
   });
+
+  describe('with a task that is running and happens to be in another tree', function() {
+    var btree, btree2, hasRunObj, testObj1, testObj2;
+    beforeEach(function() {
+      hasRunObj = [];
+      testObj1 = { foo: 'ba' };
+      testObj2 = { foo: 'bar' };
+      BehaviorTree.register('testtask', new BehaviorTree.Task({
+        run: function(obj) {
+          hasRunObj.push(obj);
+          this.running();
+        }
+      }));
+      BehaviorTree.register('testseq', new BehaviorTree.Sequence({
+        nodes: [
+          'testtask'
+        ]
+      }));
+      btree = new BehaviorTree({
+        title: 'tree1',
+        tree: 'testseq'
+      });
+      btree2 = new BehaviorTree({
+        title: 'tree2',
+        tree: 'testseq'
+      });
+    });
+
+    it('has the right object when called twice in same tree', function() {
+      btree.setObject(testObj1);
+      btree.step();
+      btree.step();
+      expect(hasRunObj[0]).toBe(testObj1);
+      expect(hasRunObj[1]).toBe(testObj1);
+    });
+
+    it('has the right object when called in both trees', function() {
+      btree2.setObject(testObj2);
+      btree.setObject(testObj1);
+      btree.step();
+      btree2.step();
+      btree2.step();
+      btree.step();
+      expect(hasRunObj[0]).toBe(testObj1);
+      expect(hasRunObj[1]).toBe(testObj2);
+      expect(hasRunObj[2]).toBe(testObj2);
+      expect(hasRunObj[3]).toBe(testObj1);
+    });
+  });
+
+  describe('the start method of root task', function() {
+    var node, runObj, btree, testObj;
+    beforeEach(function() {
+      testObj = 123;
+      node = new BehaviorTree.Node({
+        run: function() {
+          this.success();
+        },
+        start: function(arg) {
+          runObj = arg;
+        }
+      });
+      btree = new BehaviorTree({
+        title: 'test me',
+        tree: node
+      });
+      btree.setObject(testObj);
+      btree.step();
+    });
+
+    it("gets the object as argument we passed in", function() {
+      expect(runObj).toBe(testObj);
+    });
+  });
+
+  describe('the end method of root task', function() {
+    var node, runObj, btree, testObj, beSuccess;
+    beforeEach(function() {
+      testObj = 123;
+      node = new BehaviorTree.Node({
+        run: function() {
+          if (beSuccess) {
+            this.success();
+          } else {
+            this.fail();
+          }
+        },
+        end: function(arg) {
+          runObj = arg;
+        }
+      });
+      btree = new BehaviorTree({
+        title: 'test me twice',
+        tree: node
+      });
+      btree.setObject(testObj);
+    });
+
+    describe('if success is called by task', function() {
+      beforeEach(function() {
+        beSuccess = true;
+      });
+      it("gets the object as argument we passed in", function() {
+        btree.step();
+        expect(runObj).toBe(testObj);
+      });
+    });
+
+    describe('if fail is called by task', function() {
+      beforeEach(function() {
+        beSuccess = false;
+      });
+      it("gets the object as argument we passed in", function() {
+        btree.step();
+        expect(runObj).toBe(testObj);
+      });
+    });
+
+  });
 });
