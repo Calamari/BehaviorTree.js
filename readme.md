@@ -13,11 +13,151 @@ An JavaScript implementation of Behavior Trees. They are useful for implementing
 
 ## How to use
 
-*coming soon*
+### Creating a simple task
+
+A task is a simple `Node` (to be precise a leafnode), which takes care of all the dirty wirk in it's `run` method, which calls `success()`, `fail()` or `running()` in the end.
+    var mytask = new BehaviorTree.Task({
+      // (optional) if canRun is set, it has to return true or false
+      // this indicates, if this task is allowed to run.
+      // If not set, it always returns true
+      canRun: function(obj) { return !!obj.available; },
+
+      // (optional) this function is called directly before the run method
+      // is called. It allows you to setup things before starting to run
+      // Beware: if task is resumed after calling this.running(), start is not called.
+      start: function(obj) { obj.isStarted = true; },
+
+      // (optional) this function is called directly after the run method
+      // is completed with either this.success() or this.fail(). It allows you to clean up
+      // things, after you run the task.
+      end: function(obj) { obj.isStarted = false; },
+
+      // This is the meat of your task. The run method does everything you want it to do.
+      // Finish it with one of these method calls:
+      // this.success() - The task did run successfully
+      // this.fail()    - The task did fail
+      // this.running() - The task is still running and will be called directly on the next step of the tree
+      run: function(obj) {
+        this.success();
+      }
+    });
+
+The methods:
+
+* `canRun` - has to return true (default) or false; If false is returned the task will be skipped.
+* `start`  - Called before run is called. But not if task is resuming after ending with this.running().
+* `end`    - Called after run is called. But not if task finished with this.running().
+* `run`    - Contains the main things you want the task is doing.
+
+The interesting part:
+
+* the argument for all this methods is the object you pass in into the instance of `BehaviorTree` with the `setObject` method. This could be the object you want the behavior tree to control.
+
+### Creating a sequence
+
+A `Sequence` will call every of it's subnodes one after each other until one node calls `fail()` or all nodes were called. If one node calls `fail()` the `Sequence` will call `fail()` too, else it will call `success()`.
+
+    var mysequence = new BehaviorTree.Sequence({
+      title: 'my sequence',
+      nodes: [
+        // here comes in a list of nodes (Tasks, Sequences or Selectors)
+        // as objects or as registered strings
+      ]
+    });
+
+### Creating a selector
+
+A `Selector` calls every node in it's list until one node calls `success()`, then itself calls success internally. If none subnode calls `success()` the selector itself calls `fail()`.
+
+    var myselector = new BehaviorTree.Selector({
+      title: 'my selector',
+      nodes: [
+        // here comes in a list of nodes (Tasks, Sequences or Selectors)
+        // as objects or as registered strings
+      ]
+    });
+
+### Creating a behavior tree
+
+Creating a behavior tree is fairly simple. Just instantiate the `BehaviorTree` class and put in a `Node` (or more probably a `BranchingNode`, like a `Sequence` or `Selector`) in the `tree` parameter.
+
+    var mytree = new BehaviorTree({
+      title: 'tree1',  // this is optional but useful if error happens
+      tree: 'a selector' // the value of tree can be either string (which is the registered name of a node), or any node
+    });
+
+### Run through the behavior tree
+
+Before you let the tree do it's work you can add an object to the tree. This object will be passed into every `start()`, `end()`, `canRun()` and `run()` method as first argument. You can use it, to let the Behavior tree know, on which object (e.g. artificial player) it is running. After this just call `step()` whenever you have time for some AI calculations in your game loop.
+
+    mytree.setObject(someBot);
+    // do this in a loop:
+    mytree.step();
+
+### Using a lookup table for your tasks
+
+If you need the same nodes multiple times in a tree (or even in different trees), there is an easy method to register this nodes, so you can simply reference it by given name.
+
+    // register a task:
+    BehaviorTree.register('testtask', mytask);
+    // or register a sequence or selector:
+    BehaviorTree.register('test sequence', mysequence);
+
+Now you can simply use
+
+### Now putting it all together
+
+And now an example of how all could work together.
+
+    BehaviorTree.register('bark', new BehaviorTree.Task({
+      title: 'bark',
+      run: function(dog) {
+        dog.bark();
+        this.success();
+      }
+    }));
+
+    var btree = new BehaviorTree({
+      title: 'dog behaviors',
+      tree: new Behavior.Sequence({
+        nodes: [
+          'bark',
+          new BehaviorTree.Task({
+            title: 'walk',
+            run: function(dog) {
+              dog.randomlyWalk();
+              this.success();
+            }
+          }),
+          'bark',
+          new BehaviorTree.Task({
+            title: 'mark tree',
+            canRun: function(dog) {
+              return dog.standBesideATree();
+            },
+            run: function(dog) {
+              dog.liftALeg();
+              dog.pee();
+              this.success();
+            }
+          }),
+
+        ]
+      })
+    });
+
+    var dog = new Dog(/*...*/); // the nasty details of a dog are omitted
+
+    btree.setObject(dog);
+    setInterval(function() {
+      btree.step();
+    }, 1000/60);
+
+In this example the following happens: each pass on the setInterval (our game loop), the dog barks – we implemented this with a registered node, because we do this twice – then it walks randomly around, then it barks again and then if it find's itself standing beside a tree it pees on the tree.
 
 ## Contributing
 
-*coming soon*
+If you want to contribute? If you have some ideas or critics, just open an issue, here on github. If you want to get your hands dirty, you can fork this repo. But note: If you write code, don't forget to write tests. And then make a pull request. I'll be happy to see what's coming.
 
 ## Running tests
 
