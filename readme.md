@@ -16,6 +16,7 @@ An JavaScript implementation of Behavior Trees. They are useful for implementing
 ### Creating a simple task
 
 A task is a simple `Node` (to be precise a leafnode), which takes care of all the dirty wirk in it's `run` method, which calls `success()`, `fail()` or `running()` in the end.
+
     var mytask = new BehaviorTree.Task({
       // (optional) if canRun is set, it has to return true or false
       // this indicates, if this task is allowed to run.
