@@ -37,7 +37,7 @@ A task is a simple `Node` (to be precise a leafnode), which takes care of all th
       // Finish it with one of these method calls:
       // this.success() - The task did run successfully
       // this.fail()    - The task did fail
-      // this.running() - The task is still running and will be called directly on the next step of the tree
+      // this.running() - The task is still running and will be called directly from parent sequence
       run: function(obj) {
         this.success();
       }

@@ -30,6 +30,7 @@
       }
     },
     running: function(node) {
+      this._nodeRunning = node;
       this._control.running(node);
     },
     success: function() {

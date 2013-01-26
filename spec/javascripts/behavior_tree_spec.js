@@ -701,6 +701,63 @@ describe('BehaviorTree', function() {
         expect(runObj).toBe(testObj);
       });
     });
+  });
 
+  describe('having a running task under a Sequence', function() {
+    var node, runCount, runHighPrio, runFirstSeq, btree;
+    beforeEach(function() {
+      runCount = runHighPrio = runFirstSeq = 0;
+      node = new BehaviorTree.Node({
+        run: function() {
+          ++runCount;
+          this.running();
+        },
+        end: function(arg) {
+          runObj = arg;
+        }
+      });
+      btree = new BehaviorTree({
+        title: 'prio or not to prio',
+        tree: new BehaviorTree.Selector({
+          title: 'selector',
+          nodes: [
+            new BehaviorTree.Node({
+              title: 'high prio',
+              run: function() {
+                ++runHighPrio;
+                this.fail();
+              }
+            }),
+            new BehaviorTree.Sequence({
+              title: 'sequence',
+              nodes: [
+                new BehaviorTree.Node({
+                  title: 'first in sequence',
+                  run: function() {
+                    ++runFirstSeq;
+                    this.success();
+                  }
+                }),
+                node
+              ]
+            })
+          ]
+        })
+      });
+      btree.step();
+      btree.step();
+    });
+
+    it('tries running task in first position of selector', function() {
+      expect(runHighPrio).toBe(2);
+    });
+
+    it('does not run the task in sequence before the running task', function() {
+      expect(runFirstSeq).toBe(1);
+    });
+
+    it('reruns the running task again', function() {
+      expect(runCount).toBe(2);
+    });
   });
 });

@@ -2,6 +2,10 @@
 
 /**
   TODO next things:
+    - random selector
+    - decorator node
+    - condition node
+    - make/script for minifying and compiling
     - (allow returning constants instead of success, fail and running methods)
 */
 (function(exports) {
@@ -20,21 +24,15 @@
         console.log('the BehaviorTree "' + this.title + '" did call step but one Task did not finish on last call of step.');
       }
       this._started = true;
-      if (this._nodeRunning) {
-        this._nodeRunning.run(this._object);
-        this._nodeRunning = null;
-      } else {
-        var node = BehaviorTree.getNode(this._rootNode);
-        this._actualNode = node;
-        if (node.canRun(this._object)) {
-          node.setControl(this);
-          node.start(this._object);
-          node.run(this._object);
-        }
+      var node = BehaviorTree.getNode(this._rootNode);
+      this._actualNode = node;
+      if (node.canRun(this._object)) {
+        node.setControl(this);
+        node.start(this._object);
+        node.run(this._object);
       }
     },
     running: function(runningNode) {
-      this._nodeRunning = runningNode;
       this._started = false;
     },
     success: function() {
