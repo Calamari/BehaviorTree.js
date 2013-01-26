@@ -1,3 +1,11 @@
+GIT
+  remote: git://github.com/lautis/uglifier.git
+  revision: ad7ea8ce8cfbc437557724365041b6743724f7de
+  specs:
+    uglifier (1.3.0)
+      execjs (>= 0.3.0)
+      multi_json (~> 1.0, >= 1.0.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -31,6 +39,7 @@ GEM
     multi_json (1.5.0)
     rack (1.4.4)
     rainbow (1.1.4)
+    rake (10.0.3)
     rspec (2.12.0)
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)
@@ -59,3 +68,5 @@ PLATFORMS
 DEPENDENCIES
   jasmine
   jasmine-headless-webkit
+  rake
+  uglifier!

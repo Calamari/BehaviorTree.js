@@ -9,7 +9,19 @@ An JavaScript implementation of Behavior Trees. They are useful for implementing
 
 ## Installation
 
-*coming soon*
+There is a `btree.min.js` file in the root directory of this package. You can use this in your project, like so:
+
+    <script src="btree.min.js"></script>
+
+If you happen to fiddle around in the and need a minified version of the modified code, you can minify the code through a rake task provided in this package.
+
+    bundle
+    rake minify
+
+Or if you do not have `bundler` installed, you can install the gem by yourself:
+
+  gem install uglifier
+  rake minify
 
 ## How to use
 
