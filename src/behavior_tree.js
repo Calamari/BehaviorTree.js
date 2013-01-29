@@ -43,24 +43,22 @@
       this._started = false;
     }
   });
-  BehaviorTree = Object.extend(BehaviorTree, {
-    _registeredNodes: {},
-    register: function(name, node) {
-      if (typeof name === 'string') {
-        this._registeredNodes[name] = node;
-      } else {
-        // name is the node
-        this._registeredNodes[name.title] = name;
-      }
-    },
-    getNode: function(name) {
-      var node = name instanceof BehaviorTree.Node ? name : this._registeredNodes[name];
-      if (!node) {
-        console.log('The node "' + name + '" could not be looked up. Maybe it was never registered?');
-      }
-      return node;
+  BehaviorTree._registeredNodes = {};
+  BehaviorTree.register = function(name, node) {
+    if (typeof name === 'string') {
+      this._registeredNodes[name] = node;
+    } else {
+      // name is the node
+      this._registeredNodes[name.title] = name;
     }
-  });
+  };
+  BehaviorTree.getNode = function(name) {
+    var node = name instanceof BehaviorTree.Node ? name : this._registeredNodes[name];
+    if (!node) {
+      console.log('The node "' + name + '" could not be looked up. Maybe it was never registered?');
+    }
+    return node;
+  };
 
   exports.BehaviorTree = BehaviorTree;
 }(window));
