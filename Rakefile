@@ -19,13 +19,14 @@ task :minify do
   jsstring = ""
   export_files = ["node.js", "branch_node.js", "selector.js", "sequence.js", "task.js"]
   start = "(function(exports) {"
+  strict = '"use strict";'
   ending = "}(BehaviorTree));"
 
   export_files.each do |filename|
-    jsstring += File.read("src/#{filename}").gsub(start, "").gsub(ending, "")
+    jsstring += File.read("src/#{filename}").gsub(start, "").gsub(ending, "").gsub(strict, "")
   end
 
-  output = Uglifier.new(:copyright => false).compile(File.read("src/behavior_tree.js") + start + jsstring + ending)
+  output = Uglifier.new(:copyright => true).compile(File.read("src/behavior_tree.js").gsub(strict, "") + start + jsstring + ending)
 
   File.open('btree.min.js', 'w') do |file|
     file.write(output)

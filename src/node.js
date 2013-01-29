@@ -1,6 +1,7 @@
 /*globals Base */
 
 (function(exports) {
+  "use strict";
   var Node = Base.extend({
     constructor: function(config) {
       // let config override instance properties

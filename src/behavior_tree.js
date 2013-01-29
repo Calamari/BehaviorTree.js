@@ -1,13 +1,24 @@
-/*globals Base */
-
-/**
-  TODO next things:
-    - random selector
-    - decorator node
-    - condition node
-    - make/script for minifying and compiling
-*/
+/*!
+ * BehaviorTree.js
+ * https://github.com/Calamari/BehaviorTree.js
+ *
+ * Copyright 2013, Georg Tavonius
+ * Licensed under the MIT license.
+ *
+ * Version: 0.7
+ */
 (function(exports) {
+  /*globals Base */
+  "use strict";
+
+  /**
+    TODO next things:
+      - random selector
+      - decorator node
+      - condition node
+      - make/script for minifying and compiling
+  */
+
   var countUnnamed = 0;
   var BehaviorTree = Base.extend({
     constructor: function(config) {

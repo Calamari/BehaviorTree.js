@@ -1,6 +1,7 @@
 /*globals Base */
 
 (function(exports) {
+  "use strict";
   var BranchNode = exports.Node.extend({
     constructor: function(config) {
       this.base(config);
@@ -18,7 +19,7 @@
       this.end();
     },
     _run: function() {
-      var node = BehaviorTree.getNode(this.children[this._actualTask]);
+      var node = exports.getNode(this.children[this._actualTask]);
       this._runningNode = node;
       node.setControl(this);
       node.start(this._object);

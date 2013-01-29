@@ -1,6 +1,7 @@
 /*globals Base */
 
 (function(exports) {
+  "use strict";
   var Sequence = exports.BranchNode.extend({
     _run: function() {
       if (this._nodeRunning) {

@@ -188,7 +188,7 @@ or **directly in the shell** (if you have done step 1. or the full step 2.):
 
     jasmine-webkit-headless -c
 
-## License
+## MIT License
 
 Copyright (C) 2013 Georg Tavonius
 
