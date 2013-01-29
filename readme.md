@@ -1,11 +1,12 @@
 # BehaviorTree.js
 
-An JavaScript implementation of Behavior Trees. They are useful for implementing AIs. If you want need more information about Behavior Trees, look on [GameDevAI](http://aigamedev.com), there is a nice [video about Behavior Trees from Alex Champandard](http://aigamedev.com/open/article/behavior-trees-part1/).
+An JavaScript implementation of Behavior Trees. They are useful for implementing AIs. If you need more information about Behavior Trees, look on [GameDevAI](http://aigamedev.com), there is a nice [video about Behavior Trees from Alex Champandard](http://aigamedev.com/open/article/behavior-trees-part1/). There is also a nice read of [Björn Knafla](http://www.altdevblogaday.com/author/bjoern-knafla/) explaining how [explaining how Behavior Trees work](http://www.altdevblogaday.com/2011/02/24/introduction-to-behavior-trees/).
 
 ## Features
 
-* The needed: Sequences, Selectors, Tasks
-* The extended: Decorators, Filters, Lookup tables, Conditions
+* Only 2.5 kb minifed JavaScript code
+* The needed: Sequences selector, Priority selectors, Tasks
+* The extended (coming soon): Decorators, Filters, Lookup tables, Conditions
 
 ## Installation
 
@@ -13,12 +14,12 @@ There is a `btree.min.js` file in the root directory of this package. You can us
 
     <script src="btree.min.js"></script>
 
-If you happen to fiddle around in the and need a minified version of the modified code, you can minify the code through a rake task provided in this package.
+If you happen to fiddle around in the codebase and need a minified version of your modified version, you can minify the code through a rake task provided in this package.
 
     bundle
     rake minify
 
-Or if you do not have `bundler` installed, you can install the gem by yourself:
+Or if you do not have `bundler` installed, you can install the needed gem for minification by yourself and then run the rake task:
 
   gem install uglifier
   rake minify
