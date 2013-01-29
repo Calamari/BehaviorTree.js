@@ -47,7 +47,12 @@
   BehaviorTree = Object.extend(BehaviorTree, {
     _registeredNodes: {},
     register: function(name, node) {
-      this._registeredNodes[name] = node;
+      if (typeof name === 'string') {
+        this._registeredNodes[name] = node;
+      } else {
+        // name is the node
+        this._registeredNodes[name.title] = name;
+      }
     },
     getNode: function(name) {
       var node = name instanceof BehaviorTree.Node ? name : this._registeredNodes[name];

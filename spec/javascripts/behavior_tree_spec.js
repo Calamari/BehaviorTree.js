@@ -340,6 +340,31 @@ describe('BehaviorTree', function() {
     });
   });
 
+  describe('register can also be called using the title instead with explicit name', function() {
+    var hasRunObj, testObj1;
+    beforeEach(function() {
+      hasRunObj = null;
+      testObj1 = { sim: 'ba' };
+      BehaviorTree.register(new BehaviorTree.Task({
+        title: 'testtask',
+        run: function(obj) {
+          hasRunObj = obj;
+          this.success();
+        }
+      }));
+      btree = new BehaviorTree({
+        title: 'tree1',
+        tree: 'testtask'
+      });
+      btree.setObject(testObj1);
+      btree.step();
+    });
+
+    it('runs the registered task with right test obj', function() {
+      expect(hasRunObj).toBe(testObj1);
+    });
+  });
+
   describe('with several tasks to lookup', function() {
     var hasRunObj1, hasRunObj2, testObj1, msg, beSuccess;
     beforeEach(function() {
