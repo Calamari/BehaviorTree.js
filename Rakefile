@@ -22,7 +22,7 @@ task :minify do
   ending = "}(BehaviorTree));"
 
   export_files.each do |filename|
-    jsstring = File.read("src/#{filename}").gsub(start, "").gsub(ending, "")
+    jsstring += File.read("src/#{filename}").gsub(start, "").gsub(ending, "")
   end
 
   output = Uglifier.new(:copyright => false).compile(File.read("src/behavior_tree.js") + start + jsstring + ending)
