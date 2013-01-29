@@ -1,4 +1,4 @@
-/*!
+/**
  * BehaviorTree.js
  * https://github.com/Calamari/BehaviorTree.js
  *

@@ -14,10 +14,10 @@ desc "minify the source"
 task :minify do
   require 'uglifier'
 
-
-  # remove duplication through same function surroundings
   jsstring = ""
   export_files = ["node.js", "branch_node.js", "selector.js", "sequence.js", "task.js"]
+
+  # remove duplication through same function surroundings
   start = "(function(exports) {"
   strict = '"use strict";'
   ending = "}(BehaviorTree));"
@@ -30,5 +30,19 @@ task :minify do
 
   File.open('btree.min.js', 'w') do |file|
     file.write(output)
+  end
+
+  # Version including dependencys and the extended stuff
+  def extract_copyright(text)
+    cpos = text.index('*/')
+    return text[0..(cpos+1)], text[(cpos+2)..text.length]
+  end
+
+
+  copyright, code = extract_copyright(output)
+  libs = Uglifier.new(:copyright => false).compile(File.read("lib/base.js"))
+
+  File.open('btree-complete.min.js', 'w') do |file|
+    file.write(File.read("src/comment_complete.js") + libs + code)
   end
 end

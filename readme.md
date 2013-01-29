@@ -1,10 +1,10 @@
 # BehaviorTree.js
 
-An JavaScript implementation of Behavior Trees. They are useful for implementing AIs. If you need more information about Behavior Trees, look on [GameDevAI](http://aigamedev.com), there is a nice [video about Behavior Trees from Alex Champandard](http://aigamedev.com/open/article/behavior-trees-part1/). There is also a nice read of [Björn Knafla](http://www.altdevblogaday.com/author/bjoern-knafla/) explaining how [explaining how Behavior Trees work](http://www.altdevblogaday.com/2011/02/24/introduction-to-behavior-trees/).
+A JavaScript implementation of Behavior Trees. They are useful for implementing AIs. If you need more information about Behavior Trees, look on [GameDevAI](http://aigamedev.com), there is a nice [video about Behavior Trees from Alex Champandard](http://aigamedev.com/open/article/behavior-trees-part1/). There is also a nice read of [Björn Knafla](http://www.altdevblogaday.com/author/bjoern-knafla/) explaining how [explaining how Behavior Trees work](http://www.altdevblogaday.com/2011/02/24/introduction-to-behavior-trees/).
 
 ## Features
 
-* Only 2.5 kb minifed JavaScript code
+* Only 2.5 kb minifed JavaScript code + 1.5 kb dependency ([Dean Edward](http://dean.edwards.name/)'s [base class](http://dean.edwards))
 * The needed: Sequences, Priority selectors, Tasks
 * The extended (coming soon): Decorators, Filters, Lookup tables, Conditions
 
@@ -26,7 +26,14 @@ Or if you do not have `bundler` installed, you can install the needed gem for mi
 
 ## Dependency
 
-This behavior tree implementation depends on [Dean Edward](http://dean.edwards.name/)'s [base class](http://dean.edwards.name/base/Base.js). You need to load this prior to loading the `btree.min.js`. Thanks Dean for that great class implementation.
+This behavior tree implementation depends on [Dean Edward](http://dean.edwards.name/)'s [base class](http://dean.edwards.name/base/Base.js). You need to load this prior to loading the `btree.min.js`. Thanks Dean for that great class implementation. Like this:
+
+    <script src="http://dean.edwards.name/base/Base.js></script>
+    <script src="btree.min.js"></script>
+
+Or use the bundled version where the base class and the behavior tree is included:
+
+    <script src="btree-complete.min.js"></script>
 
 ## How to use
 
@@ -187,6 +194,10 @@ Done this you also have two choices. You can either run the **test in the browse
 or **directly in the shell** (if you have done step 1. or the full step 2.):
 
     jasmine-webkit-headless -c
+
+## Version history
+
+* **0.7** - first functional complete release
 
 ## MIT License
 
