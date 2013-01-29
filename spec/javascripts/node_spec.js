@@ -16,17 +16,17 @@ describe('Node', function() {
         });
       });
 
-      describe("a canRun method", function() {
+      describe("a run method", function() {
         beforeEach(function() {
           node = new BehaviorTree.Node({
-            canRun: function() {
+            run: function() {
               return true;
             }
           });
         });
 
         it('and it is available on the instance', function() {
-          expect(node.canRun()).toBe(true);
+          expect(node.run()).toBe(true);
         });
       });
     });
@@ -38,14 +38,6 @@ describe('Node', function() {
       node = new BehaviorTree.Node({
         title: 'node'
       });
-    });
-
-    it('has a canRun method', function() {
-      expect(node.canRun).toBeFunction();
-    });
-
-    it('the canRun method returns true when not overridden', function() {
-      expect(node.canRun()).toBe(true);
     });
 
     it('has a start method', function() {

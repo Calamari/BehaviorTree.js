@@ -32,14 +32,13 @@ describe('Selector', function() {
   });
 
   describe('when having a Selector with two nodes', function() {
-    var node, mayRun1, hasRun1, beSuccess1, startCalled1, endCalled1,
-        mayRun2, hasRun2, startCalled2, endCalled2;
+    var node, hasRun1, beSuccess1, startCalled1, endCalled1,
+        hasRun2, startCalled2, endCalled2;
     beforeEach(function() {
-      mayRun1 = mayRun2 = beSuccess1 = true;
+      beSuccess1 = true;
       hasRun1 = startCalled1 = endCalled1 = false;
       hasRun2 = startCalled2 = endCalled2 = false;
       node = new BehaviorTree.Node({
-        canRun: function() { return mayRun1; },
         run: function() {
           hasRun1 = true;
           if (beSuccess1) {
@@ -56,7 +55,6 @@ describe('Selector', function() {
         nodes: [
           node,
           new BehaviorTree.Node({
-            canRun: function() { return mayRun2; },
             run: function() { hasRun2 = true; this.success(); },
             start: function() { startCalled2 = true; },
             end: function() { endCalled2 = true; }

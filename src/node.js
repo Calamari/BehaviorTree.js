@@ -6,9 +6,6 @@
       // let config override instance properties
       this.base(config);
     },
-    canRun: function() {
-      return true;
-    },
     start: function() {},
     end: function() {},
     run: function() { console.log("Warning: run of " + this.title + " not implemented!"); this.fail(); },

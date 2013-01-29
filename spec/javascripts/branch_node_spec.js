@@ -31,41 +31,11 @@ describe('BranchNode', function() {
     });
   });
 
-  describe('having an BranchNode without child nodes', function() {
-    beforeEach(function() {
-      selector = new BehaviorTree.BranchNode({
-        title: 'empty selector'
-      });
-    });
-
-    it("the canRun method returns false", function() {
-      expect(selector.canRun()).toBe(false);
-    });
-  });
-
-  describe('having an BranchNode with at least one child node', function() {
-    beforeEach(function() {
-      selector = new BehaviorTree.BranchNode({
-        title: 'a selector',
-        nodes: [
-          new BehaviorTree.Node({})
-        ]
-      });
-    });
-
-    it("the canRun method returns true", function() {
-      expect(selector.canRun()).toBe(true);
-    });
-  });
-
-
   describe('the run method', function() {
-    var node, mayRun, hasRun, beSuccess, startCalled, endCalled, canObj, runObj;
+    var node, hasRun, beSuccess, startCalled, endCalled, canObj, runObj;
     beforeEach(function() {
-      mayRun = true;
       hasRun = startCalled = endCalled = false;
       node = new BehaviorTree.Node({
-        canRun: function(arg) { canObj = arg; return mayRun; },
         run: function(arg) {
           runObj = arg;
           hasRun = true;
@@ -86,32 +56,12 @@ describe('BranchNode', function() {
       });
     });
 
-    it("canRun of task gets the object as argument we passed in", function() {
-      var testObj = 42;
-      selector.run(testObj);
-      expect(canObj).toBe(testObj);
-    });
-
     it("run of task gets the object as argument we passed in", function() {
       var testObj = 23;
       selector.run(testObj);
       expect(runObj).toBe(testObj);
     });
 
-
-    describe('calls canRun on next node and', function() {
-      it("does not run the run method if canRun returns false", function() {
-        mayRun = false;
-        selector.run();
-        expect(hasRun).toBeFalsy();
-      });
-
-      it("does run the run method if canRun returns true", function() {
-        mayRun = true;
-        selector.run();
-        expect(hasRun).toBeTruthy();
-      });
-    });
     it('calls first the start method of next node before calling the run method', function() {
       selector.run();
       expect(startCalled).toBeTruthy();

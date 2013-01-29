@@ -24,10 +24,6 @@ describe('Task', function() {
       });
     });
 
-    it('has a canRun method', function() {
-      expect(task.canRun).toBeFunction();
-    });
-
     it('has a start method', function() {
       expect(task.start).toBeFunction();
     });

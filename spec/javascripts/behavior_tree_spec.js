@@ -96,38 +96,6 @@ describe('BehaviorTree', function() {
     });
   });
 
-  describe('a minimal tree where the root node canRun is false', function() {
-    var hasRun;
-    beforeEach(function() {
-      btree = new BehaviorTree({
-        tree: new BehaviorTree.Task({
-          canRun: function() { return false; },
-          run: function() {
-            hasRun = true;
-          }
-        })
-      });
-      realLog = console.log;
-      console.log = function(m) { msg = m; };
-    });
-
-    afterEach(function() {
-      console.log = realLog;
-    });
-
-    it('does nothing', function() {
-      btree.step();
-      expect(hasRun).toBeFalsy();
-    });
-
-    it('does nothing also called multiple times', function() {
-      btree.step();
-      btree.step();
-      btree.step();
-      expect(hasRun).toBeFalsy();
-    });
-  });
-
   describe('a tree where the root node does not call neither success, fail, nor running', function() {
     var hasRun, msg;
     beforeEach(function() {
@@ -221,11 +189,6 @@ describe('BehaviorTree', function() {
       obj = { foo: 'bar' };
       btree = new BehaviorTree({
         tree: new BehaviorTree.Task({
-          canRun: function(object) {
-            expect(object).toBe(obj);
-            ++runCount;
-            return true;
-          },
           run: function(object) {
             expect(object).toBe(obj);
             ++runCount;
@@ -235,9 +198,9 @@ describe('BehaviorTree', function() {
       btree.setObject(obj);
     });
 
-    it('both canRun and run have object as argument', function() {
+    it('the run method has the object as argument', function() {
       btree.step();
-      expect(runCount).toBe(2);
+      expect(runCount).toBe(1);
     });
   });
 
@@ -252,11 +215,6 @@ describe('BehaviorTree', function() {
           title: 'my sequence',
           nodes: [
             new BehaviorTree.Task({
-              canRun: function(object) {
-                expect(object).toBe(obj);
-                ++runCount;
-                return true;
-              },
               run: function(object) {
                 expect(object).toBe(obj);
                 ++runCount;
@@ -267,9 +225,9 @@ describe('BehaviorTree', function() {
       });
     });
 
-    it('both canRun and run have object as argument', function() {
+    it('the run method has the object as argument', function() {
       btree.step();
-      expect(runCount).toBe(2);
+      expect(runCount).toBe(1);
     });
   });
 

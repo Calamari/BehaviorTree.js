@@ -6,9 +6,6 @@
       this.base(config);
       this.children = this.nodes || [];
     },
-    canRun: function() {
-      return this.children.length > 0;
-    },
     start: function() {
       this._actualTask = 0;
     },
@@ -23,11 +20,9 @@
     _run: function() {
       var node = BehaviorTree.getNode(this.children[this._actualTask]);
       this._runningNode = node;
-      if (node.canRun(this._object)) {
-        node.setControl(this);
-        node.start(this._object);
-        node.run(this._object);
-      }
+      node.setControl(this);
+      node.start(this._object);
+      node.run(this._object);
     },
     running: function(node) {
       this._nodeRunning = node;

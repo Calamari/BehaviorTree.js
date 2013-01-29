@@ -2,11 +2,12 @@
 
 /**
   TODO next things:
+    - allow returning constants instead of success (true), fail (false) and running methods
+    - rename Selector to Priority
     - random selector
     - decorator node
     - condition node
     - make/script for minifying and compiling
-    - (allow returning constants instead of success, fail and running methods)
 */
 (function(exports) {
   var countUnnamed = 0;
@@ -26,11 +27,9 @@
       this._started = true;
       var node = BehaviorTree.getNode(this._rootNode);
       this._actualNode = node;
-      if (node.canRun(this._object)) {
-        node.setControl(this);
-        node.start(this._object);
-        node.run(this._object);
-      }
+      node.setControl(this);
+      node.start(this._object);
+      node.run(this._object);
     },
     running: function(runningNode) {
       this._started = false;

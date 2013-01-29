@@ -4,9 +4,6 @@
 //Task is child of Node
 
 BehaviorTree.register('previouslyGeneratedTask', new BehaviorTree.Task({
-  canRun: function() {
-    return true;
-  },
   // Things to do on starting this task
   start: function() {
 
@@ -27,9 +24,6 @@ var tree = new BehaviorTree({
     nodes: [
       new BehaviorTree.Task({
         title: 'leafing',
-        canRun: function() {
-          return false;
-        },
         run: function() {
           this.fail();
         }
@@ -47,6 +41,9 @@ var tree = new BehaviorTree({
 
   })
 });
+
+// Set object the behavior is meant to work on
+tree.setObject({});
 
 /*
   In this Tree, we use registered Nodes for the Tasks

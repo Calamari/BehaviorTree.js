@@ -30,11 +30,6 @@ Or if you do not have `bundler` installed, you can install the gem by yourself:
 A task is a simple `Node` (to be precise a leafnode), which takes care of all the dirty wirk in it's `run` method, which calls `success()`, `fail()` or `running()` in the end.
 
     var mytask = new BehaviorTree.Task({
-      // (optional) if canRun is set, it has to return true or false
-      // this indicates, if this task is allowed to run.
-      // If not set, it always returns true
-      canRun: function(obj) { return !!obj.available; },
-
       // (optional) this function is called directly before the run method
       // is called. It allows you to setup things before starting to run
       // Beware: if task is resumed after calling this.running(), start is not called.
@@ -57,7 +52,6 @@ A task is a simple `Node` (to be precise a leafnode), which takes care of all th
 
 The methods:
 
-* `canRun` - has to return true (default) or false; If false is returned the task will be skipped.
 * `start`  - Called before run is called. But not if task is resuming after ending with this.running().
 * `end`    - Called after run is called. But not if task finished with this.running().
 * `run`    - Contains the main things you want the task is doing.
@@ -101,7 +95,7 @@ Creating a behavior tree is fairly simple. Just instantiate the `BehaviorTree` c
 
 ### Run through the behavior tree
 
-Before you let the tree do it's work you can add an object to the tree. This object will be passed into every `start()`, `end()`, `canRun()` and `run()` method as first argument. You can use it, to let the Behavior tree know, on which object (e.g. artificial player) it is running. After this just call `step()` whenever you have time for some AI calculations in your game loop.
+Before you let the tree do it's work you can add an object to the tree. This object will be passed into every `start()`, `end()` and `run()` method as first argument. You can use it, to let the Behavior tree know, on which object (e.g. artificial player) it is running. After this just call `step()` whenever you have time for some AI calculations in your game loop.
 
     mytree.setObject(someBot);
     // do this in a loop:
@@ -145,13 +139,14 @@ And now an example of how all could work together.
           'bark',
           new BehaviorTree.Task({
             title: 'mark tree',
-            canRun: function(dog) {
-              return dog.standBesideATree();
-            },
             run: function(dog) {
-              dog.liftALeg();
-              dog.pee();
-              this.success();
+              if (dog.standBesideATree()) {
+                dog.liftALeg();
+                dog.pee();
+                this.success();
+              } else {
+                this.fail();
+              }
             }
           }),
 
