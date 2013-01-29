@@ -5,7 +5,7 @@ An JavaScript implementation of Behavior Trees. They are useful for implementing
 ## Features
 
 * Only 2.5 kb minifed JavaScript code
-* The needed: Sequences selector, Priority selectors, Tasks
+* The needed: Sequences, Priority selectors, Tasks
 * The extended (coming soon): Decorators, Filters, Lookup tables, Conditions
 
 ## Installation
@@ -72,26 +72,26 @@ A `Sequence` will call every of it's subnodes one after each other until one nod
     var mysequence = new BehaviorTree.Sequence({
       title: 'my sequence',
       nodes: [
-        // here comes in a list of nodes (Tasks, Sequences or Selectors)
+        // here comes in a list of nodes (Tasks, Sequences or Priorities)
         // as objects or as registered strings
       ]
     });
 
-### Creating a selector
+### Creating a priority selector
 
-A `Selector` calls every node in it's list until one node calls `success()`, then itself calls success internally. If none subnode calls `success()` the selector itself calls `fail()`.
+A `Priority` calls every node in it's list until one node calls `success()`, then itself calls success internally. If none subnode calls `success()` the priority selector itself calls `fail()`.
 
-    var myselector = new BehaviorTree.Selector({
+    var myselector = new BehaviorTree.Priority({
       title: 'my selector',
       nodes: [
-        // here comes in a list of nodes (Tasks, Sequences or Selectors)
+        // here comes in a list of nodes (Tasks, Sequences or Priorities)
         // as objects or as registered strings
       ]
     });
 
 ### Creating a behavior tree
 
-Creating a behavior tree is fairly simple. Just instantiate the `BehaviorTree` class and put in a `Node` (or more probably a `BranchingNode`, like a `Sequence` or `Selector`) in the `tree` parameter.
+Creating a behavior tree is fairly simple. Just instantiate the `BehaviorTree` class and put in a `Node` (or more probably a `BranchingNode` or `Priority`, like a `Sequence` or `Priority`) in the `tree` parameter.
 
     var mytree = new BehaviorTree({
       title: 'tree1',  // this is optional but useful if error happens
@@ -112,7 +112,7 @@ If you need the same nodes multiple times in a tree (or even in different trees)
 
     // register a task:
     BehaviorTree.register('testtask', mytask);
-    // or register a sequence or selector:
+    // or register a sequence or priority:
     BehaviorTree.register('test sequence', mysequence);
 
 Now you can simply use

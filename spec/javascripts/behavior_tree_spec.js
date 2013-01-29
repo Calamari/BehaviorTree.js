@@ -461,11 +461,11 @@ describe('BehaviorTree', function() {
       });
     });
 
-    describe('and if the selector also is looked up', function() {
+    describe('and if the priority selector also is looked up', function() {
       var btree3, testObj3;
       beforeEach(function() {
         testObj3 = { sim: 'bar' };
-        BehaviorTree.register('le selector', new BehaviorTree.Selector({
+        BehaviorTree.register('le selector', new BehaviorTree.Priority({
           title: 'my selector',
           nodes: [
             'testtask',
@@ -486,7 +486,7 @@ describe('BehaviorTree', function() {
         expect(hasRunObj2[0]).toBe(testObj3);
       });
 
-      describe('and we call the selector with several trees', function() {
+      describe('and we call the priority selector with several trees', function() {
         beforeEach(function() {
           btree.setObject(testObj1);
           btree3.setObject(testObj3);
@@ -701,7 +701,7 @@ describe('BehaviorTree', function() {
       });
       btree = new BehaviorTree({
         title: 'prio or not to prio',
-        tree: new BehaviorTree.Selector({
+        tree: new BehaviorTree.Priority({
           title: 'selector',
           nodes: [
             new BehaviorTree.Node({
@@ -731,7 +731,7 @@ describe('BehaviorTree', function() {
       btree.step();
     });
 
-    it('tries running task in first position of selector', function() {
+    it('tries running task in first position of priority selector', function() {
       expect(runHighPrio).toBe(2);
     });
 

@@ -1,7 +1,7 @@
 /*globals Base */
 
 (function(exports) {
-  var Selector = exports.BranchNode.extend({
+  var Priority = exports.BranchNode.extend({
     success: function() {
       this.base();
       this._control.success();
@@ -17,5 +17,5 @@
     }
   });
 
-  exports.Selector = Selector;
+  exports.Priority = Priority;
 }(BehaviorTree));

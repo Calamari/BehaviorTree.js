@@ -2,7 +2,6 @@
 
 /**
   TODO next things:
-    - rename Selector to Priority
     - random selector
     - decorator node
     - condition node

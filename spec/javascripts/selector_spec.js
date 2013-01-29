@@ -1,11 +1,11 @@
 
 
-describe('Selector', function() {
+describe('Priority selector', function() {
   var selector;
   describe('can be constructed with', function() {
     describe("an object containing it's title", function() {
       beforeEach(function() {
-        selector = new BehaviorTree.Selector({
+        selector = new BehaviorTree.Priority({
           title: 'choose'
         });
       });
@@ -18,7 +18,7 @@ describe('Selector', function() {
 
   describe('instance', function() {
     beforeEach(function() {
-      selector = new BehaviorTree.Selector({
+      selector = new BehaviorTree.Priority({
         title: 'selector'
       });
     });
@@ -31,7 +31,7 @@ describe('Selector', function() {
     });
   });
 
-  describe('when having a Selector with two nodes', function() {
+  describe('when having a Priority with two nodes', function() {
     var node, hasRun1, beSuccess1, startCalled1, endCalled1,
         hasRun2, startCalled2, endCalled2;
     beforeEach(function() {
@@ -50,7 +50,7 @@ describe('Selector', function() {
         start: function() { startCalled1 = true; },
         end: function() { endCalled1 = true; }
       });
-      selector = new BehaviorTree.Selector({
+      selector = new BehaviorTree.Priority({
         title: 'a selector',
         nodes: [
           node,
@@ -98,12 +98,12 @@ describe('Selector', function() {
     });
   });
 
-  describe('when in Selector with two nodes', function() {
+  describe('when in Priority with two nodes', function() {
     var node, parentSelector, beSuccess, parentSuccessCalled, parentFailCalled;
     beforeEach(function() {
       beSuccess = true;
       parentSuccessCalled = parentFailCalled = false;
-      selector = new BehaviorTree.Selector({
+      selector = new BehaviorTree.Priority({
         title: 'a selector',
         nodes: [
           new BehaviorTree.Node({
@@ -112,7 +112,7 @@ describe('Selector', function() {
         ]
       });
 
-      parentSelector = new BehaviorTree.Selector({
+      parentSelector = new BehaviorTree.Priority({
         title: 'parent',
         nodes: [ selector ],
         success: function() {
