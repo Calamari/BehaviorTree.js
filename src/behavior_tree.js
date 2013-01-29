@@ -2,7 +2,6 @@
 
 /**
   TODO next things:
-    - allow returning constants instead of success (true), fail (false) and running methods
     - rename Selector to Priority
     - random selector
     - decorator node

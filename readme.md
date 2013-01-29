@@ -24,6 +24,10 @@ Or if you do not have `bundler` installed, you can install the needed gem for mi
   gem install uglifier
   rake minify
 
+## Dependency
+
+This behavior tree implementation depends on [Dean Edward](http://dean.edwards.name/)'s [base class](http://dean.edwards.name/base/Base.js). You need to load this prior to loading the `btree.min.js`. Thanks Dean for that great class implementation.
+
 ## How to use
 
 ### Creating a simple task
