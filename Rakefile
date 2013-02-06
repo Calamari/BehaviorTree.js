@@ -26,7 +26,8 @@ task :minify do
     jsstring += File.read("src/#{filename}").gsub(start, "").gsub(ending, "").gsub(strict, "")
   end
 
-  output = Uglifier.new(:copyright => true).compile(File.read("src/behavior_tree.js").gsub(strict, "") + start + jsstring + ending)
+  uncompressed_output = File.read("src/behavior_tree.js").gsub(strict, "") + start + jsstring + ending
+  output = Uglifier.new(:copyright => true).compile(uncompressed_output)
 
   File.open('btree.min.js', 'w') do |file|
     file.write(output)
@@ -39,10 +40,15 @@ task :minify do
   end
 
 
-  copyright, code = extract_copyright(output)
+  copyright, code = extract_copyright(uncompressed_output)
   libs = Uglifier.new(:copyright => false).compile(File.read("lib/base.js"))
+  compressed_code = Uglifier.new(:copyright => false).compile(code)
 
   File.open('btree-complete.min.js', 'w') do |file|
-    file.write(File.read("src/comment_complete.js") + libs + code)
+    file.write(File.read("src/comment_complete.js") + libs + "\n" + compressed_code)
+  end
+
+  File.open('btree-complete.js', 'w') do |file|
+    file.write(File.read("src/comment_complete.js") + File.read("lib/base.js") + code)
   end
 end
