@@ -18,14 +18,14 @@ There is a `btree.min.js` file in the root directory of this package. You can us
 
 If you happen to fiddle around in the codebase and need a minified version of your modified version, you can minify the code through a rake task provided in this package.
 
-``` sh
+``` bash
 bundle
 rake minify
 ```
 
 Or if you do not have `bundler` installed, you can install the needed gem for minification by yourself and then run the rake task:
 
-``` sh
+``` bash
   gem install uglifier
   rake minify
 ```
@@ -35,7 +35,7 @@ Or if you do not have `bundler` installed, you can install the needed gem for mi
 This behavior tree implementation depends on [Dean Edward](http://dean.edwards.name/)'s [base class](http://dean.edwards.name/base/Base.js). You need to load this prior to loading the `btree.min.js`. Thanks Dean for that great class implementation. Like this:
 
 ``` html
-<script src="http://dean.edwards.name/base/Base.js></script>
+<script src="http://dean.edwards.name/base/Base.js"></script>
 <script src="btree.min.js"></script>
 ```
 
@@ -212,14 +212,14 @@ To initialize the testing, you have two choices:
 
 Done this you also have two choices. You can either run the **test in the browser**:
 
-``` sh
+``` bash
 rake jasmine
 open http://localhost:8888
 ```
 
 or **directly in the shell** (if you have done step 1. or the full step 2.):
 
-``` sh
+``` bash
 jasmine-webkit-headless -c
 ```
 
