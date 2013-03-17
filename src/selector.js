@@ -1,5 +1,3 @@
-/*globals Base */
-
 (function(exports) {
   "use strict";
   var Priority = exports.BranchNode.extend({

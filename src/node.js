@@ -1,6 +1,5 @@
-/*globals Base */
-
 (function(exports) {
+  /*globals Base */
   "use strict";
   var Node = Base.extend({
     constructor: function(config) {
