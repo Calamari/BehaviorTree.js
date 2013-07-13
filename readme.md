@@ -161,7 +161,7 @@ BehaviorTree.register('bark', new BehaviorTree.Task({
 
 var btree = new BehaviorTree({
   title: 'dog behaviors',
-  tree: new Behavior.Sequence({
+  tree: new BehaviorTree.Sequence({
     nodes: [
       'bark',
       new BehaviorTree.Task({
@@ -220,7 +220,7 @@ open http://localhost:8888
 or **directly in the shell** (if you have done step 1. or the full step 2.):
 
 ``` bash
-jasmine-webkit-headless -c
+jasmine-headless-webkit -c
 ```
 
 ## Version history
