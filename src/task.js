@@ -1,5 +1,6 @@
+/* global BehaviorTree */
 (function(exports) {
-  "use strict";
+  'use strict';
   var Task = exports.Node.extend({
   });
 

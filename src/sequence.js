@@ -1,5 +1,6 @@
+/* global BehaviorTree */
 (function(exports) {
-  "use strict";
+  'use strict';
   var Sequence = exports.BranchNode.extend({
     _run: function() {
       if (this._nodeRunning) {
@@ -11,7 +12,7 @@
     },
     success: function() {
       this.base();
-      ++this._actualTask;
+      this._actualTask += 1;
       if (this._actualTask < this.children.length) {
         this._run(this._object);
       } else {

@@ -9,7 +9,7 @@
  */
 (function(exports) {
   /*globals Base */
-  "use strict";
+  'use strict';
 
   /**
     TODO next things:
@@ -19,10 +19,13 @@
       - make/script for minifying and compiling
   */
 
-  var countUnnamed = 0;
-  var BehaviorTree = Base.extend({
+  var countUnnamed = 0,
+      BehaviorTree;
+
+  BehaviorTree = Base.extend({
     constructor: function(config) {
-      this.title = config.title || 'btree' + (++countUnnamed);
+      countUnnamed += 1;
+      this.title = config.title || 'btree' + (countUnnamed);
       this._rootNode = config.tree;
       this._object = config.object;
     },
@@ -40,7 +43,7 @@
       node.start(this._object);
       node.run(this._object);
     },
-    running: function(runningNode) {
+    running: function() {
       this._started = false;
     },
     success: function() {

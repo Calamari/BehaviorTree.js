@@ -1,5 +1,7 @@
+/* global BehaviorTree */
 (function(exports) {
-  "use strict";
+  'use strict';
+
   var Priority = exports.BranchNode.extend({
     success: function() {
       this.base();
@@ -7,7 +9,7 @@
     },
     fail: function() {
       this.base();
-      ++this._actualTask;
+      this._actualTask += 1;
       if (this._actualTask < this.children.length) {
         this._run(this._object);
       } else {

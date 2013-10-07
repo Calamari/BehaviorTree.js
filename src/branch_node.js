@@ -1,5 +1,7 @@
+/* global BehaviorTree */
 (function(exports) {
-  "use strict";
+  'use strict';
+
   var BranchNode = exports.Node.extend({
     constructor: function(config) {
       this.base(config);

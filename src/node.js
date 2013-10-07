@@ -1,6 +1,6 @@
-(function(exports) {
-  /*globals Base */
-  "use strict";
+/* globals BehaviorTree, Base */
+(function(exports, Base) {
+  'use strict';
   var Node = Base.extend({
     constructor: function(config) {
       // let config override instance properties
@@ -8,7 +8,7 @@
     },
     start: function() {},
     end: function() {},
-    run: function() { console.log("Warning: run of " + this.title + " not implemented!"); this.fail(); },
+    run: function() { console.log('Warning: run of ' + this.title + ' not implemented!'); this.fail(); },
     setControl: function(control) {
       this._control = control;
     },
@@ -24,4 +24,4 @@
   });
 
   exports.Node = Node;
-}(BehaviorTree));
+}(BehaviorTree, Base));
