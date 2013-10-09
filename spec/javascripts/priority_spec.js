@@ -36,8 +36,9 @@ describe('Priority selector', function() {
         hasRun2, startCalled2, endCalled2;
     beforeEach(function() {
       beSuccess1 = true;
-      hasRun1 = startCalled1 = endCalled1 = false;
-      hasRun2 = startCalled2 = endCalled2 = false;
+      startCalled1 = startCalled2 = 0;
+      hasRun1 = endCalled1 = false;
+      hasRun2 = endCalled2 = false;
       node = new BehaviorTree.Node({
         run: function() {
           hasRun1 = true;
@@ -47,7 +48,7 @@ describe('Priority selector', function() {
             this.fail();
           }
         },
-        start: function() { startCalled1 = true; },
+        start: function() { ++startCalled1; },
         end: function() { endCalled1 = true; }
       });
       selector = new BehaviorTree.Priority({
@@ -56,7 +57,7 @@ describe('Priority selector', function() {
           node,
           new BehaviorTree.Node({
             run: function() { hasRun2 = true; this.success(); },
-            start: function() { startCalled2 = true; },
+            start: function() { ++startCalled2; },
             end: function() { endCalled2 = true; }
           })
         ]
@@ -74,7 +75,7 @@ describe('Priority selector', function() {
       });
 
       it("does not call start of the next task in line", function() {
-        expect(startCalled2).toBeFalsy();
+        expect(startCalled2).toBe(0);
       });
 
       it("does not call run of the next task in line", function() {
@@ -89,7 +90,7 @@ describe('Priority selector', function() {
       });
 
       it("calls start of the next task in line", function() {
-        expect(startCalled2).toBeTruthy();
+        expect(startCalled2).toBe(1);
       });
 
       it("calls run of the next task in line", function() {

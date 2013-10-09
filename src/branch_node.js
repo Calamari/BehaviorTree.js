@@ -14,7 +14,7 @@
       this._object = object;
       this.start();
       if (this._actualTask < this.children.length) {
-        this._run(object);
+        this._run();
       }
       this.end();
     },
@@ -30,9 +30,11 @@
       this._control.running(node);
     },
     success: function() {
+      this._nodeRunning = null;
       this._runningNode.end(this._object);
     },
     fail: function() {
+      this._nodeRunning = null;
       this._runningNode.end(this._object);
     }
   });

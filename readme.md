@@ -67,7 +67,7 @@ var mytask = new BehaviorTree.Task({
   // Finish it with one of these method calls:
   // this.success() - The task did run successfully
   // this.fail()    - The task did fail
-  // this.running() - The task is still running and will be called directly from parent sequence
+  // this.running() - The task is still running and will be called directly from parent node
   run: function(obj) {
     this.success();
   }

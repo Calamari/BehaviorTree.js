@@ -34,7 +34,8 @@ describe('BranchNode', function() {
   describe('the run method', function() {
     var node, hasRun, beSuccess, startCalled, endCalled, canObj, runObj;
     beforeEach(function() {
-      hasRun = startCalled = endCalled = false;
+      hasRun = false;
+      startCalled = endCalled = 0;
       node = new BehaviorTree.Node({
         run: function(arg) {
           runObj = arg;
@@ -45,8 +46,8 @@ describe('BranchNode', function() {
             this.fail();
           }
         },
-        start: function() { startCalled = true; },
-        end: function() { endCalled = true; }
+        start: function() { ++startCalled; },
+        end: function() { ++endCalled; }
       });
       selector = new BehaviorTree.BranchNode({
         title: 'call it selector',
@@ -64,14 +65,14 @@ describe('BranchNode', function() {
 
     it('calls first the start method of next node before calling the run method', function() {
       selector.run();
-      expect(startCalled).toBeTruthy();
+      expect(startCalled).toBe(1);
     });
 
     describe('if success is called by task', function() {
       it("calls the end method of task", function() {
         beSuccess = true;
         selector.run();
-        expect(endCalled).toBeTruthy();
+        expect(endCalled).toBe(1);
       });
     });
 
@@ -79,7 +80,7 @@ describe('BranchNode', function() {
       it("it still calls the end method of task", function() {
         beSuccess = false;
         selector.run();
-        expect(endCalled).toBeTruthy();
+        expect(endCalled).toBe(1);
       });
     });
   });
