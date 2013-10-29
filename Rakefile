@@ -15,7 +15,7 @@ task :minify do
   require 'uglifier'
 
   jsstring = ""
-  export_files = ["node.js", "branch_node.js", "priority.js", "sequence.js", "task.js"]
+  export_files = ["node.js", "branch_node.js", "priority.js", "sequence.js", "random.js", "task.js"]
 
   # remove duplication through same function surroundings
   start = "(function(exports) {"

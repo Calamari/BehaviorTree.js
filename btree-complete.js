@@ -9,7 +9,7 @@
  * Copyright 2006-2010, Dean Edwards
  * License: http://www.opensource.org/licenses/mit-license.php
  *
- * Version: 0.7
+ * Version: 0.8
  */
 /*
   Base.js, version 1.1a
@@ -153,7 +153,7 @@ Base = Base.extend({
 
 (function(exports) {
   /*globals Base */
-  
+  'use strict';
 
   /**
     TODO next things:
@@ -163,10 +163,13 @@ Base = Base.extend({
       - make/script for minifying and compiling
   */
 
-  var countUnnamed = 0;
-  var BehaviorTree = Base.extend({
+  var countUnnamed = 0,
+      BehaviorTree;
+
+  BehaviorTree = Base.extend({
     constructor: function(config) {
-      this.title = config.title || 'btree' + (++countUnnamed);
+      countUnnamed += 1;
+      this.title = config.title || 'btree' + (countUnnamed);
       this._rootNode = config.tree;
       this._object = config.object;
     },
@@ -184,7 +187,7 @@ Base = Base.extend({
       node.start(this._object);
       node.run(this._object);
     },
-    running: function(runningNode) {
+    running: function() {
       this._started = false;
     },
     success: function() {
@@ -215,10 +218,9 @@ Base = Base.extend({
 
   exports.BehaviorTree = BehaviorTree;
 }(window));
-(function(exports) {/*globals Base */
-
-
-  
+(function(exports) {/* globals BehaviorTree, Base */
+(function(exports, Base) {
+  'use strict';
   var Node = Base.extend({
     constructor: function(config) {
       // let config override instance properties
@@ -226,7 +228,7 @@ Base = Base.extend({
     },
     start: function() {},
     end: function() {},
-    run: function() { console.log("Warning: run of " + this.title + " not implemented!"); this.fail(); },
+    run: function() { console.log('Warning: run of ' + this.title + ' not implemented!'); this.fail(); },
     setControl: function(control) {
       this._control = control;
     },
@@ -242,11 +244,11 @@ Base = Base.extend({
   });
 
   exports.Node = Node;
+}(BehaviorTree, Base));
+/* global BehaviorTree */
 
-/*globals Base */
+  'use strict';
 
-
-  
   var BranchNode = exports.Node.extend({
     constructor: function(config) {
       this.base(config);
@@ -259,7 +261,7 @@ Base = Base.extend({
       this._object = object;
       this.start();
       if (this._actualTask < this.children.length) {
-        this._run(object);
+        this._run();
       }
       this.end();
     },
@@ -275,19 +277,21 @@ Base = Base.extend({
       this._control.running(node);
     },
     success: function() {
+      this._nodeRunning = null;
       this._runningNode.end(this._object);
     },
     fail: function() {
+      this._nodeRunning = null;
       this._runningNode.end(this._object);
     }
   });
 
   exports.BranchNode = BranchNode;
 
-/*globals Base */
+/* global BehaviorTree */
 
+  'use strict';
 
-  
   var Priority = exports.BranchNode.extend({
     success: function() {
       this.base();
@@ -295,7 +299,7 @@ Base = Base.extend({
     },
     fail: function() {
       this.base();
-      ++this._actualTask;
+      this._actualTask += 1;
       if (this._actualTask < this.children.length) {
         this._run(this._object);
       } else {
@@ -306,10 +310,9 @@ Base = Base.extend({
 
   exports.Priority = Priority;
 
-/*globals Base */
+/* global BehaviorTree */
 
-
-  
+  'use strict';
   var Sequence = exports.BranchNode.extend({
     _run: function() {
       if (this._nodeRunning) {
@@ -321,7 +324,7 @@ Base = Base.extend({
     },
     success: function() {
       this.base();
-      ++this._actualTask;
+      this._actualTask += 1;
       if (this._actualTask < this.children.length) {
         this._run(this._object);
       } else {
@@ -336,10 +339,39 @@ Base = Base.extend({
 
   exports.Sequence = Sequence;
 
-/*globals Base */
+/* globals BehaviorTree */
 
+  'use strict';
 
-  
+  var Random = exports.BranchNode.extend({
+    start: function() {
+      this.base();
+      if (!this._nodeRunning) {
+        this._actualTask = Math.floor(Math.random()*this.children.length);
+      }
+    },
+    success: function() {
+      this.base();
+      this._control.success();
+    },
+    fail: function() {
+      this.base();
+      this._control.fail();
+    },
+    _run: function() {
+      if (!this._runningNode) {
+        this.base();
+      } else {
+        this._runningNode.run(this._object);
+      }
+    }
+  });
+
+  exports.Random = Random;
+
+/* global BehaviorTree */
+
+  'use strict';
   var Task = exports.Node.extend({
   });
 

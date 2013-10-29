@@ -9,5 +9,5 @@
  * Copyright 2006-2010, Dean Edwards
  * License: http://www.opensource.org/licenses/mit-license.php
  *
- * Version: 0.7
+ * Version: 0.8
  */
