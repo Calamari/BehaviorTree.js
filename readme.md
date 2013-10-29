@@ -112,6 +112,20 @@ var myselector = new BehaviorTree.Priority({
 });
 ```
 
+### Creating a random selector
+
+A `Random` selector calls randomly one node in it's list, if it returns running, it will be called again on next run.
+
+``` javascript
+var myselector = new BehaviorTree.Random({
+  title: 'my random selector',
+  nodes: [
+    // here comes in a list of nodes (Tasks, Sequences or Priorities)
+    // as objects or as registered strings
+  ]
+});
+```
+
 ### Creating a behavior tree
 
 Creating a behavior tree is fairly simple. Just instantiate the `BehaviorTree` class and put in a `Node` (or more probably a `BranchingNode` or `Priority`, like a `Sequence` or `Priority`) in the `tree` parameter.
