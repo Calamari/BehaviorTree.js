@@ -213,6 +213,24 @@ setInterval(function() {
 
 In this example the following happens: each pass on the setInterval (our game loop), the dog barks – we implemented this with a registered node, because we do this twice – then it walks randomly around, then it barks again and then if it find's itself standing beside a tree it pees on the tree.
 
+### Decorators
+
+Instead of a simple `Node` or any `BranchingNode` (like any selector), you can always pass in a `Decorator` instead, which decorates that node. Decorators wrap a node, and either control if they can be used, or do something with their returned state. (Just now) Implemented is the base class (or a transparent) `Decorator` which just does nothing but passing on all calles to the decorated and passes through all states. But it is useful as base class for new implementations, like the implemented `InvertDecorator`, which flips success and fail states.
+
+``` javascript
+var mysequence = new BehaviorTree.Sequence({
+  title: 'my sequence',
+  nodes: [
+    // here comes in a list of nodes (Tasks, Sequences or Priorities)
+    // as objects or as registered strings
+  ]
+});
+var decoratedSequence = new InvertDecorator({
+  title: 'decorated sequence',
+  node: mysequence
+});
+```
+
 ## Contributing
 
 If you want to contribute? If you have some ideas or critics, just open an issue, here on github. If you want to get your hands dirty, you can fork this repo. But note: If you write code, don't forget to write tests. And then make a pull request. I'll be happy to see what's coming.
@@ -240,6 +258,8 @@ jasmine-headless-webkit -c
 ## Version history
 
 * **0.7** - first functional complete release
+* **0.8** - Added the Random Selector
+* **0.9** - Added Decorators and the InvertDecorator
 
 ## MIT License
 

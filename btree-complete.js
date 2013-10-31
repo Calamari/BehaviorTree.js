@@ -9,7 +9,7 @@
  * Copyright 2006-2010, Dean Edwards
  * License: http://www.opensource.org/licenses/mit-license.php
  *
- * Version: 0.8
+ * Version: 0.9
  */
 /*
   Base.js, version 1.1a
@@ -154,14 +154,6 @@ Base = Base.extend({
 (function(exports) {
   /*globals Base */
   'use strict';
-
-  /**
-    TODO next things:
-      - random selector
-      - decorator node
-      - condition node
-      - make/script for minifying and compiling
-  */
 
   var countUnnamed = 0,
       BehaviorTree;
@@ -376,5 +368,49 @@ Base = Base.extend({
   });
 
   exports.Task = Task;
+
+/* globals BehaviorTree */
+
+  'use strict';
+
+  var Decorator = exports.Node.extend({
+    constructor: function(config) {
+      // let config override instance properties
+      this.base(config);
+      if (this.node) {
+        this.node = exports.getNode(this.node);
+      }
+    },
+    setNode: function(node) {
+      this.node = exports.getNode(node);
+    },
+    start: function() {
+      this.node.setControl(this);
+      this.node.start();
+    },
+    end: function() {
+      this.node.end();
+    },
+    run: function() {
+      this.node.run();
+    },
+  });
+
+  exports.Decorator = Decorator;
+
+/* globals BehaviorTree */
+
+  'use strict';
+
+  var InvertDecorator = exports.Decorator.extend({
+    success: function() {
+      this._control.fail();
+    },
+    fail: function() {
+      this._control.success();
+    },
+  });
+
+  exports.InvertDecorator = InvertDecorator;
 
 }(BehaviorTree));

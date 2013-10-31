@@ -5,19 +5,11 @@
  * Copyright 2013, Georg Tavonius
  * Licensed under the MIT license.
  *
- * Version: 0.7
+ * Version: 0.9
  */
 (function(exports) {
   /*globals Base */
   'use strict';
-
-  /**
-    TODO next things:
-      - random selector
-      - decorator node
-      - condition node
-      - make/script for minifying and compiling
-  */
 
   var countUnnamed = 0,
       BehaviorTree;
