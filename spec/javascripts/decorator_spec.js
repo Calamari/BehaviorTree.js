@@ -97,7 +97,6 @@ describe('Decorator', function() {
       var blackboard = 42;
       decorator.run(blackboard);
       expect(calledRun).toBe(true);
-      console.log(lastBlackboard);
       expect(lastBlackboard).toBe(blackboard);
     });
 

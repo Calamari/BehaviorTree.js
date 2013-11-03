@@ -3,6 +3,7 @@ src_files:
   - "src/behavior_tree.js"
   - "src/node.js"
   - "src/branch_node.js"
+  - "src/decorator.js"
   - "src/**.*"
 helpers:
   - helpers/**/*
