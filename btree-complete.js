@@ -9,7 +9,7 @@
  * Copyright 2006-2010, Dean Edwards
  * License: http://www.opensource.org/licenses/mit-license.php
  *
- * Version: 0.9
+ * Version: 0.9.1
  */
 /*
   Base.js, version 1.1a
@@ -391,8 +391,8 @@ Base = Base.extend({
     end: function() {
       this.node.end();
     },
-    run: function() {
-      this.node.run();
+    run: function(blackboard) {
+      this.node.run(blackboard);
     },
   });
 

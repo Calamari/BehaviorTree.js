@@ -5,7 +5,7 @@
  * Copyright 2013, Georg Tavonius
  * Licensed under the MIT license.
  *
- * Version: 0.9
+ * Version: 0.9.1
  */
 (function(exports) {
   /*globals Base */
