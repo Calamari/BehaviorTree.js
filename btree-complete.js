@@ -9,7 +9,7 @@
  * Copyright 2006-2010, Dean Edwards
  * License: http://www.opensource.org/licenses/mit-license.php
  *
- * Version: 0.9.1
+ * Version: 0.9.2
  */
 /*
   Base.js, version 1.1a
@@ -412,5 +412,35 @@ Base = Base.extend({
   });
 
   exports.InvertDecorator = InvertDecorator;
+
+/* globals BehaviorTree */
+
+  'use strict';
+
+  var AlwaysSucceedDecorator = exports.Decorator.extend({
+    success: function() {
+      this._control.success();
+    },
+    fail: function() {
+      this._control.success();
+    },
+  });
+
+  exports.AlwaysSucceedDecorator = AlwaysSucceedDecorator;
+
+/* globals BehaviorTree */
+
+  'use strict';
+
+  var AlwaysFailDecorator = exports.Decorator.extend({
+    success: function() {
+      this._control.fail();
+    },
+    fail: function() {
+      this._control.fail();
+    },
+  });
+
+  exports.AlwaysFailDecorator = AlwaysFailDecorator;
 
 }(BehaviorTree));
