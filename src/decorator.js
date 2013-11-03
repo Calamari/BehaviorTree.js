@@ -20,8 +20,8 @@
     end: function() {
       this.node.end();
     },
-    run: function() {
-      this.node.run();
+    run: function(blackboard) {
+      this.node.run(blackboard);
     },
   });
 

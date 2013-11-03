@@ -1,12 +1,12 @@
 describe('Decorator', function() {
-  var decorator, node, calledStart, calledEnd, calledRun;
+  var decorator, node, lastBlackboard, calledStart, calledEnd, calledRun;
   beforeEach(function() {
-    calledStart = calledEnd = calledRun = false;
+    lastBlackboard = calledStart = calledEnd = calledRun = false;
     node = new BehaviorTree.Node({
       title: 'aNode',
       start: function() { calledStart = true; },
       end: function() { calledEnd = true; },
-      run: function(cb) { calledRun = true; cb && cb.call(this); }
+      run: function(blackboard, cb) { lastBlackboard = blackboard; calledRun = true; cb && cb.call(this); }
     });
   });
 
@@ -93,9 +93,12 @@ describe('Decorator', function() {
       expect(calledEnd).toBe(true);
     });
 
-    it('it just passes on run method', function() {
-      decorator.run();
+    it('it just passes on run method (with the blackboard object)', function() {
+      var blackboard = 42;
+      decorator.run(blackboard);
       expect(calledRun).toBe(true);
+      console.log(lastBlackboard);
+      expect(lastBlackboard).toBe(blackboard);
     });
 
     describe('it just passes through the', function() {
@@ -110,17 +113,17 @@ describe('Decorator', function() {
       });
 
       it('success state', function() {
-        node.run(function() { this.success(); });
+        node.run(null, function() { this.success(); });
         expect(didSucceed).toBe(true);
       });
 
       it('fail state', function() {
-        node.run(function() { this.fail(); });
+        node.run(null, function() { this.fail(); });
         expect(hasFailed).toBe(true);
       });
 
       it('running state', function() {
-        node.run(function() { this.running(); });
+        node.run(null, function() { this.running(); });
         expect(isRunning).toBe(true);
       });
     });
