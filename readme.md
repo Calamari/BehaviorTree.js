@@ -215,7 +215,9 @@ In this example the following happens: each pass on the setInterval (our game lo
 
 ### Decorators
 
-Instead of a simple `Node` or any `BranchingNode` (like any selector), you can always pass in a `Decorator` instead, which decorates that node. Decorators wrap a node, and either control if they can be used, or do something with their returned state. (Just now) Implemented is the base class (or a transparent) `Decorator` which just does nothing but passing on all calles to the decorated and passes through all states. But it is useful as base class for new implementations, like the implemented `InvertDecorator`, which flips success and fail states.
+Instead of a simple `Node` or any `BranchingNode` (like any selector), you can always pass in a `Decorator` instead, which decorates that node. Decorators wrap a node, and either control if they can be used, or do something with their returned state. (Just now) Implemented is the base class (or a transparent) `Decorator` which just does nothing but passing on all calls to the decorated node and passes through all states.
+
+But it is useful as base class for new implementations, like the implemented `InvertDecorator` which flips success and fail states, the `AlwaysSucceedDecorator` which inverts the fail state, and the `AlwaysFailDecorator` which inverts the success state.
 
 ``` javascript
 var mysequence = new BehaviorTree.Sequence({
@@ -230,6 +232,8 @@ var decoratedSequence = new InvertDecorator({
   node: mysequence
 });
 ```
+
+*Those three decorators are useful, but the most useful decorators are those you build for your project, that do stuff with your objects. Just [check out the code](https://github.com/Calamari/BehaviorTree.js/blob/master/src/invert_decorator.js), to see how simple it is, to create your decorator.*
 
 ## Contributing
 
@@ -257,9 +261,11 @@ jasmine-headless-webkit -c
 
 ## Version history
 
-* **0.7** - first functional complete release
-* **0.8** - Added the Random Selector
-* **0.9** - Added Decorators and the InvertDecorator
+* **0.7.0** - first functional complete release
+* **0.8.0** - Added the Random Selector
+* **0.9.0** - Added Decorators and the InvertDecorator
+* **0.9.1** - Fixed run method in Decorator
+* **0.9.2** - Added AlwaysSucceedDecorator and AlwaysFailDecorator
 
 ## MIT License
 
