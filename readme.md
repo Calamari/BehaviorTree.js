@@ -4,7 +4,7 @@ A JavaScript implementation of Behavior Trees. They are useful for implementing 
 
 ## Features
 
-* Only 2.5 kb minifed JavaScript code + 1.5 kb dependency ([Dean Edward](http://dean.edwards.name/)'s [base class](http://dean.edwards))
+* Only 5 kb minifed JavaScript code
 * The needed: Sequences, Priority selectors, Tasks
 * The extended (coming soon): Decorators, Filters, Lookup tables, Conditions
 
@@ -28,21 +28,6 @@ Or if you do not have `bundler` installed, you can install the needed gem for mi
 ``` bash
   gem install uglifier
   rake minify
-```
-
-## Dependency
-
-This behavior tree implementation depends on [Dean Edward](http://dean.edwards.name/)'s [base class](http://dean.edwards.name/base/Base.js). You need to load this prior to loading the `btree.min.js`. Thanks Dean for that great class implementation. Like this:
-
-``` html
-<script src="http://dean.edwards.name/base/Base.js"></script>
-<script src="btree.min.js"></script>
-```
-
-Or use the bundled version where the base class and the behavior tree is included:
-
-``` html
-<script src="btree-complete.min.js"></script>
 ```
 
 ## How to use
