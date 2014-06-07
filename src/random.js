@@ -10,7 +10,7 @@
   Random.prototype.start = function(){
     exports.BranchNode.prototype.start.apply(this, arguments);
     if (!this._nodeRunning) {
-      this._actualTask = Math.floor(Math.random()*this.children.length);
+      this._actualTask = Math.floor(Math.random()*this.nodes.length);
     }
   }
 

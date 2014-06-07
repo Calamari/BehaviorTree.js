@@ -19,7 +19,7 @@
   Sequence.prototype.success = function(){
     exports.BranchNode.prototype.success.apply(this, arguments);
     this._actualTask += 1;
-    if (this._actualTask < this.children.length) {
+    if (this._actualTask < this.nodes.length) {
       this._run(this._object);
     } else {
       this._control.success();

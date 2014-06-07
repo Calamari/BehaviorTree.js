@@ -26,7 +26,8 @@
 
   BehaviorTree.prototype.step = function(){
     if (this._started) {
-      console.log('the BehaviorTree "' + this.title + '" did call step but one Task did not finish on last call of step.');
+      return
+      //console.log('the BehaviorTree "' + this.title + '" did call step but one Task did not finish on last call of step.');
     }
     this._started = true;
     var node = BehaviorTree.getNode(this._rootNode);
@@ -69,4 +70,4 @@
   };
 
   exports.BehaviorTree = BehaviorTree;
-}(window));
+}(this));
