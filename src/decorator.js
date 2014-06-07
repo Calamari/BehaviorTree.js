@@ -2,28 +2,31 @@
 (function(exports) {
   'use strict';
 
-  var Decorator = exports.Node.extend({
-    constructor: function(config) {
-      // let config override instance properties
-      this.base(config);
-      if (this.node) {
-        this.node = exports.getNode(this.node);
-      }
-    },
-    setNode: function(node) {
-      this.node = exports.getNode(node);
-    },
-    start: function() {
-      this.node.setControl(this);
-      this.node.start();
-    },
-    end: function() {
-      this.node.end();
-    },
-    run: function(blackboard) {
-      this.node.run(blackboard);
-    },
-  });
+  var Decorator = function(config){
+    config = config || {}
+    exports.Node.call(this, config);
+    if (config.node) {
+      this.node = BehaviorTree.getNode(config.node);
+    }
+  }
+  Decorator.prototype = new exports.Node();
+
+  Decorator.prototype.setNode = function(node){
+    this.node = BehaviorTree.getNode(node);
+  }
+
+  Decorator.prototype.start = function(){
+    this.node.setControl(this);
+    this.node.start();
+  }
+
+  Decorator.prototype.end = function(){
+    this.node.end();
+  }
+
+  Decorator.prototype.run = function(blackboard){
+    this.node.run(blackboard);
+  }
 
   exports.Decorator = Decorator;
 }(BehaviorTree));
