@@ -244,7 +244,7 @@ If you want to contribute? If you have some ideas or critics, just open an issue
 To initialize the testing, you have two choices:
 
 1. If you have `bundler` installed, just run the `bundle` command in your shell.
-2. Or install [jasmine](http://pivotal.github.com/jasmine/) by hand: `gem install jasmine`. If you want to run your tests without a browser also install the headless webkit using: `gem install jasmine-headless-webkit`.
+2. Or install [jasmine](http://pivotal.github.com/jasmine/) by hand: `gem install jasmine -v 1.3.2`. If you want to run your tests without a browser also install the headless webkit using: `gem install jasmine-headless-webkit`.
 
 Done this you also have two choices. You can either run the **test in the browser**:
 
