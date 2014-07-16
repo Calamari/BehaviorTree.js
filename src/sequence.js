@@ -5,7 +5,6 @@
     _run: function() {
       if (this._nodeRunning) {
         this._nodeRunning.run(this._object);
-        this._nodeRunning = null;
       } else {
         this.base();
       }
