@@ -9,7 +9,7 @@
  * Copyright 2006-2010, Dean Edwards
  * License: http://www.opensource.org/licenses/mit-license.php
  *
- * Version: 0.9.2
+ * Version: 0.9.3
  */
 /*
   Base.js, version 1.1a
@@ -309,7 +309,6 @@ Base = Base.extend({
     _run: function() {
       if (this._nodeRunning) {
         this._nodeRunning.run(this._object);
-        this._nodeRunning = null;
       } else {
         this.base();
       }
