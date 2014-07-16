@@ -168,14 +168,51 @@ describe('BehaviorTree', function() {
           expect(runCount2).toBe(1);
         });
 
-        it('the first node will not be called again on second step', function() {
-          btree.step();
-          expect(runCount1).toBe(1);
-        });
+        describe('on second step', function() {
+          beforeEach(function() {
+            btree.step();
+          });
 
-        it('the second node will be called on second step', function() {
-          btree.step();
-          expect(runCount2).toBe(2);
+          it('the first node will not be called again', function() {
+            expect(runCount1).toBe(1);
+          });
+
+          it('the second node will be called', function() {
+            expect(runCount2).toBe(2);
+          });
+
+          describe('as long as second is running', function() {
+            beforeEach(function() {
+              btree.step();
+              btree.step();
+              btree.step();
+            });
+
+            it('the first node will still not be called again', function() {
+              expect(runCount1).toBe(1);
+            });
+
+            it('the second node will be called', function() {
+              expect(runCount2).toBe(5);
+            });
+
+            describe('and if that node finally ends', function() {
+              beforeEach(function() {
+                stillRunning2 = false;
+                btree.step();
+                // now all will be run again
+                btree.step();
+              });
+
+              it('the first node will still not be called again', function() {
+                expect(runCount1).toBe(2);
+              });
+
+              it('the second node will be called', function() {
+                expect(runCount2).toBe(7);
+              });
+            });
+          });
         });
 
       });
