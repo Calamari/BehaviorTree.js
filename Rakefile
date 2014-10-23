@@ -43,12 +43,24 @@ task :minify do
   copyright, code = extract_copyright(uncompressed_output)
   libs = Uglifier.new(:copyright => false).compile(File.read("lib/base.js"))
   compressed_code = Uglifier.new(:copyright => false).compile(code)
+  comment = File.read("src/comment_complete.js")
 
   File.open('btree-complete.min.js', 'w') do |file|
-    file.write(File.read("src/comment_complete.js") + libs + "\n" + compressed_code)
+    file.write(comment + libs + "\n" + compressed_code)
   end
 
   File.open('btree-complete.js', 'w') do |file|
-    file.write(File.read("src/comment_complete.js") + File.read("lib/base.js") + code)
+    file.write(comment + File.read("lib/base.js") + code)
+  end
+
+  # Add UMD wrapped version
+  umd_header = File.read("src/umd_header.js")
+  umd_footer = File.read("src/umd_footer.js")
+  File.open('btree-complete-umd.min.js', 'w') do |file|
+    file.write(comment + umd_header + libs + "\n" + compressed_code + umd_footer)
+  end
+
+  File.open('btree-complete-umd.js', 'w') do |file|
+    file.write(comment + umd_header + File.read("lib/base.js") + code + umd_footer)
   end
 end
