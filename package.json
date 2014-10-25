@@ -1,0 +1,32 @@
+{
+  "name": "behaviortree",
+  "version": "1.0.0",
+  "description": "A JavaScript implementation of Behavior Trees. They are useful for implementing AIs.",
+  "main": "btree-complete.js",
+  "dependencies": {
+    "gulp": "^3.8.9"
+  },
+  "devDependencies": {
+    "testem": "^0.6.22"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/testem ci"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Calamari/BehaviorTree.js.git"
+  },
+  "keywords": [
+    "Behaviors",
+    "AI",
+    "Behavior",
+    "Tree",
+    "Intelligence"
+  ],
+  "author": "Georg Tavonius",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Calamari/BehaviorTree.js/issues"
+  },
+  "homepage": "https://github.com/Calamari/BehaviorTree.js"
+}

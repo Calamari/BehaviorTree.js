@@ -241,22 +241,28 @@ If you want to contribute? If you have some ideas or critics, just open an issue
 
 ## Running tests
 
-To initialize the testing, you have to install testem first.
+To initialize the testing, you have to install testem first. Just use npm for this.
 
 ``` bash
-npm install testem -g
+npm install
 ```
 
 With testem you can run the **test in the browser**:
 
 ``` bash
-testem dev --launch=chrome
+node_modules/.bin/testem dev --launch=chrome
 ```
 
 or **directly in the shell**:
 
 ``` bash
-testem ci
+node_modules/.bin/testem ci
+```
+
+or just using npm:
+
+``` bash
+npm test
 ```
 
 ## Version history
