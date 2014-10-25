@@ -1,0 +1,16 @@
+{
+  "framework": "jasmine",
+
+  "src_files": [
+    "btree-complete.js",
+
+    "spec/javascripts/helpers/*.js",
+
+    "spec/**/*spec.js"
+  ],
+
+  "launch_in_ci": [
+    "Chrome",
+    "PhantomJS"
+  ]
+}
