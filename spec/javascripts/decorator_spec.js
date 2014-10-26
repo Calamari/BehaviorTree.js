@@ -1,3 +1,5 @@
+/* globals BehaviorTree */
+
 describe('Decorator', function() {
   var decorator, node, lastBlackboard, calledStart, calledEnd, calledRun;
   beforeEach(function() {
@@ -20,11 +22,11 @@ describe('Decorator', function() {
       });
 
       it('and the title is saved on the instance', function() {
-        expect(decorator.title).toBe('defaultDecorator');
+        expect(decorator.title).to.eql('defaultDecorator');
       });
 
       it('and the node is saved on the instance', function() {
-        expect(decorator.node).toBe(node);
+        expect(decorator.node).to.eql(node);
       });
     });
 
@@ -37,21 +39,21 @@ describe('Decorator', function() {
       });
 
       it('and the title is saved on the instance', function() {
-        expect(decorator.title).toBe('defaultDecorator');
+        expect(decorator.title).to.eql('defaultDecorator');
       });
 
       it('and the node is null', function() {
-        expect(decorator.node).toBe(undefined);
+        expect(decorator.node).to.eql(undefined);
       });
 
       it('and we can set the node afterwards', function() {
         decorator.setNode(node);
-        expect(decorator.node).toBe(node);
+        expect(decorator.node).to.eql(node);
       });
 
       it('and we can set the node afterwards by its title', function() {
         decorator.setNode('aNode');
-        expect(decorator.node).toBe(node);
+        expect(decorator.node).to.eql(node);
       });
     });
 
@@ -64,17 +66,18 @@ describe('Decorator', function() {
       });
 
       it('and the title is saved on the instance', function() {
-        expect(decorator.title).toBe('defaultDecorator');
+        expect(decorator.title).to.eql('defaultDecorator');
       });
 
       it('and the node is saved on the instance', function() {
-        expect(decorator.node.title).toBe(node.title);
-        expect(decorator.node instanceof BehaviorTree.Node).toBe(true);
+        expect(decorator.node.title).to.eql(node.title);
+        expect(decorator.node instanceof BehaviorTree.Node).to.be.true;
       });
     });
   });
 
   describe('when having a default Decorator', function() {
+    var isRunning, hasFailed, didSucceed;
     beforeEach(function() {
       isRunning = hasFailed = didSucceed = false;
       decorator = new BehaviorTree.Decorator({
@@ -85,19 +88,19 @@ describe('Decorator', function() {
 
     it('it just passes on start method', function() {
       decorator.start();
-      expect(calledStart).toBe(true);
+      expect(calledStart).to.be.true;
     });
 
     it('it just passes on end method', function() {
       decorator.end();
-      expect(calledEnd).toBe(true);
+      expect(calledEnd).to.be.true;
     });
 
     it('it just passes on run method (with the blackboard object)', function() {
       var blackboard = 42;
       decorator.run(blackboard);
-      expect(calledRun).toBe(true);
-      expect(lastBlackboard).toBe(blackboard);
+      expect(calledRun).to.be.true;
+      expect(lastBlackboard).to.eql(blackboard);
     });
 
     describe('it just passes through the', function() {
@@ -113,17 +116,17 @@ describe('Decorator', function() {
 
       it('success state', function() {
         node.run(null, function() { this.success(); });
-        expect(didSucceed).toBe(true);
+        expect(didSucceed).to.be.true;
       });
 
       it('fail state', function() {
         node.run(null, function() { this.fail(); });
-        expect(hasFailed).toBe(true);
+        expect(hasFailed).to.be.true;
       });
 
       it('running state', function() {
         node.run(null, function() { this.running(); });
-        expect(isRunning).toBe(true);
+        expect(isRunning).to.be.true;
       });
     });
 

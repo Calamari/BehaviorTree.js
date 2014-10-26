@@ -1,4 +1,4 @@
-
+/* globals BehaviorTree, sinon */
 
 describe('Random', function() {
   var random;
@@ -11,7 +11,7 @@ describe('Random', function() {
       });
 
       it('and the title is saved on the instance', function() {
-        expect(random.title).toBe('runAny');
+        expect(random.title).to.eql('runAny');
       });
     });
   });
@@ -27,7 +27,7 @@ describe('Random', function() {
       var branchNode = new BehaviorTree.BranchNode({}),
           method;
       for (method in branchNode) {
-        expect(random[method]).toBeTruthy();
+        expect(random[method]).to.be.ok;
       }
     });
   });
@@ -85,68 +85,80 @@ describe('Random', function() {
     describe('if task will be success', function() {
       beforeEach(function() {
         beSuccess = true;
-        spyOn(Math, 'random').andReturn(0.7);
+        sinon.stub(Math, 'random').returns(0.7);
         selector.run();
       });
 
+      afterEach(function() {
+        Math.random.restore();
+      });
+
       it('runs randomly one task', function() {
-        expect(hasRun1).toBeFalsy();
-        expect(hasRun2).toBeTruthy();
+        expect(hasRun1).not.to.be.ok;
+        expect(hasRun2).to.be.ok;
       });
 
       it('starts randomly only one task', function() {
-        expect(startCalled1).toBeFalsy();
-        expect(startCalled2).toBeTruthy();
+        expect(startCalled1).not.to.be.ok;
+        expect(startCalled2).to.be.ok;
       });
     });
 
     describe('if task will fail', function() {
       beforeEach(function() {
         beSuccess = false;
-        spyOn(Math, 'random').andReturn(0.7);
+        sinon.stub(Math, 'random').returns(0.7);
         selector.run();
       });
 
+      afterEach(function() {
+        Math.random.restore();
+      });
+
       it('runs randomly only that one task', function() {
-        expect(hasRun1).toBeFalsy();
-        expect(hasRun2).toBeTruthy();
+        expect(hasRun1).not.to.be.ok;
+        expect(hasRun2).to.be.ok;
       });
 
       it('starts randomly only that one task', function() {
-        expect(startCalled1).toBeFalsy();
-        expect(startCalled2).toBeTruthy();
+        expect(startCalled1).not.to.be.ok;
+        expect(startCalled2).to.be.ok;
       });
     });
 
     describe('if task will return running', function() {
       beforeEach(function() {
         willRun = true;
-        spyOn(Math, 'random').andReturn(0.7);
+        sinon.stub(Math, 'random').returns(0.7);
         selector.run();
+      });
+
+      afterEach(function() {
+        Math.random.restore();
       });
 
       it('will run that one again on run() and only start it once', function() {
-        expect(hasRun1).toBeFalsy();
-        expect(hasRun2).toBe(1);
-        expect(startCalled2).toBeTruthy();
+        expect(hasRun1).not.to.be.ok;
+        expect(hasRun2).to.eql(1);
+        expect(startCalled2).to.be.ok;
 
         startCalled2 = false;
-        Math.random.andReturn(0.3);
+        Math.random.returns(0.3);
         selector.run();
-        expect(hasRun1).toBeFalsy();
-        expect(hasRun2).toBe(2);
-        expect(startCalled2).toBeFalsy();
+        expect(hasRun1).not.to.be.ok;
+        expect(hasRun2).to.eql(2);
+        expect(startCalled2).not.to.be.ok;
 
-        Math.random.andReturn(0.1);
+        Math.random.returns(0.1);
         selector.run();
-        expect(hasRun1).toBeFalsy();
-        expect(hasRun2).toBe(3);
-        expect(startCalled2).toBeFalsy();
+        expect(hasRun1).not.to.be.ok;
+        expect(hasRun2).to.eql(3);
+        expect(startCalled2).not.to.be.ok;
       });
 
       it('starts randomly only that one task', function() {
-        expect(startCalled1).toBeFalsy();
-        expect(startCalled2).toBeTruthy();
+        expect(startCalled1).not.to.be.ok;
+        expect(startCalled2).to.be.ok;
       });
     });
   });
@@ -192,7 +204,7 @@ describe('Random', function() {
       it('calls success also in parent node', function() {
         beSuccess = true;
         parentSelector.run();
-        expect(parentSuccessCalled).toBeTruthy();
+        expect(parentSuccessCalled).to.be.ok;
       });
     });
 
@@ -200,7 +212,7 @@ describe('Random', function() {
       it('calls fail also in parent node', function() {
         beSuccess = false;
         parentSelector.run();
-        expect(parentFailCalled).toBeTruthy();
+        expect(parentFailCalled).to.be.ok;
       });
     });
 
@@ -208,7 +220,7 @@ describe('Random', function() {
       it('calls running also in parent node', function() {
         willRun = true;
         parentSelector.run();
-        expect(parentRunningCalled).toBeTruthy();
+        expect(parentRunningCalled).to.be.ok;
       });
     });
   });

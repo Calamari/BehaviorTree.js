@@ -1,12 +1,20 @@
 {
   "name": "behaviortree",
-  "version": "1.0.0",
-  "description": "A JavaScript implementation of Behavior Trees. They are useful for implementing AIs.",
+  "version": "1.0.1",
+  "description": "A JavaScript implementation of Behavior Trees. They are useful for implementing AIs. For Browsers and NodeJS.",
   "main": "btree-complete.js",
   "dependencies": {
     "gulp": "^3.8.9"
   },
   "devDependencies": {
+    "chai": "^1.9.2",
+    "gulp": "^3.8.9",
+    "gulp-browserify": "^0.5.0",
+    "gulp-header": "^1.2.2",
+    "gulp-rename": "^1.2.0",
+    "gulp-uglify": "^1.0.1",
+    "mocha": "^2.0.1",
+    "sinon": "^1.10.3",
     "testem": "^0.6.22"
   },
   "scripts": {

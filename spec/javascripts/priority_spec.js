@@ -1,9 +1,9 @@
-
+/* globals BehaviorTree */
 
 describe('Priority selector', function() {
   var selector;
   describe('can be constructed with', function() {
-    describe("an object containing it's title", function() {
+    describe('an object containing it\'s title', function() {
       beforeEach(function() {
         selector = new BehaviorTree.Priority({
           title: 'choose'
@@ -11,7 +11,7 @@ describe('Priority selector', function() {
       });
 
       it('and the title is saved on the instance', function() {
-        expect(selector.title).toBe('choose');
+        expect(selector.title).to.eql('choose');
       });
     });
   });
@@ -24,9 +24,10 @@ describe('Priority selector', function() {
     });
 
     it('has the same methods like a BranchNode instance', function() {
-      var branchNode = new BehaviorTree.BranchNode({});
-      for (var method in branchNode) {
-        expect(selector[method]).toBeTruthy();
+      var branchNode = new BehaviorTree.BranchNode({}),
+          method;
+      for (method in branchNode) {
+        expect(selector[method]).to.be.ok;
       }
     });
   });
@@ -48,7 +49,7 @@ describe('Priority selector', function() {
             this.fail();
           }
         },
-        start: function() { ++startCalled1; },
+        start: function() { startCalled1 += 1; },
         end: function() { endCalled1 = true; }
       });
       selector = new BehaviorTree.Priority({
@@ -57,7 +58,7 @@ describe('Priority selector', function() {
           node,
           new BehaviorTree.Node({
             run: function() { hasRun2 = true; this.success(); },
-            start: function() { ++startCalled2; },
+            start: function() { startCalled2 += 1; },
             end: function() { endCalled2 = true; }
           })
         ]
@@ -74,12 +75,12 @@ describe('Priority selector', function() {
         selector.run();
       });
 
-      it("does not call start of the next task in line", function() {
-        expect(startCalled2).toBe(0);
+      it('does not call start of the next task in line', function() {
+        expect(startCalled2).to.eql(0);
       });
 
-      it("does not call run of the next task in line", function() {
-        expect(hasRun2).toBeFalsy();
+      it('does not call run of the next task in line', function() {
+        expect(hasRun2).not.to.be.ok;
       });
     });
 
@@ -89,18 +90,18 @@ describe('Priority selector', function() {
         selector.run();
       });
 
-      it("calls start of the next task in line", function() {
-        expect(startCalled2).toBe(1);
+      it('calls start of the next task in line', function() {
+        expect(startCalled2).to.eql(1);
       });
 
-      it("calls run of the next task in line", function() {
-        expect(hasRun2).toBeTruthy();
+      it('calls run of the next task in line', function() {
+        expect(hasRun2).to.be.ok;
       });
     });
   });
 
   describe('when in Priority with two nodes', function() {
-    var node, parentSelector, beSuccess, parentSuccessCalled, parentFailCalled;
+    var parentSelector, beSuccess, parentSuccessCalled, parentFailCalled;
     beforeEach(function() {
       beSuccess = true;
       parentSuccessCalled = parentFailCalled = false;
@@ -129,7 +130,7 @@ describe('Priority selector', function() {
       it('calls success also in parent node', function() {
         beSuccess = true;
         parentSelector.run();
-        expect(parentSuccessCalled).toBeTruthy();
+        expect(parentSuccessCalled).to.be.ok;
       });
     });
 
@@ -137,7 +138,7 @@ describe('Priority selector', function() {
       it('calls fail also in parent node', function() {
         beSuccess = false;
         parentSelector.run();
-        expect(parentFailCalled).toBeTruthy();
+        expect(parentFailCalled).to.be.ok;
       });
     });
   });

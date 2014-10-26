@@ -1,21 +1,22 @@
-
+/* globals BehaviorTree */
 
 describe('BehaviorTree', function() {
   describe('can be constructed with', function() {
-    it("an object containing the tree key", function() {
+    it('an object containing the tree key', function() {
       var btree = new BehaviorTree({
         tree: {}
       });
-      expect(btree instanceof BehaviorTree).toBeTruthy();
+
+      expect(btree).to.be.instanceOf(BehaviorTree);
     });
   });
 
   it('has a register method', function() {
-    expect(BehaviorTree.register).toBeFunction();
+    expect(BehaviorTree).itself.to.respondTo('register');
   });
 
   it('has a getNode', function() {
-    expect(BehaviorTree.register).toBeFunction();
+    expect(BehaviorTree).itself.to.respondTo('getNode');
   });
 
   describe('can save an object with register method', function() {
@@ -23,8 +24,8 @@ describe('BehaviorTree', function() {
     beforeEach(function() {
       BehaviorTree.register('myNode', node);
     });
-    it("and getNode returns it", function() {
-      expect(BehaviorTree.getNode('myNode')).toBe(node);
+    it('and getNode returns it', function() {
+      expect(BehaviorTree.getNode('myNode')).to.eql(node);
     });
   });
 
@@ -37,16 +38,16 @@ describe('BehaviorTree', function() {
     });
 
     it('has a step method', function() {
-      expect(btree.step).toBeFunction();
+      expect(btree).to.respondTo('step');
     });
 
     it('has a setObject method', function() {
-      expect(btree.setObject).toBeFunction();
+      expect(btree).to.respondTo('setObject');
     });
   });
 
   describe('setup with a minimal tree', function() {
-    var btree, runCount, startCalled, endCalled, msg;
+    var btree, runCount, beSuccess, startCalled, endCalled;
     beforeEach(function() {
       runCount = 0;
       beSuccess = startCalled = endCalled = false;
@@ -55,49 +56,37 @@ describe('BehaviorTree', function() {
           start: function() { startCalled = true; },
           end: function() { endCalled = true; },
           run: function() {
-            runCount++;
+            runCount += 1;
             this.success();
           }
         })
       });
-      realLog = console.log;
-      console.log = function(m) { msg = m; };
-    });
-
-    afterEach(function() {
-      console.log = realLog;
     });
 
     it('the step method calls start of root node', function() {
       btree.step();
-      expect(startCalled).toBeTruthy();
+      expect(startCalled).to.be.ok;
     });
 
     it('the step method calls run of root node', function() {
       btree.step();
-      expect(runCount).toBe(1);
+      expect(runCount).to.eql(1);
     });
 
     it('the step method calls end of root node on success', function() {
       beSuccess = true;
       btree.step();
-      expect(endCalled).toBeTruthy();
+      expect(endCalled).to.be.ok;
     });
 
     it('the step method calls end of root node on fail', function() {
       btree.step();
-      expect(endCalled).toBeTruthy();
-    });
-
-    it('logs no message into the console if step is called again', function() {
-      btree.step();
-      btree.step();
-      expect(msg).toBeUndefined();
+      expect(endCalled).to.be.ok;
     });
   });
 
   describe('a tree where the root node does not call neither success, fail, nor running', function() {
-    var hasRun, msg;
+    var btree;
     beforeEach(function() {
       btree = new BehaviorTree({
         title: 'the TREE',
@@ -105,23 +94,18 @@ describe('BehaviorTree', function() {
           run: function() {}
         })
       });
-      realLog = console.log;
-      console.log = function(m) { msg = m; };
     });
 
-    afterEach(function() {
-      console.log = realLog;
-    });
-
-    it('logs message into the console', function() {
+    it('throws error', function() {
       btree.step();
-      btree.step();
-      expect(msg).toBe('the BehaviorTree "the TREE" did call step but one Task did not finish on last call of step.');
+      expect(function() {
+        btree.step();
+      }).to.throw('the BehaviorTree "the TREE" did call step but one Task did not finish on last call of step.');
     });
   });
 
   describe('when having a more complex tree', function() {
-    var runCount1, runCount2, beSuccess1, beSuccess2, stillRunning2;
+    var runCount1, runCount2, beSuccess1, beSuccess2, stillRunning2, btree;
     beforeEach(function() {
       runCount1 = runCount2 = 0;
       beSuccess1 = beSuccess2 = stillRunning2 = false;
@@ -133,7 +117,7 @@ describe('BehaviorTree', function() {
             new BehaviorTree.Task({
               title: 'node1',
               run: function() {
-                ++runCount1;
+                runCount1 += 1;
                 if (beSuccess1) { this.success(); }
                 else { this.fail(); }
               }
@@ -141,7 +125,7 @@ describe('BehaviorTree', function() {
             new BehaviorTree.Task({
               title: 'node2',
               run: function() {
-                ++runCount2;
+                runCount2 += 1;
                 if (stillRunning2) { this.running(); }
                 else if (beSuccess2) { this.success(); }
                 else { this.fail(); }
@@ -164,8 +148,8 @@ describe('BehaviorTree', function() {
         });
 
         it('both run methods are called', function() {
-          expect(runCount1).toBe(1);
-          expect(runCount2).toBe(1);
+          expect(runCount1).to.eql(1);
+          expect(runCount2).to.eql(1);
         });
 
         describe('on second step', function() {
@@ -174,11 +158,11 @@ describe('BehaviorTree', function() {
           });
 
           it('the first node will not be called again', function() {
-            expect(runCount1).toBe(1);
+            expect(runCount1).to.eql(1);
           });
 
           it('the second node will be called', function() {
-            expect(runCount2).toBe(2);
+            expect(runCount2).to.eql(2);
           });
 
           describe('as long as second is running', function() {
@@ -189,11 +173,11 @@ describe('BehaviorTree', function() {
             });
 
             it('the first node will still not be called again', function() {
-              expect(runCount1).toBe(1);
+              expect(runCount1).to.eql(1);
             });
 
             it('the second node will be called', function() {
-              expect(runCount2).toBe(5);
+              expect(runCount2).to.eql(5);
             });
 
             describe('and if that node finally ends', function() {
@@ -205,11 +189,11 @@ describe('BehaviorTree', function() {
               });
 
               it('the first node will still not be called again', function() {
-                expect(runCount1).toBe(2);
+                expect(runCount1).to.eql(2);
               });
 
               it('the second node will be called', function() {
-                expect(runCount2).toBe(7);
+                expect(runCount2).to.eql(7);
               });
             });
           });
@@ -220,15 +204,15 @@ describe('BehaviorTree', function() {
   });
 
   describe('when setting setObject to the tree', function() {
-    var obj, runCount;
+    var obj, runCount, btree;
     beforeEach(function() {
       runCount = 0;
       obj = { foo: 'bar' };
       btree = new BehaviorTree({
         tree: new BehaviorTree.Task({
           run: function(object) {
-            expect(object).toBe(obj);
-            ++runCount;
+            expect(object).to.eql(obj);
+            runCount += 1;
           }
         })
       });
@@ -237,12 +221,12 @@ describe('BehaviorTree', function() {
 
     it('the run method has the object as argument', function() {
       btree.step();
-      expect(runCount).toBe(1);
+      expect(runCount).to.eql(1);
     });
   });
 
   describe('when setting object as config and having more then one node', function() {
-    var obj, runCount;
+    var obj, runCount, btree;
     beforeEach(function() {
       runCount = 0;
       obj = { word: 'bird' };
@@ -253,8 +237,8 @@ describe('BehaviorTree', function() {
           nodes: [
             new BehaviorTree.Task({
               run: function(object) {
-                expect(object).toBe(obj);
-                ++runCount;
+                expect(object).to.eql(obj);
+                runCount += 1;
               }
             })
           ]
@@ -264,12 +248,13 @@ describe('BehaviorTree', function() {
 
     it('the run method has the object as argument', function() {
       btree.step();
-      expect(runCount).toBe(1);
+      expect(runCount).to.eql(1);
     });
   });
 
+  // Hier 4:
   describe('a minimal tree with a lookup task as root note', function() {
-    var hasRunObj, testObj1, msg, callSuccess;
+    var hasRunObj, testObj1, callSuccess, btree;
     beforeEach(function() {
       hasRunObj = [];
       testObj1 = { sim: 'ba' };
@@ -285,18 +270,12 @@ describe('BehaviorTree', function() {
         title: 'tree1',
         tree: 'testtask'
       });
-      realLog = console.log;
-      console.log = function(m) { msg = m; };
-    });
-
-    afterEach(function() {
-      console.log = realLog;
     });
 
     it('runs the registered task with right test obj', function() {
       btree.setObject(testObj1);
       btree.step();
-      expect(hasRunObj[0]).toBe(testObj1);
+      expect(hasRunObj[0]).to.eql(testObj1);
     });
 
     describe('and looking up the same task in another tree', function() {
@@ -312,31 +291,35 @@ describe('BehaviorTree', function() {
       it('also runs the registered task with right test obj', function() {
         btree2.setObject(testObj2);
         btree2.step();
-        expect(hasRunObj[0]).toBe(testObj2);
+        expect(hasRunObj[0]).to.eql(testObj2);
       });
 
       describe('and setting up objects and calling both trees', function() {
         beforeEach(function() {
           btree2.setObject(testObj2);
           btree.setObject(testObj1);
-          btree.step();
-          btree2.step();
         });
 
-        it('does not log warnings into console', function() {
-          expect(msg).toBeFalsy();
+        it('does not throw any error', function() {
+          expect(function() {
+            btree.step();
+            btree2.step();
+          }).not.to.throw();
         });
 
         it('gives the right objects', function() {
-          expect(hasRunObj[0]).toBe(testObj1);
-          expect(hasRunObj[1]).toBe(testObj2);
+          btree.step();
+          btree2.step();
+
+          expect(hasRunObj[0]).to.eql(testObj1);
+          expect(hasRunObj[1]).to.eql(testObj2);
         });
       });
     });
   });
 
   describe('register can also be called using the title instead with explicit name', function() {
-    var hasRunObj, testObj1;
+    var hasRunObj, testObj1, btree;
     beforeEach(function() {
       hasRunObj = null;
       testObj1 = { sim: 'ba' };
@@ -356,12 +339,12 @@ describe('BehaviorTree', function() {
     });
 
     it('runs the registered task with right test obj', function() {
-      expect(hasRunObj).toBe(testObj1);
+      expect(hasRunObj).to.eql(testObj1);
     });
   });
 
   describe('with several tasks to lookup', function() {
-    var hasRunObj1, hasRunObj2, testObj1, msg, beSuccess;
+    var hasRunObj1, hasRunObj2, testObj1, beSuccess, btree;
     beforeEach(function() {
       beSuccess = true;
       hasRunObj1 = [];
@@ -394,19 +377,13 @@ describe('BehaviorTree', function() {
           ]
         })
       });
-      realLog = console.log;
- //     console.log = function(m) { msg = m; };
-    });
-
-    afterEach(function() {
-      console.log = realLog;
     });
 
     it('runs the registered tasks both with right test obj', function() {
       btree.setObject(testObj1);
       btree.step();
-      expect(hasRunObj1[0]).toBe(testObj1);
-      expect(hasRunObj2[0]).toBe(testObj1);
+      expect(hasRunObj1[0]).to.eql(testObj1);
+      expect(hasRunObj2[0]).to.eql(testObj1);
     });
 
     describe('and looking up the same tasks in another tree', function() {
@@ -428,27 +405,31 @@ describe('BehaviorTree', function() {
       it('also runs the registered tasks with right test obj', function() {
         btree2.setObject(testObj2);
         btree2.step();
-        expect(hasRunObj1[0]).toBe(testObj2);
-        expect(hasRunObj2[0]).toBe(testObj2);
+        expect(hasRunObj1[0]).to.eql(testObj2);
+        expect(hasRunObj2[0]).to.eql(testObj2);
       });
 
       describe('and setting up objects and calling both trees', function() {
         beforeEach(function() {
           btree2.setObject(testObj2);
           btree.setObject(testObj1);
-          btree.step();
-          btree2.step();
         });
 
-        it('does not log warnings into console', function() {
-          expect(msg).toBeFalsy();
+        it('does not throw any error', function() {
+          expect(function() {
+            btree.step();
+            btree2.step();
+          }).not.to.throw();
         });
 
         it('gives the right objects', function() {
-          expect(hasRunObj1[0]).toBe(testObj1);
-          expect(hasRunObj1[1]).toBe(testObj2);
-          expect(hasRunObj2[0]).toBe(testObj1);
-          expect(hasRunObj2[1]).toBe(testObj2);
+          btree.step();
+          btree2.step();
+
+          expect(hasRunObj1[0]).to.eql(testObj1);
+          expect(hasRunObj1[1]).to.eql(testObj2);
+          expect(hasRunObj2[0]).to.eql(testObj1);
+          expect(hasRunObj2[1]).to.eql(testObj2);
         });
       });
     });
@@ -473,27 +454,31 @@ describe('BehaviorTree', function() {
       it('also runs the registered tasks with right test obj', function() {
         btree3.setObject(testObj3);
         btree3.step();
-        expect(hasRunObj1[0]).toBe(testObj3);
-        expect(hasRunObj2[0]).toBe(testObj3);
+        expect(hasRunObj1[0]).to.eql(testObj3);
+        expect(hasRunObj2[0]).to.eql(testObj3);
       });
 
       describe('and we call the sequence with several trees', function() {
         beforeEach(function() {
           btree.setObject(testObj1);
           btree3.setObject(testObj3);
-          btree.step();
-          btree3.step();
         });
 
-        it('does not log warnings into console', function() {
-          expect(msg).toBeFalsy();
+        it('does not throw any error', function() {
+          expect(function() {
+            btree.step();
+            btree3.step();
+          }).not.to.throw();
         });
 
         it('gives the right objects', function() {
-          expect(hasRunObj1[0]).toBe(testObj1);
-          expect(hasRunObj1[1]).toBe(testObj3);
-          expect(hasRunObj2[0]).toBe(testObj1);
-          expect(hasRunObj2[1]).toBe(testObj3);
+          btree.step();
+          btree3.step();
+
+          expect(hasRunObj1[0]).to.eql(testObj1);
+          expect(hasRunObj1[1]).to.eql(testObj3);
+          expect(hasRunObj2[0]).to.eql(testObj1);
+          expect(hasRunObj2[1]).to.eql(testObj3);
         });
       });
     });
@@ -519,35 +504,40 @@ describe('BehaviorTree', function() {
         beSuccess = false;
         btree3.setObject(testObj3);
         btree3.step();
-        expect(hasRunObj1[0]).toBe(testObj3);
-        expect(hasRunObj2[0]).toBe(testObj3);
+        expect(hasRunObj1[0]).to.eql(testObj3);
+        expect(hasRunObj2[0]).to.eql(testObj3);
       });
 
       describe('and we call the priority selector with several trees', function() {
         beforeEach(function() {
           btree.setObject(testObj1);
           btree3.setObject(testObj3);
-          btree.step();
-          beSuccess = false;
-          btree3.step();
         });
 
-        it('does not log warnings into console', function() {
-          expect(msg).toBeFalsy();
+        it('does not throw any error', function() {
+          expect(function() {
+            btree.step();
+            beSuccess = false;
+            btree3.step();
+          }).not.to.throw();
         });
 
         it('gives the right objects', function() {
-          expect(hasRunObj1[0]).toBe(testObj1);
-          expect(hasRunObj1[1]).toBe(testObj3);
-          expect(hasRunObj2[0]).toBe(testObj1);
-          expect(hasRunObj2[1]).toBe(testObj3);
+          btree.step();
+          beSuccess = false;
+          btree3.step();
+
+          expect(hasRunObj1[0]).to.eql(testObj1);
+          expect(hasRunObj1[1]).to.eql(testObj3);
+          expect(hasRunObj2[0]).to.eql(testObj1);
+          expect(hasRunObj2[1]).to.eql(testObj3);
         });
       });
     });
   });
 
   describe('with a failing lookup task as root note', function() {
-    var hasRunObj, testObj1, msg, callSuccess;
+    var hasRunObj, testObj1, btree;
     beforeEach(function() {
       hasRunObj = [];
       testObj1 = { sim: 'ba' };
@@ -566,12 +556,12 @@ describe('BehaviorTree', function() {
     it('runs the registered task with right test obj', function() {
       btree.setObject(testObj1);
       btree.step();
-      expect(hasRunObj[0]).toBe(testObj1);
+      expect(hasRunObj[0]).to.eql(testObj1);
     });
   });
 
   describe('with a failing lookup sequence', function() {
-    var hasRunObj, testObj1, msg, callSuccess;
+    var hasRunObj, testObj1, btree;
     beforeEach(function() {
       hasRunObj = [];
       testObj1 = { sim: 'ba' };
@@ -585,9 +575,9 @@ describe('BehaviorTree', function() {
         nodes: [
           'testtask',
           new BehaviorTree.Task({
-            run: function(obj) {
+            run: function() {
               // this should not run
-              expect(true).toBe(false);
+              expect(true).to.be.false;
             }
           })
         ]
@@ -601,7 +591,7 @@ describe('BehaviorTree', function() {
     it('runs the first task in sequence with right test obj', function() {
       btree.setObject(testObj1);
       btree.step();
-      expect(hasRunObj[0]).toBe(testObj1);
+      expect(hasRunObj[0]).to.eql(testObj1);
     });
   });
 
@@ -636,8 +626,8 @@ describe('BehaviorTree', function() {
       btree.setObject(testObj1);
       btree.step();
       btree.step();
-      expect(hasRunObj[0]).toBe(testObj1);
-      expect(hasRunObj[1]).toBe(testObj1);
+      expect(hasRunObj[0]).to.eql(testObj1);
+      expect(hasRunObj[1]).to.eql(testObj1);
     });
 
     it('has the right object when called in both trees', function() {
@@ -647,10 +637,10 @@ describe('BehaviorTree', function() {
       btree2.step();
       btree2.step();
       btree.step();
-      expect(hasRunObj[0]).toBe(testObj1);
-      expect(hasRunObj[1]).toBe(testObj2);
-      expect(hasRunObj[2]).toBe(testObj2);
-      expect(hasRunObj[3]).toBe(testObj1);
+      expect(hasRunObj[0]).to.eql(testObj1);
+      expect(hasRunObj[1]).to.eql(testObj2);
+      expect(hasRunObj[2]).to.eql(testObj2);
+      expect(hasRunObj[3]).to.eql(testObj1);
     });
   });
 
@@ -674,8 +664,8 @@ describe('BehaviorTree', function() {
       btree.step();
     });
 
-    it("gets the object as argument we passed in", function() {
-      expect(runObj).toBe(testObj);
+    it('gets the object as argument we passed in', function() {
+      expect(runObj).to.eql(testObj);
     });
   });
 
@@ -706,9 +696,9 @@ describe('BehaviorTree', function() {
       beforeEach(function() {
         beSuccess = true;
       });
-      it("gets the object as argument we passed in", function() {
+      it('gets the object as argument we passed in', function() {
         btree.step();
-        expect(runObj).toBe(testObj);
+        expect(runObj).to.eql(testObj);
       });
     });
 
@@ -716,20 +706,20 @@ describe('BehaviorTree', function() {
       beforeEach(function() {
         beSuccess = false;
       });
-      it("gets the object as argument we passed in", function() {
+      it('gets the object as argument we passed in', function() {
         btree.step();
-        expect(runObj).toBe(testObj);
+        expect(runObj).to.eql(testObj);
       });
     });
   });
 
   describe('having a running task under a Sequence', function() {
-    var node, runCount, runHighPrio, runFirstSeq, btree;
+    var node, runCount, runHighPrio, runFirstSeq, btree, runObj;
     beforeEach(function() {
       runCount = runHighPrio = runFirstSeq = 0;
       node = new BehaviorTree.Node({
         run: function() {
-          ++runCount;
+          runCount += 1;
           this.running();
         },
         end: function(arg) {
@@ -744,7 +734,7 @@ describe('BehaviorTree', function() {
             new BehaviorTree.Node({
               title: 'high prio',
               run: function() {
-                ++runHighPrio;
+                runHighPrio += 1;
                 this.fail();
               }
             }),
@@ -754,7 +744,7 @@ describe('BehaviorTree', function() {
                 new BehaviorTree.Node({
                   title: 'first in sequence',
                   run: function() {
-                    ++runFirstSeq;
+                    runFirstSeq += 1;
                     this.success();
                   }
                 }),
@@ -769,15 +759,15 @@ describe('BehaviorTree', function() {
     });
 
     it('tries running task in first position of priority selector', function() {
-      expect(runHighPrio).toBe(2);
+      expect(runHighPrio).to.eql(2);
     });
 
     it('does not run the task in sequence before the running task', function() {
-      expect(runFirstSeq).toBe(1);
+      expect(runFirstSeq).to.eql(1);
     });
 
     it('reruns the running task again', function() {
-      expect(runCount).toBe(2);
+      expect(runCount).to.eql(2);
     });
   });
 });

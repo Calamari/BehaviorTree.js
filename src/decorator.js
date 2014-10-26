@@ -1,29 +1,25 @@
-/* globals BehaviorTree */
-(function(exports) {
-  'use strict';
 
-  var Decorator = exports.Node.extend({
-    constructor: function(config) {
-      // let config override instance properties
-      this.base(config);
-      if (this.node) {
-        this.node = exports.getNode(this.node);
-      }
-    },
-    setNode: function(node) {
-      this.node = exports.getNode(node);
-    },
-    start: function() {
-      this.node.setControl(this);
-      this.node.start();
-    },
-    end: function() {
-      this.node.end();
-    },
-    run: function(blackboard) {
-      this.node.run(blackboard);
-    },
-  });
+var BehaviorTree = require('./behavior_tree');
 
-  exports.Decorator = Decorator;
-}(BehaviorTree));
+module.exports = require('./node').extend({
+  constructor: function(config) {
+    // let config override instance properties
+    this.base(config);
+    if (this.node) {
+      this.node = BehaviorTree.getNode(this.node);
+    }
+  },
+  setNode: function(node) {
+    this.node = BehaviorTree.getNode(node);
+  },
+  start: function() {
+    this.node.setControl(this);
+    this.node.start();
+  },
+  end: function() {
+    this.node.end();
+  },
+  run: function(blackboard) {
+    this.node.run(blackboard);
+  },
+});

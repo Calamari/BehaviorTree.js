@@ -1,9 +1,9 @@
-
+/* globals BehaviorTree */
 
 describe('BranchNode', function() {
   var selector;
   describe('can be constructed with', function() {
-    describe("an object containing it's title", function() {
+    describe('an object containing it\'s title', function() {
       beforeEach(function() {
         selector = new BehaviorTree.BranchNode({
           title: 'choose'
@@ -11,7 +11,7 @@ describe('BranchNode', function() {
       });
 
       it('and the title is saved on the instance', function() {
-        expect(selector.title).toBe('choose');
+        expect(selector.title).to.eql('choose');
       });
     });
   });
@@ -24,15 +24,16 @@ describe('BranchNode', function() {
     });
 
     it('has the same methods like a Node instance', function() {
-      var node = new BehaviorTree.Node({});
-      for (var method in node) {
-        expect(selector[method]).toBeTruthy();
+      var node = new BehaviorTree.Node({}),
+          method;
+      for (method in node) {
+        expect(selector[method]).to.be.ok;
       }
     });
   });
 
   describe('the run method', function() {
-    var node, hasRun, beSuccess, startCalled, endCalled, canObj, runObj;
+    var node, hasRun, beSuccess, startCalled, endCalled, runObj;
     beforeEach(function() {
       hasRun = false;
       startCalled = endCalled = 0;
@@ -46,8 +47,8 @@ describe('BranchNode', function() {
             this.fail();
           }
         },
-        start: function() { ++startCalled; },
-        end: function() { ++endCalled; }
+        start: function() { startCalled += 1; },
+        end: function() { endCalled += 1; }
       });
       selector = new BehaviorTree.BranchNode({
         title: 'call it selector',
@@ -57,30 +58,30 @@ describe('BranchNode', function() {
       });
     });
 
-    it("run of task gets the object as argument we passed in", function() {
+    it('run of task gets the object as argument we passed in', function() {
       var testObj = 23;
       selector.run(testObj);
-      expect(runObj).toBe(testObj);
+      expect(runObj).to.eql(testObj);
     });
 
     it('calls first the start method of next node before calling the run method', function() {
       selector.run();
-      expect(startCalled).toBe(1);
+      expect(startCalled).to.eql(1);
     });
 
     describe('if success is called by task', function() {
-      it("calls the end method of task", function() {
+      it('calls the end method of task', function() {
         beSuccess = true;
         selector.run();
-        expect(endCalled).toBe(1);
+        expect(endCalled).to.eql(1);
       });
     });
 
     describe('if fail is called by task', function() {
-      it("it still calls the end method of task", function() {
+      it('it still calls the end method of task', function() {
         beSuccess = false;
         selector.run();
-        expect(endCalled).toBe(1);
+        expect(endCalled).to.eql(1);
       });
     });
   });
@@ -106,8 +107,8 @@ describe('BranchNode', function() {
       selector.run(testObj);
     });
 
-    it("gets the object as argument we passed in", function() {
-      expect(runObj).toBe(testObj);
+    it('gets the object as argument we passed in', function() {
+      expect(runObj).to.eql(testObj);
     });
   });
 
@@ -141,8 +142,8 @@ describe('BranchNode', function() {
         selector.run(testObj);
       });
 
-      it("gets the object as argument we passed in", function() {
-        expect(runObj).toBe(testObj);
+      it('gets the object as argument we passed in', function() {
+        expect(runObj).to.eql(testObj);
       });
     });
 
@@ -152,8 +153,8 @@ describe('BranchNode', function() {
         selector.run(testObj);
       });
 
-      it("gets the object as argument we passed in", function() {
-        expect(runObj).toBe(testObj);
+      it('gets the object as argument we passed in', function() {
+        expect(runObj).to.eql(testObj);
       });
     });
   });

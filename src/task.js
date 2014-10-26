@@ -1,8 +1,2 @@
-/* global BehaviorTree */
-(function(exports) {
-  'use strict';
-  var Task = exports.Node.extend({
-  });
 
-  exports.Task = Task;
-}(BehaviorTree));
+module.exports = require('./node').extend({});

@@ -1,16 +1,31 @@
 {
-  "framework": "jasmine",
+  "framework": "mocha",
 
   "src_files": [
+    "node_modules/chai/chai.js",
+    "node_modules/sinon/lib/sinon.js",
+    "node_modules/sinon/lib/sinon/*.js",
+
     "btree-complete.js",
 
-    "spec/javascripts/helpers/*.js",
-
+    "spec/javascripts/support/*.js",
     "spec/**/*spec.js"
   ],
 
+  "launchers": {
+    "node": {
+      "command": "./node_modules/.bin/mocha -r spec/javascripts/support/setup.js -R tap spec/javascripts/**/*spec.js",
+      "protocol": "tap"
+    }
+  },
+
+  "launch_in_dev": [
+    "PhantomJS",
+    "node"
+  ],
+
   "launch_in_ci": [
-    "Chrome",
-    "PhantomJS"
+    "PhantomJS",
+    "node"
   ]
 }

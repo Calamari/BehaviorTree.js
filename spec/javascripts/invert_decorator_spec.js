@@ -1,3 +1,5 @@
+/* globals BehaviorTree */
+
 describe('InvertDecorator', function() {
   var invertDecorator, node, calledStart, calledEnd, calledRun;
   beforeEach(function() {
@@ -28,19 +30,19 @@ describe('InvertDecorator', function() {
 
     it('inverts the success state', function() {
       node.run(function() { this.success(); });
-      expect(didSucceed).toBe(false);
-      expect(hasFailed).toBe(true);
+      expect(didSucceed).to.be.false;
+      expect(hasFailed).to.be.true;
     });
 
     it('inverts the fail state', function() {
       node.run(function() { this.fail(); });
-      expect(didSucceed).toBe(true);
-      expect(hasFailed).toBe(false);
+      expect(didSucceed).to.be.true;
+      expect(hasFailed).to.be.false;
     });
 
     it('passes through the running state', function() {
       node.run(function() { this.running(); });
-      expect(isRunning).toBe(true);
+      expect(isRunning).to.be.true;
     });
   });
 });

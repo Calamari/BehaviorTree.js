@@ -10,13 +10,14 @@
     "afterEach": false,
     "beforeEach": false,
     "describe": false,
+    "chai": false,
     "expect": false,
     "jasmine": false,
     "console": false
   },
 
 // Enforcing
-  "indent" : 2,
+  //"indent" : 2,
   "camelcase": true,
   "bitwise": true,
   "curly": true,
@@ -61,7 +62,7 @@
   "devel": false,
   "jquery": true,
   "mootools": false,
-  "node": false,
+  "node": true,
   "nonstandard": false,
   "prototypejs": false,
   "rhino": false,

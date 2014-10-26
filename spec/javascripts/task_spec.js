@@ -1,8 +1,8 @@
-
+/* globals BehaviorTree */
 
 describe('Task', function() {
   describe('can be constructed with', function() {
-    describe("an object containing it's title", function() {
+    describe('an object containing it\'s title', function() {
       var task;
       beforeEach(function() {
         task = new BehaviorTree.Task({
@@ -11,7 +11,7 @@ describe('Task', function() {
       });
 
       it('and the title is saved on the instance', function() {
-        expect(task.title).toBe('firstTask');
+        expect(task.title).to.eql('firstTask');
       });
     });
   });
@@ -25,15 +25,15 @@ describe('Task', function() {
     });
 
     it('has a start method', function() {
-      expect(task.start).toBeFunction();
+      expect(task).to.respondTo('start');
     });
 
     it('has a end method', function() {
-      expect(task.end).toBeFunction();
+      expect(task).to.respondTo('end');
     });
 
     it('has a run method', function() {
-      expect(task.run).toBeFunction();
+      expect(task).to.respondTo('run');
     });
   });
 

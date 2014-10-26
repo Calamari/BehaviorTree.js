@@ -1,3 +1,5 @@
+/* globals BehaviorTree */
+
 describe('AlwaysSucceedDecorator', function() {
   var alwaysDecorator, node, calledStart, calledEnd, calledRun;
   beforeEach(function() {
@@ -28,19 +30,19 @@ describe('AlwaysSucceedDecorator', function() {
 
     it('returns success on success state', function() {
       node.run(function() { this.success(); });
-      expect(didSucceed).toBe(true);
-      expect(hasFailed).toBe(false);
+      expect(didSucceed).to.be.true;
+      expect(hasFailed).to.be.false;
     });
 
     it('returns success on fail state', function() {
       node.run(function() { this.fail(); });
-      expect(didSucceed).toBe(true);
-      expect(hasFailed).toBe(false);
+      expect(didSucceed).to.be.true;
+      expect(hasFailed).to.be.false;
     });
 
     it('passes through the running state', function() {
       node.run(function() { this.running(); });
-      expect(isRunning).toBe(true);
+      expect(isRunning).to.be.true;
     });
   });
 });

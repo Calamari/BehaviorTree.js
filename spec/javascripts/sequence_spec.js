@@ -1,9 +1,9 @@
-
+/* globals BehaviorTree */
 
 describe('Sequence', function() {
   var sequence;
   describe('can be constructed with', function() {
-    describe("an object containing it's title", function() {
+    describe('an object containing it\'s title', function() {
       beforeEach(function() {
         sequence = new BehaviorTree.Sequence({
           title: 'runAll'
@@ -11,7 +11,7 @@ describe('Sequence', function() {
       });
 
       it('and the title is saved on the instance', function() {
-        expect(sequence.title).toBe('runAll');
+        expect(sequence.title).to.eql('runAll');
       });
     });
   });
@@ -24,16 +24,17 @@ describe('Sequence', function() {
     });
 
     it('has the same methods like a BranchNode instance', function() {
-      var branchNode = new BehaviorTree.BranchNode({});
-      for (var method in branchNode) {
-        expect(sequence[method]).toBeTruthy();
+      var branchNode = new BehaviorTree.BranchNode({}),
+          method;
+      for (method in branchNode) {
+        expect(sequence[method]).to.be.ok;
       }
     });
   });
 
   describe('when having a Sequence with two nodes', function() {
     var node, hasRun1, beSuccess1, startCalled1, endCalled1,
-        hasRun2, startCalled2, endCalled2;
+        hasRun2, startCalled2, endCalled2, selector;
     beforeEach(function() {
       beSuccess1 = true;
       hasRun1 = startCalled1 = endCalled1 = false;
@@ -73,12 +74,12 @@ describe('Sequence', function() {
         selector.run();
       });
 
-      it("calls start of the next task in line", function() {
-        expect(startCalled2).toBeTruthy();
+      it('calls start of the next task in line', function() {
+        expect(startCalled2).to.be.ok;
       });
 
-      it("calls run of the next task in line", function() {
-        expect(hasRun2).toBeTruthy();
+      it('calls run of the next task in line', function() {
+        expect(hasRun2).to.be.ok;
       });
     });
 
@@ -88,18 +89,18 @@ describe('Sequence', function() {
         selector.run();
       });
 
-      it("does not call start of the next task in line", function() {
-        expect(startCalled2).toBeFalsy();
+      it('does not call start of the next task in line', function() {
+        expect(startCalled2).not.to.be.ok;
       });
 
-      it("does not call run of the next task in line", function() {
-        expect(hasRun2).toBeFalsy();
+      it('does not call run of the next task in line', function() {
+        expect(hasRun2).not.to.be.ok;
       });
     });
   });
 
   describe('when in Sequence with two nodes', function() {
-    var node, parentSelector, beSuccess, parentSuccessCalled, parentFailCalled;
+    var parentSelector, beSuccess, parentSuccessCalled, parentFailCalled, selector;
     beforeEach(function() {
       beSuccess = true;
       parentSuccessCalled = parentFailCalled = false;
@@ -128,7 +129,7 @@ describe('Sequence', function() {
       it('calls success also in parent node', function() {
         beSuccess = true;
         parentSelector.run();
-        expect(parentSuccessCalled).toBeTruthy();
+        expect(parentSuccessCalled).to.be.ok;
       });
     });
 
@@ -136,7 +137,7 @@ describe('Sequence', function() {
       it('calls fail also in parent node', function() {
         beSuccess = false;
         parentSelector.run();
-        expect(parentFailCalled).toBeTruthy();
+        expect(parentFailCalled).to.be.ok;
       });
     });
   });
