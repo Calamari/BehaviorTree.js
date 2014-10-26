@@ -4,46 +4,28 @@ A JavaScript implementation of Behavior Trees. They are useful for implementing 
 
 ## Features
 
-* Only 2.5 kb minifed JavaScript code + 1.5 kb dependency ([Dean Edward](http://dean.edwards.name/)'s [base class](http://dean.edwards))
 * The needed: Sequences, Priority selectors, Tasks
-* The extended (coming soon): Decorators, Filters, Lookup tables, Conditions
+* The extended: Decorators
+* More extended (coming soon): Filters, Lookup tables, Conditions
 
 ## Installation
 
 There is a `btree.min.js` file in the root directory of this package. You can use this in your project, like so:
 
 ``` html
-<script src="btree.min.js"></script>
+<script src="btree-complete.min.js"></script>
 ```
 
-If you happen to fiddle around in the codebase and need a minified version of your modified version, you can minify the code through a rake task provided in this package.
+If you happen to fiddle around in the codebase and need a minified version of your modified version, you can minify the code through a gulp task provided in this package.
 
 ``` bash
-bundle
-rake minify
-```
-
-Or if you do not have `bundler` installed, you can install the needed gem for minification by yourself and then run the rake task:
-
-``` bash
-  gem install uglifier
-  rake minify
+npm install # needed only once
+gulp scripts
 ```
 
 ## Dependency
 
-This behavior tree implementation depends on [Dean Edward](http://dean.edwards.name/)'s [base class](http://dean.edwards.name/base/Base.js). You need to load this prior to loading the `btree.min.js`. Thanks Dean for that great class implementation. Like this:
-
-``` html
-<script src="http://dean.edwards.name/base/Base.js"></script>
-<script src="btree.min.js"></script>
-```
-
-Or use the bundled version where the base class and the behavior tree is included:
-
-``` html
-<script src="btree-complete.min.js"></script>
-```
+This behavior tree implementation depends on [Dean Edward](http://dean.edwards.name/)'s [base class](http://dean.edwards.name/base/Base.js). This is included in the package.
 
 ## How to use
 
@@ -250,7 +232,7 @@ npm install
 With testem you can run the **test in the browser**:
 
 ``` bash
-node_modules/.bin/testem dev --launch=chrome
+node_modules/.bin/testem dev
 ```
 
 or **directly in the shell**:
@@ -272,10 +254,11 @@ npm test
 * **0.9.0** - Added Decorators and the InvertDecorator
 * **0.9.1** - Fixed run method in Decorator
 * **0.9.2** - Added AlwaysSucceedDecorator and AlwaysFailDecorator
+* **1.0.2** - Supporting NodeJS now. Bumped to 1.0.2 because of NPM package
 
 ## MIT License
 
-Copyright (C) 2013 Georg Tavonius
+Copyright (C) 2013-2014 Georg Tavonius
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
