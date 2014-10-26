@@ -40,6 +40,7 @@ gulp.task('scripts', function() {
    .pipe(gulp.dest('./'))
 
    .pipe(uglify())
+   .pipe(header(banner, { pkg: pkg }))
    .pipe(rename('btree-complete.min.js'))
    .pipe(gulp.dest('./'));
 });
