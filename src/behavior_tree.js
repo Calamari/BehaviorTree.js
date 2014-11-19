@@ -22,7 +22,6 @@ BehaviorTree = require('../lib/base').extend({
     this._object = obj;
   },
   step: function() {
-    console.log(24);
     if (this._started) {
       throw new Error('the BehaviorTree "' + this.title + '" did call step but one Task did not finish on last call of step.');
     }
