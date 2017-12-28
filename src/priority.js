@@ -1,5 +1,12 @@
 
 module.exports = require('./branch_node').extend({
+  _run: function() {
+    if (this._nodeRunning) {
+      this._nodeRunning.run(this._object);
+    } else {
+      this.base();
+    }
+  },
   success: function() {
     this.base();
     this._control.success();
