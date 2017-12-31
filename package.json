@@ -4,21 +4,21 @@
   "description": "A JavaScript implementation of Behavior Trees. They are useful for implementing AIs. For Browsers and NodeJS.",
   "main": "btree-complete.js",
   "dependencies": {
-    "gulp": "^3.8.9"
+    "jest": "^22.0.4"
   },
   "devDependencies": {
-    "chai": "^1.9.2",
-    "gulp": "^3.8.9",
-    "gulp-browserify": "^0.5.0",
-    "gulp-header": "^1.2.2",
-    "gulp-rename": "^1.2.0",
-    "gulp-uglify": "^1.0.1",
-    "mocha": "^2.0.1",
-    "sinon": "^1.10.3",
-    "testem": "^0.6.22"
+    "babel-eslint": "^8.1.2",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "eslint": "^4.14.0",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1"
   },
   "scripts": {
-    "test": "node_modules/.bin/testem ci"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
