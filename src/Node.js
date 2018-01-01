@@ -7,7 +7,7 @@ export default class Node {
     this.blueprint = { run, start, end, ...props }
   }
 
-  run (blackboard, { rerun = false }) {
+  run (blackboard, { rerun = false } = {}) {
     if (!rerun) this.blueprint.start(blackboard)
     const result = this.blueprint.run(blackboard)
     if (result !== RUNNING) {
