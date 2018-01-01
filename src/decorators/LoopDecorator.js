@@ -1,7 +1,7 @@
 import { FAILURE } from '../constants'
 import { createDecorator } from '../Decorator'
 
-export default createDecorator((run, blackboard, { loop = Infinity }) => {
+export default createDecorator((run, blackboard, { loop = Infinity } = {}) => {
   let i = 0
   let result = FAILURE
   while (i++ < loop) {
