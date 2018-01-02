@@ -14,7 +14,7 @@ export default class BranchNode extends Node {
     let currentIndex = indexes.shift() || 0
     while (currentIndex < this.numNodes) {
       let node = registryLookUp(this.blueprint.nodes[currentIndex])
-      const result = node.run(blackboard, { indexes, rerun })
+      const result = node.run(blackboard, { indexes, rerun, registryLookUp })
       if (result === RUNNING) {
         return [ currentIndex, ...indexes ]
       } else if (typeof result === 'object') { // array

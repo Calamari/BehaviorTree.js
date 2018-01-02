@@ -24,7 +24,7 @@ export default class BehaviorTree {
   step () {
     const indexes = this.lastResult && typeof this.lastResult === 'object' ? this.lastResult : []
     const rerun = this.lastResult === RUNNING || indexes.length > 0
-    this.lastResult = this.tree.run(this.blackboard, { indexes, rerun, registryLookUp })
+    this.lastResult = registryLookUp(this.tree).run(this.blackboard, { indexes, rerun, registryLookUp })
   }
 
   static register (name, node) {

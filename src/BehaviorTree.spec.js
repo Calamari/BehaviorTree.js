@@ -277,5 +277,52 @@ describe('BehaviorTree', () => {
         bTree.step()
       }).toThrowError('No node with name taskA registered.')
     })
+
+    it('can load tree directly as registered sequence', () => {
+      BehaviorTree.register('awesome behavior', new Sequence({
+        nodes: [
+          'taskA',
+          'taskB',
+          'taskA'
+        ]
+      }))
+      bTree = new BehaviorTree({
+        blackboard,
+        tree: 'awesome behavior'
+      })
+      bTree.step()
+
+      expect(blackboard.taskA).toEqual(1)
+      expect(blackboard.taskB).toEqual(1)
+    })
+
+    it('looks up previously registered sequences with sub sequences as well', () => {
+      BehaviorTree.register('mySubSequence', new Sequence({
+        nodes: [
+          'taskA',
+          'taskB',
+          'taskA'
+        ]
+      }))
+
+      BehaviorTree.register('mySequence', new Sequence({
+        nodes: [
+          'mySubSequence',
+          'taskB'
+        ]
+      }))
+      bTree = new BehaviorTree({
+        blackboard,
+        tree: new Sequence({
+          nodes: [
+            'mySequence'
+          ]
+        })
+      })
+      bTree.step()
+
+      expect(blackboard.taskA).toEqual(1)
+      expect(blackboard.taskB).toEqual(1)
+    })
   })
 })
