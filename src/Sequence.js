@@ -1,7 +1,7 @@
 import { SUCCESS, FAILURE } from './constants'
 import BranchNode from './BranchNode'
 
-export default class Selector extends BranchNode {
+export default class Sequence extends BranchNode {
   constructor (blueprint) {
     super(blueprint)
 
