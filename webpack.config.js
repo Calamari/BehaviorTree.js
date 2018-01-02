@@ -1,10 +1,11 @@
+const webpack = require('webpack')
 const path = require('path')
 const pkg = require('./package.json')
 // const FlowBabelWebpackPlugin = require('flow-babel-webpack-plugin');
 
 module.exports = {
   entry: {
-    index: path.join(__dirname, '/index.js')
+    index: path.join(__dirname, '/src/index.js')
   },
   output: {
     path: path.join(__dirname, '/dist'),
@@ -13,6 +14,7 @@ module.exports = {
     umdNamedDefine: true,
     filename: '[name].js'
   },
+  devtool: 'eval',
   module: {
     rules: [
       {
