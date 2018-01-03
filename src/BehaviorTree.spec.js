@@ -4,6 +4,7 @@ import BehaviorTree from './BehaviorTree'
 import Sequence from './Sequence'
 import Selector from './Selector'
 import Task from './Task'
+import InvertDecorator from './decorators/InvertDecorator'
 
 describe('BehaviorTree', () => {
   let bTree
@@ -316,6 +317,24 @@ describe('BehaviorTree', () => {
         tree: new Sequence({
           nodes: [
             'mySequence'
+          ]
+        })
+      })
+      bTree.step()
+
+      expect(blackboard.taskA).toEqual(1)
+      expect(blackboard.taskB).toEqual(1)
+    })
+
+    it('looks up previously registered task within a decorators', () => {
+      const invert = new InvertDecorator()
+
+      bTree = new BehaviorTree({
+        blackboard,
+        tree: new Selector({
+          nodes: [
+            invert('taskA'),
+            'taskB'
           ]
         })
       })

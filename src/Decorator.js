@@ -15,7 +15,7 @@ export function createDecorator (decorator) {
     return node => {
       return new Task({
         run (blackboard, runConfig) {
-          return decorator(() => node.run(blackboard, runConfig), blackboard, config)
+          return decorator(() => runConfig.registryLookUp(node).run(blackboard, runConfig), blackboard, config)
         }
       })
     }

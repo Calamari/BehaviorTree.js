@@ -7,9 +7,9 @@ export default class Node {
     this.blueprint = { run, start, end, ...props }
   }
 
-  run (blackboard, { rerun = false } = {}) {
+  run (blackboard, { rerun = false, registryLookUp = x => x, ...config } = {}) {
     if (!rerun) this.blueprint.start(blackboard)
-    const result = this.blueprint.run(blackboard)
+    const result = this.blueprint.run(blackboard, { ...config, rerun, registryLookUp })
     if (result !== RUNNING) {
       this.blueprint.end(blackboard)
     }
