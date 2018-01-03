@@ -1,48 +1,27 @@
-import Task from './Task'
+import Node from './Node'
 
-// export default function decorator (config) {
-//   return node => {
-//     return new Task({
-//       run (blackboard, runConfig) {
-//         return node.run(blackboard, runConfig)
-//       }
-//     })
-//   }
-// }
+export default class Decorator extends Node {
+  nodeType = 'Decorator'
 
-export function createDecorator (decorator) {
-  return (config) => {
-    return node => {
-      return new Task({
-        run (blackboard, runConfig) {
-          return decorator(() => runConfig.registryLookUp(node).run(blackboard, runConfig), blackboard, config)
-        }
-      })
-    }
+  constructor ({ config = {}, ...props } = {}) {
+    super(props)
+    this.setConfig(config)
+  }
+
+  decorate (run) {
+    // This method should be overridden to make it useful
+    return run()
+  }
+
+  run (blackboard, { registryLookUp = x => x, ...config } = {}) {
+    const result = this.decorate(() => (
+      registryLookUp(this.blueprint.node).run(blackboard, { ...config, registryLookUp })
+    ), blackboard, this.config)
+
+    return result
+  }
+
+  setConfig (config) {
+    this.config = config
   }
 }
-
-/**
- * This decorator does nothing really, but demonstrates how a decorator works
- */
-export default createDecorator(run => run())
-
-//
-//
-// class Decorator {
-//   constructor (config) {
-//     this.config = config
-//   }
-//
-//   apply (node) {
-//     return {
-//       run: (blackboard, runConfig) => {
-//         return node.run(blackboard, runConfig)
-//       }
-//     }
-//   }
-// }
-//
-// const InvertDecorator = createDecorator((run) => {
-//   const result = run()
-// })

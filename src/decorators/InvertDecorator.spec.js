@@ -9,14 +9,22 @@ describe('InvertDecorator', () => {
       return blackboard.result
     }
   })
-  const invert = new InvertDecorator()
+  let invertedTask
+
+  beforeEach(() => {
+    invertedTask = new InvertDecorator({ node: task })
+  })
+
+  it('has a nodeType', () => {
+    expect(invertedTask.nodeType).toEqual('InvertDecorator')
+  })
 
   it('inverts SUCCESS and FAILURES', () => {
-    expect(invert(task).run({ result: SUCCESS })).toEqual(FAILURE)
-    expect(invert(task).run({ result: FAILURE })).toEqual(SUCCESS)
+    expect(invertedTask.run({ result: SUCCESS })).toEqual(FAILURE)
+    expect(invertedTask.run({ result: FAILURE })).toEqual(SUCCESS)
   })
 
   it('does not change RUNNING responses', () => {
-    expect(invert(task).run({ result: RUNNING })).toEqual(RUNNING)
+    expect(invertedTask.run({ result: RUNNING })).toEqual(RUNNING)
   })
 })

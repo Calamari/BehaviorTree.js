@@ -7,7 +7,7 @@ export Node from './Node'
 export Selector from './Selector'
 export Sequence from './Sequence'
 export Random from './Random'
-export Decorator, { createDecorator } from './Decorator'
+export Decorator from './Decorator'
 export Task from './Task'
 
 export { SUCCESS, FAILURE, RUNNING } from './constants'

@@ -327,13 +327,11 @@ describe('BehaviorTree', () => {
     })
 
     it('looks up previously registered task within a decorators', () => {
-      const invert = new InvertDecorator()
-
       bTree = new BehaviorTree({
         blackboard,
         tree: new Selector({
           nodes: [
-            invert('taskA'),
+            new InvertDecorator({ node: 'taskA' }),
             'taskB'
           ]
         })

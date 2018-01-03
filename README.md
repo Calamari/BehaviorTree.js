@@ -212,8 +212,6 @@ In this example the following happens: each pass on the setInterval (our game lo
 
 Every node can also be a `Decorator`, which wraps a regular (or another decorated) node and either control their value or calling, add some conditions or do something with their returned state. In the `src/decorators` directory you'll find some already implemented decorators for inspiration or use, like an `InvertDecorator` which negates the return value of the decorated node or a `CooldownDecorator` which ensures the node is only called once within a cool down time period.
 
-Furthermore, there is a `createDecorator` method exported, that makes it easy to create own decorators.
-
 ```js
 const decoratedSequence = new InvertDecorator({
   node: 'awesome sequence doing stuff'

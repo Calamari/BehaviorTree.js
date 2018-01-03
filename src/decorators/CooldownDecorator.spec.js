@@ -12,6 +12,7 @@ describe('CooldownDecorator', () => {
     }
   })
   let decoratedTask
+  let decoratedTask5sec
   let blackboard
   let clock
 
@@ -20,15 +21,17 @@ describe('CooldownDecorator', () => {
     blackboard = {
       count: 0
     }
-    decoratedTask = decorate(task)
+    decoratedTask = new CooldownDecorator({ config: { cooldown: 3 }, node: task })
+    decoratedTask5sec = new CooldownDecorator({ config: { cooldown: 5 }, node: task })
   })
 
   afterEach(() => {
     clock.restore()
   })
 
-  const decorate = new CooldownDecorator({ cooldown: 3 })
-  const decorate5sec = new CooldownDecorator({ cooldown: 5 })
+  it('has a nodeType', () => {
+    expect(decoratedTask.nodeType).toEqual('CooldownDecorator')
+  })
 
   it('calls the task on first call', () => {
     decoratedTask.run(blackboard)
@@ -52,19 +55,18 @@ describe('CooldownDecorator', () => {
   })
 
   it('different cooldown tasks dont interfer with each other', () => {
-    const decoratedTask2 = decorate5sec(task)
     expect(decoratedTask.run(blackboard)).toEqual(SUCCESS)
-    expect(decoratedTask2.run(blackboard)).toEqual(SUCCESS)
+    expect(decoratedTask5sec.run(blackboard)).toEqual(SUCCESS)
     expect(blackboard.count).toEqual(2)
 
     clock.tick(3000)
     expect(decoratedTask.run(blackboard)).toEqual(SUCCESS)
-    expect(decoratedTask2.run(blackboard)).toEqual(FAILURE)
+    expect(decoratedTask5sec.run(blackboard)).toEqual(FAILURE)
     expect(blackboard.count).toEqual(3)
 
     clock.tick(2000)
     expect(decoratedTask.run(blackboard)).toEqual(FAILURE)
-    expect(decoratedTask2.run(blackboard)).toEqual(SUCCESS)
+    expect(decoratedTask5sec.run(blackboard)).toEqual(SUCCESS)
     expect(blackboard.count).toEqual(4)
   })
 })

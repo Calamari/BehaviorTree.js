@@ -1,8 +1,12 @@
 import { RUNNING, FAILURE } from '../constants'
-import { createDecorator } from '../Decorator'
+import Decorator from '../Decorator'
 
-export default createDecorator(run => {
-  const result = run()
-  if (result === RUNNING) return RUNNING
-  return FAILURE
-})
+export default class AlwaysFailDecorator extends Decorator {
+  nodeType = 'AlwaysFailDecorator'
+
+  decorate (run) {
+    const result = run()
+    if (result === RUNNING) return RUNNING
+    return FAILURE
+  }
+}

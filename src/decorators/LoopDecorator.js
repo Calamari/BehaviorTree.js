@@ -1,12 +1,22 @@
 import { FAILURE } from '../constants'
-import { createDecorator } from '../Decorator'
+import Decorator from '../Decorator'
 
-export default createDecorator((run, blackboard, { loop = Infinity } = {}) => {
-  let i = 0
-  let result = FAILURE
-  while (i++ < loop) {
-    result = run()
-    if (result === FAILURE) return FAILURE
+export default class LoopDecorator extends Decorator {
+  nodeType = 'LoopDecorator'
+
+  setConfig ({ loop = Infinity }) {
+    this.config = {
+      loop
+    }
   }
-  return result
-})
+
+  decorate (run) {
+    let i = 0
+    let result = FAILURE
+    while (i++ < this.config.loop) {
+      result = run()
+      if (result === FAILURE) return FAILURE
+    }
+    return result
+  }
+}

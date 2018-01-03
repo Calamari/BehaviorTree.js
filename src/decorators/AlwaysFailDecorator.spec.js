@@ -9,14 +9,14 @@ describe('AlwaysFailDecorator', () => {
       return blackboard.result
     }
   })
-  const decorate = new AlwaysFailDecorator()
+  const decoratedTask = new AlwaysFailDecorator({ node: task })
 
   it('changes SUCCESS to FAILURE', () => {
-    expect(decorate(task).run({ result: SUCCESS })).toEqual(FAILURE)
-    expect(decorate(task).run({ result: FAILURE })).toEqual(FAILURE)
+    expect(decoratedTask.run({ result: SUCCESS })).toEqual(FAILURE)
+    expect(decoratedTask.run({ result: FAILURE })).toEqual(FAILURE)
   })
 
   it('does not change RUNNING responses', () => {
-    expect(decorate(task).run({ result: RUNNING })).toEqual(RUNNING)
+    expect(decoratedTask.run({ result: RUNNING })).toEqual(RUNNING)
   })
 })
