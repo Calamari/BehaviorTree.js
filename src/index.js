@@ -1,5 +1,6 @@
-import BehaviorTree from './BehaviorTree'
+import BehaviorTree, { getRegistry } from './BehaviorTree'
 export default BehaviorTree
+export { getRegistry }
 
 export BranchNode from './BranchNode'
 export Node from './Node'

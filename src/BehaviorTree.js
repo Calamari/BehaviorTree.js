@@ -3,7 +3,11 @@ import Task from './Task'
 
 let registry = {}
 
-function registryLookUp (node) {
+export function getRegistry () {
+  return registry
+}
+
+export function registryLookUp (node) {
   if (typeof node === 'string') {
     const lookedUpNode = registry[node]
     if (!lookedUpNode) {
