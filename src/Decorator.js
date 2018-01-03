@@ -23,6 +23,7 @@ export default class Decorator extends Node {
       runData.push({
         config: this.config,
         name: this.name,
+        type: this.nodeType,
         nodes: subRunData,
         result
       })

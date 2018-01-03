@@ -39,6 +39,7 @@ export default class BranchNode extends Node {
       }
       runData.push({
         name: this.name,
+        type: this.nodeType,
         nodes: subRunData,
         result: overallResult
       })
@@ -49,6 +50,7 @@ export default class BranchNode extends Node {
   get collectData () {
     return {
       name: this.name,
+      type: this.nodeType,
       nodes: this.nodes.map(node => node.collectData())
     }
   }

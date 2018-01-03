@@ -364,7 +364,7 @@ describe('BehaviorTree', () => {
           name: 'TestSelector',
           nodes: [
             'taskB',
-            new InvertDecorator({ node: 'taskA' }),
+            new InvertDecorator({ name: 'inverting', node: 'taskA' }),
             'taskB',
             'taskC',
             'taskD'
@@ -389,7 +389,8 @@ describe('BehaviorTree', () => {
       expect(bTree.lastRunData[0].result).toEqual(true)
       const selectorNodes = bTree.lastRunData[0].nodes
       expect(selectorNodes.length).toEqual(5)
-      expect(selectorNodes.map(x => x.name)).toEqual(['taskB', 'InvertDecorator', 'taskB', 'taskC', 'taskD'])
+      expect(selectorNodes.map(x => x.name)).toEqual(['taskB', 'inverting', 'taskB', 'taskC', 'taskD'])
+      expect(selectorNodes.map(x => x.type)).toEqual(['Task', 'InvertDecorator', 'Task', 'Task', 'Task'])
       expect(selectorNodes.map(x => x.result)).toEqual([false, false, false, true, undefined])
     })
   })

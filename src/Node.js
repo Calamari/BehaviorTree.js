@@ -18,6 +18,7 @@ export default class Node {
     if (runData) {
       runData.push({
         name: this.name,
+        type: this.nodeType,
         result
       })
     }
@@ -26,11 +27,12 @@ export default class Node {
 
   collectData () {
     return {
-      name: this.name
+      name: this.name,
+      type: this.nodeType
     }
   }
 
   get name () {
-    return this.blueprint.name || this.nodeType
+    return this.blueprint.name
   }
 }
