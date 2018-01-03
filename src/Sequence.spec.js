@@ -329,20 +329,20 @@ describe('Sequence', () => {
         expect(blackboard.run).toEqual(1)
         expect(blackboard.end).toEqual(0)
 
-        result = selector.run(blackboard, { indexes: result, rerun: true })
+        let result2 = selector.run(blackboard, { indexes: result, rerun: true })
 
         expect(blackboard.start).toEqual(1)
         expect(blackboard.run).toEqual(2)
         expect(blackboard.end).toEqual(0)
 
         blackboard.switchResult = SUCCESS
-        result = selector.run(blackboard, { indexes: result, rerun: true })
+        selector.run(blackboard, { indexes: result2, rerun: true })
 
         expect(blackboard.start).toEqual(1)
         expect(blackboard.run).toEqual(3)
         expect(blackboard.end).toEqual(1)
 
-        result = selector.run(blackboard)
+        selector.run(blackboard)
 
         expect(blackboard.start).toEqual(2)
         expect(blackboard.run).toEqual(4)

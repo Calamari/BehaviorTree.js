@@ -342,4 +342,55 @@ describe('BehaviorTree', () => {
       expect(blackboard.taskB).toEqual(1)
     })
   })
+
+  describe('debugging the tree', () => {
+    beforeEach(() => {
+      BehaviorTree.register('taskA', () => {
+        return SUCCESS
+      })
+      BehaviorTree.register('taskB', () => {
+        return FAILURE
+      })
+      BehaviorTree.register('taskC', () => {
+        return SUCCESS
+      })
+      BehaviorTree.register('taskD', () => {
+        return SUCCESS
+      })
+
+      bTree = new BehaviorTree({
+        blackboard,
+        tree: new Selector({
+          name: 'TestSelector',
+          nodes: [
+            'taskB',
+            new InvertDecorator({ node: 'taskA' }),
+            'taskB',
+            'taskC',
+            'taskD'
+          ]
+        })
+      })
+    })
+
+    it('not using the debug optino is not generating lastRunData', () => {
+      bTree.step()
+
+      expect(bTree.lastRunData).toEqual(null)
+    })
+
+    it('there is a debug option providing more output about that step', () => {
+      expect(bTree.lastRunData).toEqual(undefined)
+
+      bTree.step({ debug: true })
+
+      expect(bTree.lastRunData.length).toEqual(1)
+      expect(bTree.lastRunData[0].name).toEqual('TestSelector')
+      expect(bTree.lastRunData[0].result).toEqual(true)
+      const selectorNodes = bTree.lastRunData[0].nodes
+      expect(selectorNodes.length).toEqual(5)
+      expect(selectorNodes.map(x => x.name)).toEqual(['taskB', 'InvertDecorator', 'taskB', 'taskC', 'taskD'])
+      expect(selectorNodes.map(x => x.result)).toEqual([false, false, false, true, undefined])
+    })
+  })
 })

@@ -2,6 +2,8 @@ import { RUNNING } from './constants'
 import BranchNode from './BranchNode'
 
 export default class Random extends BranchNode {
+  nodeType = 'Random'
+
   run (blackboard = null, { indexes = [], rerun, registryLookUp = x => x } = {}) {
     this.blueprint.start(blackboard)
     let currentIndex = indexes.shift() || 0
