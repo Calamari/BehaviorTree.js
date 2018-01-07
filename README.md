@@ -218,6 +218,15 @@ const decoratedSequence = new InvertDecorator({
 })
 ```
 
+### Debugging option
+
+If you call the `step`-method with the `debug` parameter set to `true`, the state of your last call will be available as `lastRunData` property. But don't do this on a production environment, because the work that is don there is simply not needed for regular evaluation.
+
+```js
+bTree.step({ debug: true });
+console.log(bTree.lastRunData)
+```
+
 ## Contributing
 
 You want to contribute? If you have some ideas or critics, just open an issue, here on GitHub. If you want to get your hands dirty, you can fork this repo. But note: If you write code, don't forget to write tests. And then make a pull request. I'll be happy to see what's coming.
@@ -233,7 +242,7 @@ yarn test
 
 ## Version history
 
-* **2.0.0** - Complete ES7 rewrite and improvement on ways it works and how it can be used 
+* **2.0.0** - Complete ES7 rewrite and improvement on ways it works and how it can be used
 * **1.0.4** - Fix resuming in priority nodes
 * **1.0.3** - Removed a useless console.log statement
 * **1.0.2** - Supporting NodeJS now. Bumped to 1.0.2 because of NPM package
