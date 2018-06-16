@@ -218,6 +218,39 @@ const decoratedSequence = new InvertDecorator({
 })
 ```
 
+### Creating own Decorators
+
+To create an own decorator. You simple need a class that extends the `Decorator` class and overrides the decorate method. Simply look within the `src/decorators` subfolder to check some reference implementations.
+
+Beware that you cannot simple instantiate the `Decorator` class and pass in the `decorate` methods as a blueprint as a dynamically decorator, because the way things works right now.
+
+### Importing BehaviorTree defintions from JSON files
+
+There is a `BehaviorTreeImporter` class defined that can be used to fill a `BehaviorTree` instance out of a JSON definition for a tree. A definition structure looks like this:
+
+```json
+{
+  "type": "selector",
+  "name": "the root",
+  "nodes": [
+    {
+      "type": "ifEnemyInSight",
+      "name": "handling enemies",
+      "node": { "type": "walk", "name": "go to enemy" }
+    },
+    {
+      "type": "cooldown",
+      "name": "jumping around",
+      "cooldown": 1,
+      "node": { "type": "jump", "name": "jump up" }
+    },
+    { "type": "idle", "name": "doing nothing" }
+  ]
+}
+```
+
+Through the `type` property, the importer looks up `Decorators`, `Selectors`, `Sequences` and your own defined classes from an internal type definition as well as tasks from the `BehaviorTree` registry, and returns an object, that can be used as `tree` within the `BehaviorTree` constructor.
+
 ### Debugging option
 
 If you call the `step`-method with the `debug` parameter set to `true`, the state of your last call will be available as `lastRunData` property. But don't do this on a production environment, because the work that is don there is simply not needed for regular evaluation.

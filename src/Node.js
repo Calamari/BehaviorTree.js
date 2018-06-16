@@ -33,6 +33,10 @@ export default class Node {
   }
 
   get name () {
-    return this.blueprint.name
+    return this._name || this.blueprint.name
+  }
+
+  set name (name) {
+    this._name = name
   }
 }
