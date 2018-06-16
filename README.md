@@ -29,7 +29,7 @@ This package has no own dependencies.
 
 ### Creating a simple Task
 
-A task is a simple `Node` (to be precise a leafnode), which takes care of all the dirty wirk in it's `run` method, which returns either `true`, `false`, or `"running"`. For clarity, and to be flexible, please use the provided exported constants for those return values (`SUCCESS`, `FAILURE`, `RUNNING`).
+A task is a simple `Node` (to be precise a leaf node), which takes care of all the dirty work in it's `run` method, which returns either `true`, `false`, or `"running"`. For clarity, and to be flexible, please use the provided exported constants for those return values (`SUCCESS`, `FAILURE`, `RUNNING`).
 
 Each method of your task receives the blackboard, which you assign when instantiating the BehaviorTree. A blackboard is basically a object, which holds data and methods all the task need to perform their work and to communicate with the world.
 
@@ -206,7 +206,7 @@ setInterval(function() {
 }, 1000/60)
 ```
 
-In this example the following happens: each pass on the setInterval (our game loop), the dog barks – we implemented this with a registered node, because we do this twice – then it walks randomly around, then it barks again and then if it find's itself standing beside a tree it pees on the tree.
+In this example the following happens: each pass on the `setInterval` (our game loop), the dog barks – we implemented this with a registered node, because we do this twice – then it walks randomly around, then it barks again and then if it find's itself standing beside a tree it pees on the tree.
 
 ### Decorators
 
@@ -220,7 +220,7 @@ const decoratedSequence = new InvertDecorator({
 
 ### Creating own Decorators
 
-To create an own decorator. You simple need a class that extends the `Decorator` class and overrides the decorate method. Simply look within the `src/decorators` subfolder to check some reference implementations.
+To create an own decorator. You simple need a class that extends the `Decorator` class and overrides the decorate method. Simply look within the `src/decorators` sub folder to check some reference implementations.
 
 Beware that you cannot simple instantiate the `Decorator` class and pass in the `decorate` methods as a blueprint as a dynamically decorator, because the way things works right now.
 
@@ -262,7 +262,7 @@ console.log(bTree.lastRunData)
 
 ## Contributing
 
-You want to contribute? If you have some ideas or critics, just open an issue, here on GitHub. If you want to get your hands dirty, you can fork this repo. But note: If you write code, don't forget to write tests. And then make a pull request. I'll be happy to see what's coming.
+You want to contribute? If you have some ideas or critics, just open an issue, here on GitHub. If you want to get your hands dirty, you can fork this repository. But note: If you write code, don't forget to write tests. And then make a pull request. I'll be happy to see what's coming.
 
 ## Running tests
 
@@ -287,7 +287,7 @@ yarn test
 
 ## MIT License
 
-Copyright (C) 2013-2014 Georg Tavonius
+Copyright (C) 2013-2018 Georg Tavonius
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

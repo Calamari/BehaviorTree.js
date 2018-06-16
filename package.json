@@ -1,6 +1,6 @@
 {
   "name": "behaviortree",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "description": "A JavaScript implementation of Behavior Trees. They are useful for implementing AIs. For Browsers and NodeJS.",
   "main": "dist/index.js",
   "dependencies": {},
@@ -33,9 +33,10 @@
   "keywords": [
     "Behaviors",
     "AI",
-    "Behavior",
+    "Behavior Tree",
     "Tree",
-    "Intelligence"
+    "Intelligence",
+    "Games"
   ],
   "author": "Georg Tavonius",
   "license": "MIT",
