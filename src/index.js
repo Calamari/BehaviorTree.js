@@ -1,6 +1,6 @@
-import BehaviorTree, { getRegistry } from './BehaviorTree'
+import BehaviorTree, { getRegistry, registryLookUp } from './BehaviorTree'
 export default BehaviorTree
-export { getRegistry }
+export { getRegistry, registryLookUp }
 
 export BehaviorTreeImporter from './BehaviorTreeImporter'
 

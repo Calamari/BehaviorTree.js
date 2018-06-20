@@ -1,28 +1,42 @@
-const webpack = require('webpack')
 const path = require('path')
 const pkg = require('./package.json')
-// const FlowBabelWebpackPlugin = require('flow-babel-webpack-plugin');
 
-module.exports = {
-  entry: {
-    index: path.join(__dirname, '/src/index.js')
-  },
-  output: {
-    path: path.join(__dirname, '/dist'),
-    library: pkg.name,
-    libraryTarget: 'umd',
-    umdNamedDefine: true,
-    filename: '[name].js'
-  },
-  devtool: 'eval',
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader'
-      }
-    ]
-  },
-  plugins: []
+const webpackModule = {
+  rules: [
+    {
+      test: /\.js$/,
+      exclude: /node_modules/,
+      loader: 'babel-loader'
+    }
+  ]
 }
+
+module.exports = [
+  {
+    target: 'node',
+    mode: 'production',
+    entry: {
+      index: path.join(__dirname, '/src/index.node.js')
+    },
+    devtool: 'inline-source-map',
+    output: {
+      path: path.join(__dirname, '/dist'),
+      libraryTarget: 'commonjs',
+      filename: '[name].node.js'
+    },
+    module: webpackModule
+  },
+  {
+    target: 'node',
+    mode: 'production',
+    entry: {
+      index: path.join(__dirname, '/src/index.js')
+    },
+    devtool: 'inline-source-map',
+    output: {
+      path: path.join(__dirname, '/dist'),
+      filename: '[name].js'
+    },
+    module: webpackModule
+  }
+]
