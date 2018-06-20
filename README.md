@@ -27,6 +27,22 @@ This package has no own dependencies.
 
 ## How to use
 
+First of all, I should mention that it is possible to use this library also in common-js environment like node v8. For this to work, you should switch all `import` statements with `require()` statements.
+
+So instead of
+
+```js
+import { BehaviorTree, Sequence, Task, SUCCESS, FAILURE } from 'behaviortree'
+```
+
+just use
+
+```js
+const { BehaviorTree, Sequence, Task, SUCCESS, FAILURE } = require('behaviortree')
+```
+
+I use the new ES modules syntax, because I think it is very readable. So all the code is written like this. To see working examples of both versions visit/clone [the examples repo](https://github.com/Calamari/BehaviorTree.js-Examples).
+
 ### Creating a simple Task
 
 A task is a simple `Node` (to be precise a leaf node), which takes care of all the dirty work in it's `run` method, which returns either `true`, `false`, or `"running"`. For clarity, and to be flexible, please use the provided exported constants for those return values (`SUCCESS`, `FAILURE`, `RUNNING`).
@@ -106,7 +122,7 @@ const mySelector = new Random({
 Creating an instance of a behavior tree is fairly simple. Just instantiate the `BehaviorTree` class and specify the shape of the tree, using the nodes mentioned above and the blackboard the nodes can use.
 
 ```js
-import BehaviorTree from 'behaviortree'
+import { BehaviorTree } from 'behaviortree'
 var bTree = new BehaviorTree({
   tree: mySelector,
   blackboard: {}
@@ -159,7 +175,7 @@ BehaviorTree.register('testtask', (blackboard) => {
 And now an example of how all could work together.
 
 ```js
-import BehaviorTree, { Sequence, Task, SUCCESS, FAILURE } from 'behaviortree'
+import { BehaviorTree, Sequence, Task, SUCCESS, FAILURE } from 'behaviortree'
 BehaviorTree.register('bark', new Task({
   run: function(dog) {
     dog.bark()
@@ -187,13 +203,12 @@ const tree = new Sequence({
             return FAILURE
           }
         }
-      }),
-
+      })
     ]
   })
 });
 
-const dog = new Dog(/*...*/); // the nasty details of a dog are omitted
+const dog = new Dog(/*...*/) // the nasty details of a dog are omitted
 
 const bTree = new BehaviorTree({
   tree: tree,
@@ -202,7 +217,7 @@ const bTree = new BehaviorTree({
 
 // The "game" loop:
 setInterval(function() {
-  bTree.step();
+  bTree.step()
 }, 1000/60)
 ```
 
@@ -275,6 +290,7 @@ yarn test
 
 ## Version history
 
+* **2.0.2** - Now with working node.js build (as well as babel build)
 * **2.0.0** - Complete ES7 rewrite and improvement on ways it works and how it can be used
 * **1.0.4** - Fix resuming in priority nodes
 * **1.0.3** - Removed a useless console.log statement
