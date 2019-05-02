@@ -45,5 +45,8 @@
   "bugs": {
     "url": "https://github.com/Calamari/BehaviorTree.js/issues"
   },
-  "homepage": "https://github.com/Calamari/BehaviorTree.js"
+  "homepage": "https://github.com/Calamari/BehaviorTree.js",
+  "jest": {
+    "testURL": "http://localhost/"
+  }
 }
