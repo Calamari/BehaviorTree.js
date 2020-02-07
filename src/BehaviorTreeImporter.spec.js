@@ -93,7 +93,13 @@ describe('BehaviorTreeImporter', () => {
       let selectorNodes = bTree.lastRunData[0].nodes
       expect(selectorNodes.map(x => x.result)).toEqual([false, false, true])
 
-      clock.tick(1000)
+      clock.tick(999)
+      bTree.step({ debug: true })
+
+      selectorNodes = bTree.lastRunData[0].nodes
+      expect(selectorNodes.map(x => x.result)).toEqual([false, false, true])
+
+      clock.tick(1)
       bTree.step({ debug: true })
 
       selectorNodes = bTree.lastRunData[0].nodes
