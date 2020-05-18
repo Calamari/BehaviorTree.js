@@ -307,6 +307,7 @@ yarn test
 
 ## Version history
 
+* **2.0.3** - Add decorators to exports
 * **2.0.2** - Now with working node.js build (as well as babel build)
 * **2.0.0** - Complete ES7 rewrite and improvement on ways it works and how it can be used
 * **1.0.4** - Fix resuming in priority nodes
