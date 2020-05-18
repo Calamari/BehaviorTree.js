@@ -12,4 +12,7 @@ export Random from './Random'
 export Decorator from './Decorator'
 export Task from './Task'
 
-export { SUCCESS, FAILURE, RUNNING } from './constants'
+import decorators from './decorators'
+
+export { SUCCESS, FAILURE, RUNNING, decorators } from './constants'
+
