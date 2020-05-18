@@ -184,29 +184,28 @@ BehaviorTree.register('bark', new Task({
 }))
 
 const tree = new Sequence({
-    nodes: [
-      'bark',
-      new Task({
-        run: function(dog) {
-          dog.randomlyWalk()
+  nodes: [
+    'bark',
+    new Task({
+      run: function(dog) {
+        dog.randomlyWalk()
+        return SUCCESS
+      }
+    }),
+    'bark',
+    new Task({
+      run: function(dog) {
+        if (dog.standBesideATree()) {
+          dog.liftALeg()
+          dog.pee()
           return SUCCESS
+        } else {
+          return FAILURE
         }
-      }),
-      'bark',
-      new Task({
-        run: function(dog) {
-          if (dog.standBesideATree()) {
-            dog.liftALeg()
-            dog.pee()
-            return SUCCESS
-          } else {
-            return FAILURE
-          }
-        }
-      })
-    ]
-  })
-});
+      }
+    })
+  ]
+})
 
 const dog = new Dog(/*...*/) // the nasty details of a dog are omitted
 
@@ -239,6 +238,16 @@ To create an own decorator. You simple need a class that extends the `Decorator`
 
 Beware that you cannot simple instantiate the `Decorator` class and pass in the `decorate` methods as a blueprint as a dynamically decorator, because the way things works right now.
 
+### Using built-in Decorators
+
+There are several "simple" decorators already built for your convenience. Check the `src/decorators` dir for more details (and the specs for what they are doing). Using them is as simple as:
+
+```js
+import { BehaviorTree, Sequence, Task, SUCCESS, FAILURE, decorators } from 'behaviortree'
+
+const { AlwaysSucceedDecorator } = decorators
+```
+
 ### Importing BehaviorTree defintions from JSON files
 
 There is a `BehaviorTreeImporter` class defined that can be used to fill a `BehaviorTree` instance out of a JSON definition for a tree. A definition structure looks like this:
@@ -265,6 +274,14 @@ There is a `BehaviorTreeImporter` class defined that can be used to fill a `Beha
 ```
 
 Through the `type` property, the importer looks up `Decorators`, `Selectors`, `Sequences` and your own defined classes from an internal type definition as well as tasks from the `BehaviorTree` registry, and returns an object, that can be used as `tree` within the `BehaviorTree` constructor.
+
+### Using traditional-style requires
+
+If you don't like the new `import`-statements, you should still be able to use the traditional `require`-statements:
+
+```js
+const { BehaviorTree, Sequence, Task, SUCCESS, FAILURE, decorators: { AlwaysSucceedDecorator } } = require('behaviortree')
+```
 
 ### Debugging option
 
@@ -303,7 +320,7 @@ yarn test
 
 ## MIT License
 
-Copyright (C) 2013-2018 Georg Tavonius
+Copyright (C) 2013-2020 Georg Tavonius
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
