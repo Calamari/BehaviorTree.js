@@ -32,12 +32,8 @@ export default class BehaviorTreeImporter {
     const { type, name, node, nodes, ...config } = json
     const Klass = this.types[type]
     if (!Klass) {
-      let registeredNode = registryLookUp(type)
+      const registeredNode = registryLookUp(type)
       if (registeredNode) {
-        if (registeredNode.prototype) {
-          const RegisteredClass = registeredNode
-          registeredNode = new RegisteredClass({ config, node: this.parse(node) })
-        }
         registeredNode.name = name
         return registeredNode
       }

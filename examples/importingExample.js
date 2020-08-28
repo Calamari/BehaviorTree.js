@@ -17,7 +17,6 @@ class CanJumpDecorator extends Decorator {
 };
 
 BehaviorTree.register('selector', Selector)
-BehaviorTree.register('canJump', CanJumpDecorator)
 
 BehaviorTree.register('walk', new Task({
   run: function (blackboard) {
@@ -47,6 +46,8 @@ const treeJson = {
   ]
 }
 const importer = new BehaviorTreeImporter()
+
+importer.defineType('canJump', CanJumpDecorator)
 
 const blackboard = {
   isJumping: true
