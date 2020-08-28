@@ -34,7 +34,7 @@ export default class BehaviorTree {
   }
 
   static register (name, node) {
-    registry[name] = typeof node === 'function'
+    registry[name] = (typeof node === 'function' && !node.prototype)
       ? new Task({ name, run: node })
       : node
   }
