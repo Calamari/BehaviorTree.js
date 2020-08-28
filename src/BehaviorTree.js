@@ -34,7 +34,8 @@ export default class BehaviorTree {
   }
 
   static register (name, node) {
-    registry[name] = (typeof node === 'function' && !node.prototype)
+    const isProperBTreeClass = node.prototype && node.prototype.run
+    registry[name] = (typeof node === 'function' && !isProperBTreeClass)
       ? new Task({ name, run: node })
       : node
   }
