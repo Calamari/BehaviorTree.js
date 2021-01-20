@@ -54,7 +54,6 @@ import { Task, SUCCESS } from 'behaviortree'
 const myTask = new Task({
   // (optional) this function is called directly before the run method
   // is called. It allows you to setup things before starting to run
-  // Beware: if task is resumed after calling this.running(), start is not called.
   start: function(blackboard) { blackboard.isStarted = true; },
 
   // (optional) this function is called directly after the run method
