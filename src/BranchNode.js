@@ -8,6 +8,7 @@ export default class BranchNode extends Node {
     super(blueprint)
 
     this.numNodes = blueprint.nodes.length
+    this.wasRunning = false
   }
 
   run (blackboard = null, { indexes = [], rerun, runData, registryLookUp = x => x } = {}) {
@@ -19,6 +20,7 @@ export default class BranchNode extends Node {
       let node = registryLookUp(this.blueprint.nodes[currentIndex])
       const result = node.run(blackboard, { indexes, rerun, runData: subRunData, registryLookUp })
       if (result === RUNNING) {
+        this.wasRunning = true
         return [ currentIndex, ...indexes ]
       } else if (typeof result === 'object') { // array
         return [ ...indexes, currentIndex, ...result ]
@@ -26,6 +28,10 @@ export default class BranchNode extends Node {
         overallResult = result
         break
       } else {
+        if (this.wasRunning) {
+          this.wasRunning = false
+          rerun = false
+        }
         ++currentIndex
       }
     }
