@@ -453,9 +453,9 @@ describe('BehaviorTree', () => {
         end3: 0
       }
 
-      bTree = new BehaviorTree({
+      const bTree = new BehaviorTree({
         tree: sequence,
-        blackboard: blackboard
+        blackboard
       })
 
       bTree.step()
