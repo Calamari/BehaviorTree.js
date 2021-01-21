@@ -1,4 +1,6 @@
 import BehaviorTree, { getRegistry, registryLookUp } from './BehaviorTree'
+import decorators from './decorators'
+
 export default BehaviorTree
 export { getRegistry, registryLookUp }
 
@@ -12,7 +14,8 @@ export Random from './Random'
 export Decorator from './Decorator'
 export Task from './Task'
 
-import decorators from './decorators'
+export {
+  decorators
+}
 
-export { SUCCESS, FAILURE, RUNNING, decorators } from './constants'
-
+export { SUCCESS, FAILURE, RUNNING } from './constants'
