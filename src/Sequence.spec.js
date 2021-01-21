@@ -323,13 +323,13 @@ describe('Sequence', () => {
           end: 0
         }
 
-        let result = selector.run(blackboard)
+        const result = selector.run(blackboard)
 
         expect(blackboard.start).toEqual(1)
         expect(blackboard.run).toEqual(1)
         expect(blackboard.end).toEqual(0)
 
-        let result2 = selector.run(blackboard, { indexes: result, rerun: true })
+        const result2 = selector.run(blackboard, { indexes: result, rerun: true })
 
         expect(blackboard.start).toEqual(1)
         expect(blackboard.run).toEqual(2)

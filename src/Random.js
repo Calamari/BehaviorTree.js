@@ -13,9 +13,9 @@ export default class Random extends BranchNode {
     const node = registryLookUp(this.blueprint.nodes[currentIndex])
     const result = node.run(blackboard, { indexes, rerun, registryLookUp })
     if (result === RUNNING) {
-      return [ currentIndex, ...indexes ]
+      return [currentIndex, ...indexes]
     } else if (typeof result === 'object') { // array
-      return [ ...indexes, currentIndex, ...result ]
+      return [...indexes, currentIndex, ...result]
     }
     this.blueprint.end(blackboard)
     return result

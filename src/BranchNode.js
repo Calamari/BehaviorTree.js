@@ -17,13 +17,13 @@ export default class BranchNode extends Node {
     let overallResult = this.START_CASE
     let currentIndex = indexes.shift() || 0
     while (currentIndex < this.numNodes) {
-      let node = registryLookUp(this.blueprint.nodes[currentIndex])
+      const node = registryLookUp(this.blueprint.nodes[currentIndex])
       const result = node.run(blackboard, { indexes, rerun, runData: subRunData, registryLookUp })
       if (result === RUNNING) {
         this.wasRunning = true
-        return [ currentIndex, ...indexes ]
+        return [currentIndex, ...indexes]
       } else if (typeof result === 'object') { // array
-        return [ ...indexes, currentIndex, ...result ]
+        return [...indexes, currentIndex, ...result]
       } else if (result === this.OPT_OUT_CASE) {
         overallResult = result
         break
