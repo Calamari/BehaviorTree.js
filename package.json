@@ -26,6 +26,7 @@
   },
   "scripts": {
     "build": "webpack",
+    "lint": "eslint src",
     "test": "jest",
     "prepublish": "npm run build"
   },
