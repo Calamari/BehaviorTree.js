@@ -394,4 +394,113 @@ describe('BehaviorTree', () => {
       expect(selectorNodes.map(x => x.result)).toEqual([false, false, false, true, undefined])
     })
   })
+  describe('behavior with running nodes', () => {
+    it('calls start of all task where appropriate', () => {
+      const task1 = new Task({
+        start: function (blackboard) {
+          ++blackboard.start1
+        },
+        end: function (blackboard) {
+          ++blackboard.end1
+        },
+        run: function (blackboard) {
+          ++blackboard.run1
+          return SUCCESS
+        }
+      })
+      const task2 = new Task({
+        start: function (blackboard) {
+          ++blackboard.start2
+        },
+        end: function (blackboard) {
+          ++blackboard.end2
+        },
+        run: function (blackboard) {
+          ++blackboard.run2
+          return blackboard.task2Result
+        }
+      })
+      const task3 = new Task({
+        start: function (blackboard) {
+          ++blackboard.start3
+        },
+        end: function (blackboard) {
+          ++blackboard.end3
+        },
+        run: function (blackboard) {
+          ++blackboard.run3
+          return SUCCESS
+        }
+      })
+
+      const sequence = new Sequence({
+        nodes: [
+          task1,
+          task2,
+          task3
+        ]
+      })
+      const blackboard = {
+        task2Result: RUNNING,
+        start1: 0,
+        run1: 0,
+        end1: 0,
+        start2: 0,
+        run2: 0,
+        end2: 0,
+        start3: 0,
+        run3: 0,
+        end3: 0
+      }
+
+      bTree = new BehaviorTree({
+        tree: sequence,
+        blackboard: blackboard
+      })
+
+      bTree.step()
+
+      expect(blackboard.start1).toEqual(1)
+      expect(blackboard.run1).toEqual(1)
+      expect(blackboard.end1).toEqual(1)
+
+      expect(blackboard.start2).toEqual(1)
+      expect(blackboard.run2).toEqual(1)
+      expect(blackboard.end2).toEqual(0)
+
+      expect(blackboard.start3).toEqual(0)
+      expect(blackboard.run3).toEqual(0)
+      expect(blackboard.end3).toEqual(0)
+
+      bTree.step()
+
+      expect(blackboard.start1).toEqual(1)
+      expect(blackboard.run1).toEqual(1)
+      expect(blackboard.end1).toEqual(1)
+
+      expect(blackboard.start2).toEqual(1)
+      expect(blackboard.run2).toEqual(2)
+      expect(blackboard.end2).toEqual(0)
+
+      expect(blackboard.start3).toEqual(0)
+      expect(blackboard.run3).toEqual(0)
+      expect(blackboard.end3).toEqual(0)
+
+      blackboard.task2Result = SUCCESS
+
+      bTree.step()
+
+      expect(blackboard.start1).toEqual(1)
+      expect(blackboard.run1).toEqual(1)
+      expect(blackboard.end1).toEqual(1)
+
+      expect(blackboard.start2).toEqual(1)
+      expect(blackboard.run2).toEqual(3)
+      expect(blackboard.end2).toEqual(1)
+
+      expect(blackboard.start3).toEqual(1)
+      expect(blackboard.run3).toEqual(1)
+      expect(blackboard.end3).toEqual(1)
+    })
+  })
 })
