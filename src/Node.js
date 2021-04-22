@@ -5,11 +5,11 @@ const NOOP = () => {}
 export default class Node {
   nodeType = 'Node'
 
-  constructor ({ run = NOOP, start = NOOP, end = NOOP, ...props }) {
+  constructor({ run = NOOP, start = NOOP, end = NOOP, ...props }) {
     this.blueprint = { run, start, end, ...props }
   }
 
-  run (blackboard, { rerun = false, runData, registryLookUp = x => x, ...config } = {}) {
+  run(blackboard, { rerun = false, runData, registryLookUp = (x) => x, ...config } = {}) {
     if (!rerun) this.blueprint.start(blackboard)
     const result = this.blueprint.run(blackboard, { ...config, rerun, runData, registryLookUp })
     if (result !== RUNNING) {
@@ -25,18 +25,18 @@ export default class Node {
     return result
   }
 
-  collectData () {
+  collectData() {
     return {
       name: this.name,
       type: this.nodeType
     }
   }
 
-  get name () {
+  get name() {
     return this._name || this.blueprint.name
   }
 
-  set name (name) {
+  set name(name) {
     this._name = name
   }
 }

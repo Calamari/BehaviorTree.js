@@ -4,14 +4,14 @@ import Node from './Node'
 export default class BranchNode extends Node {
   nodeType = 'BranchNode'
 
-  constructor (blueprint) {
+  constructor(blueprint) {
     super(blueprint)
 
     this.numNodes = blueprint.nodes.length
     this.wasRunning = false
   }
 
-  run (blackboard = null, { indexes = [], rerun, runData, registryLookUp = x => x } = {}) {
+  run(blackboard = null, { indexes = [], rerun, runData, registryLookUp = (x) => x } = {}) {
     const subRunData = runData ? [] : null
     this.blueprint.start(blackboard)
     let overallResult = this.START_CASE
@@ -22,7 +22,8 @@ export default class BranchNode extends Node {
       if (result === RUNNING) {
         this.wasRunning = true
         return [currentIndex, ...indexes]
-      } else if (typeof result === 'object') { // array
+      } else if (typeof result === 'object') {
+        // array
         return [...indexes, currentIndex, ...result]
       } else if (result === this.OPT_OUT_CASE) {
         overallResult = result
@@ -53,11 +54,11 @@ export default class BranchNode extends Node {
     return overallResult
   }
 
-  get collectData () {
+  get collectData() {
     return {
       name: this.name,
       type: this.nodeType,
-      nodes: this.nodes.map(node => node.collectData())
+      nodes: this.nodes.map((node) => node.collectData())
     }
   }
 }

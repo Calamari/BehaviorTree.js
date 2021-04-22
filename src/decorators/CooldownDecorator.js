@@ -4,13 +4,13 @@ import Decorator from '../Decorator'
 export default class CooldownDecorator extends Decorator {
   nodeType = 'CooldownDecorator'
 
-  setConfig ({ cooldown = 5 }) {
+  setConfig({ cooldown = 5 }) {
     this.config = {
       cooldown
     }
   }
 
-  decorate (run) {
+  decorate(run) {
     if (this.lock) {
       return FAILURE
     }

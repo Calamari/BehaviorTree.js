@@ -36,10 +36,7 @@ describe('Selector', () => {
 
   it('stops immediately at a successfull node', () => {
     const selector = new Selector({
-      nodes: [
-        successTask,
-        failTask
-      ]
+      nodes: [successTask, failTask]
     })
 
     selector.run()
@@ -50,13 +47,7 @@ describe('Selector', () => {
 
   it('stops at a successfull node', () => {
     const selector = new Selector({
-      nodes: [
-        failTask,
-        successTask,
-        successTask,
-        successTask,
-        failTask
-      ]
+      nodes: [failTask, successTask, successTask, successTask, failTask]
     })
 
     selector.run()
@@ -67,12 +58,7 @@ describe('Selector', () => {
 
   it('calls all tasks if all fail', () => {
     const selector = new Selector({
-      nodes: [
-        failTask,
-        failTask,
-        failTask,
-        failTask
-      ]
+      nodes: [failTask, failTask, failTask, failTask]
     })
 
     selector.run()
@@ -83,12 +69,7 @@ describe('Selector', () => {
 
   it('does not call tasks after running task', () => {
     const selector = new Selector({
-      nodes: [
-        failTask,
-        failTask,
-        runningTask,
-        failTask
-      ]
+      nodes: [failTask, failTask, runningTask, failTask]
     })
 
     selector.run()
@@ -99,11 +80,7 @@ describe('Selector', () => {
   describe('result values', () => {
     it('returns SUCCESS if one task succeeds', () => {
       const selector = new Selector({
-        nodes: [
-          failTask,
-          successTask,
-          failTask
-        ]
+        nodes: [failTask, successTask, failTask]
       })
 
       expect(selector.run()).toEqual(SUCCESS)
@@ -111,12 +88,7 @@ describe('Selector', () => {
 
     it('returns FAILURE if no task succeeds', () => {
       const selector = new Selector({
-        nodes: [
-          failTask,
-          failTask,
-          failTask,
-          failTask
-        ]
+        nodes: [failTask, failTask, failTask, failTask]
       })
 
       expect(selector.run()).toEqual(FAILURE)
@@ -124,12 +96,7 @@ describe('Selector', () => {
 
     it('returns the index of still running task as array of running indexes', () => {
       const selector = new Selector({
-        nodes: [
-          failTask,
-          failTask,
-          runningTask,
-          failTask
-        ]
+        nodes: [failTask, failTask, runningTask, failTask]
       })
 
       expect(selector.run()).toEqual([2])
@@ -152,10 +119,7 @@ describe('Selector', () => {
 
     it('can be passed to a task, and stores data between different tasks', () => {
       const selector = new Selector({
-        nodes: [
-          aTask,
-          bTask
-        ]
+        nodes: [aTask, bTask]
       })
       const blackboard = { counter: 0 }
 
@@ -185,11 +149,7 @@ describe('Selector', () => {
           aTask,
           aTask,
           new Selector({
-            nodes: [
-              bTask,
-              bTask,
-              bTask
-            ]
+            nodes: [bTask, bTask, bTask]
           })
         ]
       })
@@ -214,11 +174,7 @@ describe('Selector', () => {
           aTask,
           aTask,
           new Selector({
-            nodes: [
-              bTask,
-              switchTask,
-              bTask
-            ]
+            nodes: [bTask, switchTask, bTask]
           }),
           aTask
         ]

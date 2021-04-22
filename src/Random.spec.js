@@ -37,11 +37,7 @@ describe('Random', () => {
 
   it('chooses one node per random and runs that', () => {
     const random = new Random({
-      nodes: [
-        task1,
-        task2,
-        task3
-      ]
+      nodes: [task1, task2, task3]
     })
 
     random.run(blackboard)
@@ -51,11 +47,7 @@ describe('Random', () => {
 
   it('returns the value of the called task', () => {
     const random = new Random({
-      nodes: [
-        task1,
-        task2,
-        task3
-      ]
+      nodes: [task1, task2, task3]
     })
 
     blackboard.result = SUCCESS
@@ -70,11 +62,7 @@ describe('Random', () => {
 
   it('calls the the same task all over again when it is running', () => {
     const random = new Random({
-      nodes: [
-        task1,
-        task2,
-        task3
-      ]
+      nodes: [task1, task2, task3]
     })
 
     blackboard.result = RUNNING

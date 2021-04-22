@@ -4,7 +4,7 @@ import Decorator from '../Decorator'
 export default class AlwaysFailDecorator extends Decorator {
   nodeType = 'AlwaysFailDecorator'
 
-  decorate (run) {
+  decorate(run) {
     const result = run()
     if (result === RUNNING) return RUNNING
     return FAILURE

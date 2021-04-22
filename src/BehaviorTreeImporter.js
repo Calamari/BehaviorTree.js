@@ -24,11 +24,11 @@ export default class BehaviorTreeImporter {
     loop: LoopDecorator
   }
 
-  defineType (type, Klass) {
+  defineType(type, Klass) {
     this.types[type] = Klass
   }
 
-  parse (json) {
+  parse(json) {
     const { type, name, node, nodes, ...config } = json
     const Klass = this.types[type]
     if (!Klass) {
@@ -43,7 +43,7 @@ export default class BehaviorTreeImporter {
     return new Klass({
       name: name,
       node: node ? this.parse(node) : null,
-      nodes: nodes ? nodes.map(subJson => this.parse(subJson)) : null,
+      nodes: nodes ? nodes.map((subJson) => this.parse(subJson)) : null,
       config
     })
   }

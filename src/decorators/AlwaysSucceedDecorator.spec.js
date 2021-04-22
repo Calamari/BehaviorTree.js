@@ -5,7 +5,7 @@ import Task from '../Task'
 
 describe('AlwaysSuccessDecorator', () => {
   const task = new Task({
-    run (blackboard) {
+    run(blackboard) {
       return blackboard.result
     }
   })
