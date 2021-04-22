@@ -1,6 +1,6 @@
 {
   "name": "behaviortree",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "A JavaScript implementation of Behavior Trees. They are useful for implementing AIs. For Browsers and NodeJS.",
   "module": "dist/index.js",
   "main": "dist/index.node.js",
