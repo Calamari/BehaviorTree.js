@@ -4,8 +4,8 @@ A JavaScript implementation of Behavior Trees. They are useful for implementing 
 
 ## Features
 
-* The needed: Sequences, Selectors, Tasks
-* The extended: Decorators
+- The needed: Sequences, Selectors, Tasks
+- The extended: Decorators
 
 ## Installation
 
@@ -54,15 +54,19 @@ import { Task, SUCCESS } from 'behaviortree'
 const myTask = new Task({
   // (optional) this function is called directly before the run method
   // is called. It allows you to setup things before starting to run
-  start: function(blackboard) { blackboard.isStarted = true; },
+  start: function (blackboard) {
+    blackboard.isStarted = true
+  },
 
   // (optional) this function is called directly after the run method
   // is completed with either this.success() or this.fail(). It allows you to clean up
   // things, after you run the task.
-  end: function(blackboard) { blackboard.isStarted = false; },
+  end: function (blackboard) {
+    blackboard.isStarted = false
+  },
 
   // This is the meat of your task. The run method does everything you want it to do.
-  run: function(blackboard) {
+  run: function (blackboard) {
     return SUCCESS
   }
 })
@@ -70,9 +74,9 @@ const myTask = new Task({
 
 The methods:
 
-* `start`  - Called before run is called. But not if task is resuming after ending with this.running()
-* `end`    - Called after run is called. But not if task finished with this.running()
-* `run`    - Contains the main things you want the task to do
+- `start` - Called before run is called. But not if task is resuming after ending with this.running()
+- `end` - Called after run is called. But not if task finished with this.running()
+- `run` - Contains the main things you want the task to do
 
 ### Creating a Sequence
 
@@ -142,7 +146,7 @@ BehaviorTree is coming with a internal registry in which you can register tasks 
 
 ```js
 // Register a task:
-BehaviorTree.register('testtask', myTask);
+BehaviorTree.register('testtask', myTask)
 // Or register a sequence or priority:
 BehaviorTree.register('test sequence', mySequence)
 ```
@@ -152,10 +156,7 @@ Which you now can simply refer to in your nodes, like:
 ```js
 import { Selector } from 'behaviortree'
 const mySelector = new Selector({
-  nodes: [
-    'my awesome task',
-    'another awe# task to do'
-  ]
+  nodes: ['my awesome task', 'another awe# task to do']
 })
 ```
 
@@ -165,9 +166,8 @@ Using the registry has one more benefit, for simple Tasks with only one `run` me
 BehaviorTree.register('testtask', (blackboard) => {
   console.log('I am doing stuff')
   return SUCCESS
-});
+})
 ```
-
 
 ### Now putting it all together
 
@@ -175,25 +175,28 @@ And now an example of how all could work together.
 
 ```js
 import { BehaviorTree, Sequence, Task, SUCCESS, FAILURE } from 'behaviortree'
-BehaviorTree.register('bark', new Task({
-  run: function(dog) {
-    dog.bark()
-    return SUCCESS
-  }
-}))
+BehaviorTree.register(
+  'bark',
+  new Task({
+    run: function (dog) {
+      dog.bark()
+      return SUCCESS
+    }
+  })
+)
 
 const tree = new Sequence({
   nodes: [
     'bark',
     new Task({
-      run: function(dog) {
+      run: function (dog) {
         dog.randomlyWalk()
         return SUCCESS
       }
     }),
     'bark',
     new Task({
-      run: function(dog) {
+      run: function (dog) {
         if (dog.standBesideATree()) {
           dog.liftALeg()
           dog.pee()
@@ -214,9 +217,9 @@ const bTree = new BehaviorTree({
 })
 
 // The "game" loop:
-setInterval(function() {
+setInterval(function () {
   bTree.step()
-}, 1000/60)
+}, 1000 / 60)
 ```
 
 In this example the following happens: each pass on the `setInterval` (our game loop), the dog barks – we implemented this with a registered node, because we do this twice – then it walks randomly around, then it barks again and then if it find's itself standing beside a tree it pees on the tree.
@@ -279,7 +282,14 @@ Through the `type` property, the importer looks up `Decorators`, `Selectors`, `S
 If you don't like the new `import`-statements, you should still be able to use the traditional `require`-statements:
 
 ```js
-const { BehaviorTree, Sequence, Task, SUCCESS, FAILURE, decorators: { AlwaysSucceedDecorator } } = require('behaviortree')
+const {
+  BehaviorTree,
+  Sequence,
+  Task,
+  SUCCESS,
+  FAILURE,
+  decorators: { AlwaysSucceedDecorator }
+} = require('behaviortree')
 ```
 
 ### Debugging option
@@ -287,7 +297,7 @@ const { BehaviorTree, Sequence, Task, SUCCESS, FAILURE, decorators: { AlwaysSucc
 If you call the `step`-method with the `debug` parameter set to `true`, the state of your last call will be available as `lastRunData` property. But don't do this on a production environment, because the work that is don there is simply not needed for regular evaluation.
 
 ```js
-bTree.step({ debug: true });
+bTree.step({ debug: true })
 console.log(bTree.lastRunData)
 ```
 
@@ -306,18 +316,19 @@ yarn test
 
 ## Version history
 
-* **2.0.4** - Fix bug that start not called after run in branching nodes
-* **2.0.3** - Add decorators to exports
-* **2.0.2** - Now with working node.js build (as well as babel build)
-* **2.0.0** - Complete ES7 rewrite and improvement on ways it works and how it can be used
-* **1.0.4** - Fix resuming in priority nodes
-* **1.0.3** - Removed a useless console.log statement
-* **1.0.2** - Supporting NodeJS now. Bumped to 1.0.2 because of NPM package
-* **0.9.2** - Added AlwaysSucceedDecorator and AlwaysFailDecorator
-* **0.9.1** - Fixed run method in Decorator
-* **0.9.0** - Added Decorators and the InvertDecorator
-* **0.8.0** - Added the Random Selector
-* **0.7.0** - first functional complete release
+- **2.0.5** - Fix edge case that did not call start on subsequent branching nodes after a running one
+- **2.0.4** - Fix bug that start not called after run in branching nodes
+- **2.0.3** - Add decorators to exports
+- **2.0.2** - Now with working node.js build (as well as babel build)
+- **2.0.0** - Complete ES7 rewrite and improvement on ways it works and how it can be used
+- **1.0.4** - Fix resuming in priority nodes
+- **1.0.3** - Removed a useless console.log statement
+- **1.0.2** - Supporting NodeJS now. Bumped to 1.0.2 because of NPM package
+- **0.9.2** - Added AlwaysSucceedDecorator and AlwaysFailDecorator
+- **0.9.1** - Fixed run method in Decorator
+- **0.9.0** - Added Decorators and the InvertDecorator
+- **0.8.0** - Added the Random Selector
+- **0.7.0** - first functional complete release
 
 ## MIT License
 
