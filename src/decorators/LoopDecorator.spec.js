@@ -5,19 +5,19 @@ import Task from '../Task'
 
 describe('LoopDecorator', () => {
   const task = new Task({
-    run (blackboard) {
+    run(blackboard) {
       ++blackboard.count
       return SUCCESS
     }
   })
   const endingTask = new Task({
-    run (blackboard) {
+    run(blackboard) {
       ++blackboard.count
       return blackboard.count === 2 ? FAILURE : SUCCESS
     }
   })
   const inifinityTask = new Task({
-    run (blackboard) {
+    run(blackboard) {
       ++blackboard.count
       return blackboard.count === 100 ? FAILURE : SUCCESS
     }

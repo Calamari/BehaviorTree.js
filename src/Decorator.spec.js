@@ -6,7 +6,7 @@ import Task from './Task'
 describe('Decorator', () => {
   it('does nothing by itself', () => {
     const task = new Task({
-      run (blackboard) {
+      run(blackboard) {
         return blackboard.result
       }
     })

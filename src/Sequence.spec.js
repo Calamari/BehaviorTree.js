@@ -36,10 +36,7 @@ describe('Sequence', () => {
 
   it('stops immediately at a failing node', () => {
     const selector = new Sequence({
-      nodes: [
-        failTask,
-        successTask
-      ]
+      nodes: [failTask, successTask]
     })
 
     selector.run()
@@ -50,13 +47,7 @@ describe('Sequence', () => {
 
   it('stops at a failing node', () => {
     const selector = new Sequence({
-      nodes: [
-        successTask,
-        successTask,
-        failTask,
-        failTask,
-        successTask
-      ]
+      nodes: [successTask, successTask, failTask, failTask, successTask]
     })
 
     selector.run()
@@ -67,12 +58,7 @@ describe('Sequence', () => {
 
   it('calls all tasks if all are successful', () => {
     const selector = new Sequence({
-      nodes: [
-        successTask,
-        successTask,
-        successTask,
-        successTask
-      ]
+      nodes: [successTask, successTask, successTask, successTask]
     })
 
     selector.run()
@@ -83,12 +69,7 @@ describe('Sequence', () => {
 
   it('does not call tasks after running task', () => {
     const selector = new Sequence({
-      nodes: [
-        successTask,
-        successTask,
-        runningTask,
-        successTask
-      ]
+      nodes: [successTask, successTask, runningTask, successTask]
     })
 
     selector.run()
@@ -99,11 +80,7 @@ describe('Sequence', () => {
   describe('result values', () => {
     it('returns SUCCESS if all task succeeds', () => {
       const selector = new Sequence({
-        nodes: [
-          successTask,
-          successTask,
-          successTask
-        ]
+        nodes: [successTask, successTask, successTask]
       })
 
       expect(selector.run()).toEqual(SUCCESS)
@@ -111,12 +88,7 @@ describe('Sequence', () => {
 
     it('returns FAILURE if one task fails', () => {
       const selector = new Sequence({
-        nodes: [
-          successTask,
-          failTask,
-          successTask,
-          successTask
-        ]
+        nodes: [successTask, failTask, successTask, successTask]
       })
 
       expect(selector.run()).toEqual(FAILURE)
@@ -124,12 +96,7 @@ describe('Sequence', () => {
 
     it('returns the index of still running task as array of running indexes', () => {
       const selector = new Sequence({
-        nodes: [
-          successTask,
-          successTask,
-          runningTask,
-          successTask
-        ]
+        nodes: [successTask, successTask, runningTask, successTask]
       })
 
       expect(selector.run()).toEqual([2])
@@ -152,10 +119,7 @@ describe('Sequence', () => {
 
     it('can be passed to a task, and stores data between different tasks', () => {
       const selector = new Sequence({
-        nodes: [
-          aTask,
-          bTask
-        ]
+        nodes: [aTask, bTask]
       })
       const blackboard = { counter: 0 }
 
@@ -185,11 +149,7 @@ describe('Sequence', () => {
           aTask,
           aTask,
           new Sequence({
-            nodes: [
-              bTask,
-              bTask,
-              bTask
-            ]
+            nodes: [bTask, bTask, bTask]
           })
         ]
       })
@@ -214,11 +174,7 @@ describe('Sequence', () => {
           aTask,
           aTask,
           new Sequence({
-            nodes: [
-              bTask,
-              switchTask,
-              bTask
-            ]
+            nodes: [bTask, switchTask, bTask]
           }),
           aTask
         ]
@@ -309,12 +265,7 @@ describe('Sequence', () => {
 
       it('start is not called again on further running node', () => {
         const selector = new Sequence({
-          nodes: [
-            aTask,
-            aTask,
-            switchTask,
-            aTask
-          ]
+          nodes: [aTask, aTask, switchTask, aTask]
         })
         const blackboard = {
           switchResult: RUNNING,

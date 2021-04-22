@@ -14,8 +14,6 @@ export Random from './Random'
 export Decorator from './Decorator'
 export Task from './Task'
 
-export {
-  decorators
-}
+export { decorators }
 
 export { SUCCESS, FAILURE, RUNNING } from './constants'

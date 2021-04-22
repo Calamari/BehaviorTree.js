@@ -9,7 +9,7 @@ import Task from './Task'
 class EnemyInSightDecorator extends Decorator {
   nodeType = 'EnemyInSightDecorator'
 
-  decorate (run, blackboard) {
+  decorate(run, blackboard) {
     return blackboard.enemyInSight ? run() : FAILURE
   }
 }
@@ -24,26 +24,35 @@ describe('BehaviorTreeImporter', () => {
     blackboard = {
       timesJumped: 0
     }
-    BehaviorTree.register('walk', new Task({
-      run: function (blackboard) {
-        blackboard.walking = true
-        return SUCCESS
-      }
-    }))
+    BehaviorTree.register(
+      'walk',
+      new Task({
+        run: function (blackboard) {
+          blackboard.walking = true
+          return SUCCESS
+        }
+      })
+    )
 
-    BehaviorTree.register('idle', new Task({
-      run: function (blackboard) {
-        blackboard.walking = false
-        return SUCCESS
-      }
-    }))
+    BehaviorTree.register(
+      'idle',
+      new Task({
+        run: function (blackboard) {
+          blackboard.walking = false
+          return SUCCESS
+        }
+      })
+    )
 
-    BehaviorTree.register('jump', new Task({
-      run: function (blackboard) {
-        blackboard.timesJumped++
-        return SUCCESS
-      }
-    }))
+    BehaviorTree.register(
+      'jump',
+      new Task({
+        run: function (blackboard) {
+          blackboard.timesJumped++
+          return SUCCESS
+        }
+      })
+    )
     importer = new BehaviorTreeImporter()
     importer.defineType('ifEnemyInSight', EnemyInSightDecorator)
   })
@@ -83,27 +92,27 @@ describe('BehaviorTreeImporter', () => {
 
       const selectorNodes = bTree.lastRunData[0].nodes
       expect(selectorNodes.length).toEqual(3)
-      expect(selectorNodes.map(x => x.name)).toEqual(['handling enemies', 'jumping around', 'doing nothing'])
-      expect(selectorNodes.map(x => x.result)).toEqual([false, true, undefined])
+      expect(selectorNodes.map((x) => x.name)).toEqual(['handling enemies', 'jumping around', 'doing nothing'])
+      expect(selectorNodes.map((x) => x.result)).toEqual([false, true, undefined])
     })
 
     it('passes in the config as it is supposed to', () => {
       bTree.step({ debug: true })
       bTree.step({ debug: true })
       let selectorNodes = bTree.lastRunData[0].nodes
-      expect(selectorNodes.map(x => x.result)).toEqual([false, false, true])
+      expect(selectorNodes.map((x) => x.result)).toEqual([false, false, true])
 
       clock.tick(999)
       bTree.step({ debug: true })
 
       selectorNodes = bTree.lastRunData[0].nodes
-      expect(selectorNodes.map(x => x.result)).toEqual([false, false, true])
+      expect(selectorNodes.map((x) => x.result)).toEqual([false, false, true])
 
       clock.tick(1)
       bTree.step({ debug: true })
 
       selectorNodes = bTree.lastRunData[0].nodes
-      expect(selectorNodes.map(x => x.result)).toEqual([false, true, undefined])
+      expect(selectorNodes.map((x) => x.result)).toEqual([false, true, undefined])
     })
   })
 })

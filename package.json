@@ -4,7 +4,11 @@
   "description": "A JavaScript implementation of Behavior Trees. They are useful for implementing AIs. For Browsers and NodeJS.",
   "module": "dist/index.js",
   "main": "dist/index.node.js",
-  "dependencies": {},
+  "dependencies": {
+    "eslint-config-prettier": "^8.2.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.2.1"
+  },
   "devDependencies": {
     "babel-eslint": "7",
     "babel-loader": "^7",

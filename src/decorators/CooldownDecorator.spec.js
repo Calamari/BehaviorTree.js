@@ -6,7 +6,7 @@ import Task from '../Task'
 
 describe('CooldownDecorator', () => {
   const task = new Task({
-    run (blackboard) {
+    run(blackboard) {
       ++blackboard.count
       return SUCCESS
     }
