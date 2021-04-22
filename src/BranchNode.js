@@ -30,8 +30,8 @@ export default class BranchNode extends Node {
       } else {
         if (this.wasRunning) {
           this.wasRunning = false
-          rerun = false
         }
+        rerun = false
         ++currentIndex
       }
     }
