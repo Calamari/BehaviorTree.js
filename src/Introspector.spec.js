@@ -253,4 +253,71 @@ describe('Introspector', () => {
       expect(introspector.results).toEqual([result])
     })
   })
+
+  describe('a full scale tree', () => {
+    beforeEach(() => {
+      blackboard = {
+        start: 0,
+        run: 0,
+        end: 0,
+        result: SUCCESS
+      }
+    })
+
+    it('shows all that did run', () => {
+      const invertedSimple = new InvertDecorator({ node: 'simpleTask' })
+      const selector1 = new Selector({ name: 'select1', nodes: ['failingTask', 'simpleTask'] })
+      const selector2 = new Selector({ name: 'select2', nodes: [invertedSimple, 'simpleTask', 'failingTask'] })
+
+      const tree = new Sequence({ name: 'sequence', nodes: [selector1, selector2] })
+      bTree = new BehaviorTree({ tree, blackboard })
+
+      bTree.step({ introspector })
+
+      const result = [
+        {
+          name: 'sequence',
+          result: SUCCESS,
+          children: [
+            {
+              name: 'select1',
+              result: SUCCESS,
+              children: [
+                {
+                  name: 'Bumm',
+                  result: FAILURE
+                },
+                {
+                  name: 'The Task',
+                  result: SUCCESS
+                }
+              ]
+            },
+            {
+              name: 'select2',
+              result: SUCCESS,
+              children: [
+                {
+                  result: FAILURE,
+                  children: [
+                    {
+                      name: 'The Task',
+                      result: SUCCESS
+                    }
+                  ]
+                },
+                {
+                  name: 'The Task',
+                  result: SUCCESS
+                }
+              ]
+            }
+          ]
+        }
+      ]
+
+      expect(introspector.lastResult).toEqual(result)
+      expect(introspector.results).toEqual([result])
+    })
+  })
 })
