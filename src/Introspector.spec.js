@@ -37,6 +37,15 @@ describe('Introspector', () => {
       }
     })
   )
+  BehaviorTree.register(
+    'runningTask',
+    new Task({
+      name: 'Forest',
+      run: function (blackboard) {
+        return RUNNING
+      }
+    })
+  )
 
   beforeEach(() => {
     introspector = new Introspector()
@@ -244,6 +253,29 @@ describe('Introspector', () => {
             {
               name: 'The Task',
               result: SUCCESS
+            }
+          ]
+        }
+      ]
+
+      expect(introspector.lastResult).toEqual(result)
+      expect(introspector.results).toEqual([result])
+    })
+
+    it('does not show more then was running', () => {
+      const tree = new Selector({ name: 'select', nodes: ['runningTask', 'simpleTask'] })
+      bTree = new BehaviorTree({ tree, blackboard })
+
+      bTree.step({ introspector })
+
+      const result = [
+        {
+          name: 'select',
+          result: RUNNING,
+          children: [
+            {
+              name: 'Forest',
+              result: RUNNING
             }
           ]
         }

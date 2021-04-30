@@ -21,10 +21,12 @@ export default class BranchNode extends Node {
       const result = node.run(blackboard, { indexes, introspector, rerun, runData: subRunData, registryLookUp })
       if (result === RUNNING) {
         this.wasRunning = true
-        return [currentIndex, ...indexes]
+        overallResult = [currentIndex, ...indexes]
+        break
       } else if (typeof result === 'object') {
         // array
-        return [...indexes, currentIndex, ...result]
+        overallResult = [...indexes, currentIndex, ...result]
+        break
       } else if (result === this.OPT_OUT_CASE) {
         overallResult = result
         break
@@ -38,7 +40,8 @@ export default class BranchNode extends Node {
     }
     this.blueprint.end(blackboard)
     if (introspector) {
-      introspector.wrapLast(Math.min(currentIndex + 1, this.numNodes), this, overallResult, blackboard)
+      const debugResult = typeof overallResult === 'object' ? RUNNING : overallResult
+      introspector.wrapLast(Math.min(currentIndex + 1, this.numNodes), this, debugResult, blackboard)
     }
     if (runData) {
       ++currentIndex
