@@ -28,7 +28,7 @@ export default class Decorator extends Node {
     )
 
     if (introspector) {
-      introspector.wrapLast(this, result, blackboard)
+      introspector.wrapLast(1, this, result, blackboard)
     }
     if (runData) {
       runData.push({

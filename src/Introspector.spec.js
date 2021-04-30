@@ -4,6 +4,7 @@ import BehaviorTree from './BehaviorTree'
 import Task from './Task'
 import InvertDecorator from './decorators/InvertDecorator'
 import Introspector from './Introspector'
+import Selector from './Selector'
 
 describe('Introspector', () => {
   let bTree
@@ -23,6 +24,15 @@ describe('Introspector', () => {
       },
       end: function (blackboard) {
         ++blackboard.end
+      }
+    })
+  )
+  BehaviorTree.register(
+    'failingTask',
+    new Task({
+      name: 'Bumm',
+      run: function (blackboard) {
+        return FAILURE
       }
     })
   )
@@ -111,6 +121,67 @@ describe('Introspector', () => {
           name: 'inverter',
           result: FAILURE,
           children: [
+            {
+              name: 'The Task',
+              result: SUCCESS
+            }
+          ]
+        }
+      ]
+
+      expect(introspector.lastResult).toEqual(result)
+      expect(introspector.results).toEqual([result])
+    })
+  })
+
+  describe('with a selector', () => {
+    beforeEach(() => {
+      blackboard = {
+        start: 0,
+        run: 0,
+        end: 0,
+        result: SUCCESS
+      }
+    })
+
+    it('does not show task that did not run', () => {
+      const tree = new Selector({ name: 'select', nodes: ['simpleTask', 'failingTask'] })
+      bTree = new BehaviorTree({ tree, blackboard })
+
+      bTree.step({ introspector })
+
+      const result = [
+        {
+          name: 'select',
+          result: SUCCESS,
+          children: [
+            {
+              name: 'The Task',
+              result: SUCCESS
+            }
+          ]
+        }
+      ]
+
+      expect(introspector.lastResult).toEqual(result)
+      expect(introspector.results).toEqual([result])
+    })
+
+    it('show all tasks if all did run', () => {
+      const tree = new Selector({ name: 'select', nodes: ['failingTask', 'simpleTask'] })
+      bTree = new BehaviorTree({ tree, blackboard })
+
+      bTree.step({ introspector })
+
+      const result = [
+        {
+          name: 'select',
+          result: SUCCESS,
+          children: [
+            {
+              name: 'Bumm',
+              result: FAILURE
+            },
             {
               name: 'The Task',
               result: SUCCESS

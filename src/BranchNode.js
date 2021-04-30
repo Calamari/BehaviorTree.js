@@ -11,14 +11,14 @@ export default class BranchNode extends Node {
     this.wasRunning = false
   }
 
-  run(blackboard = null, { indexes = [], rerun, runData, registryLookUp = (x) => x } = {}) {
+  run(blackboard = null, { indexes = [], introspector, rerun, runData, registryLookUp = (x) => x } = {}) {
     const subRunData = runData ? [] : null
     this.blueprint.start(blackboard)
     let overallResult = this.START_CASE
     let currentIndex = indexes.shift() || 0
     while (currentIndex < this.numNodes) {
       const node = registryLookUp(this.blueprint.nodes[currentIndex])
-      const result = node.run(blackboard, { indexes, rerun, runData: subRunData, registryLookUp })
+      const result = node.run(blackboard, { indexes, introspector, rerun, runData: subRunData, registryLookUp })
       if (result === RUNNING) {
         this.wasRunning = true
         return [currentIndex, ...indexes]
@@ -37,6 +37,9 @@ export default class BranchNode extends Node {
       }
     }
     this.blueprint.end(blackboard)
+    if (introspector) {
+      introspector.wrapLast(currentIndex + 1, this, overallResult, blackboard)
+    }
     if (runData) {
       ++currentIndex
       // collect data of unfinished nodes
