@@ -15,12 +15,16 @@ export default class Introspector {
   }
 
   push(node, result) {
-    this.currentResult.push({ name: node.name, result })
+    this.currentResult.push(this._toResult(node, result))
   }
 
   wrapLast(numResults, node, result) {
     const children = this.currentResult.splice(this.currentResult.length - numResults, numResults)
-    this.currentResult.push({ name: node.name, result, children })
+    this.currentResult.push({ ...this._toResult(node, result), children })
+  }
+
+  _toResult(node, result) {
+    return { ...(node.name ? { name: node.name } : {}), result }
   }
 
   get lastResult() {
