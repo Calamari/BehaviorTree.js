@@ -38,7 +38,7 @@ export default class BranchNode extends Node {
     }
     this.blueprint.end(blackboard)
     if (introspector) {
-      introspector.wrapLast(currentIndex + 1, this, overallResult, blackboard)
+      introspector.wrapLast(Math.min(currentIndex + 1, this.numNodes), this, overallResult, blackboard)
     }
     if (runData) {
       ++currentIndex
