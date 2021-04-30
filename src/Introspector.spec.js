@@ -5,6 +5,7 @@ import Task from './Task'
 import InvertDecorator from './decorators/InvertDecorator'
 import Introspector from './Introspector'
 import Selector from './Selector'
+import Sequence from './Sequence'
 
 describe('Introspector', () => {
   let bTree
@@ -98,6 +99,64 @@ describe('Introspector', () => {
 
       expect(introspector.lastResult).toEqual(resultThirdRun)
       expect(introspector.results).toEqual([resultFirstRun, resultSecondRun, resultThirdRun])
+    })
+  })
+
+  describe('with nameless tasks', () => {
+    beforeEach(() => {
+      blackboard = {
+        start: 0,
+        run: 0,
+        end: 0,
+        result: SUCCESS
+      }
+
+      bTree = new BehaviorTree({ tree: new Task({ run: () => RUNNING }), blackboard })
+    })
+
+    it('does not print a name', () => {
+      bTree.step({ introspector })
+
+      const resultFirstRun = [
+        {
+          result: RUNNING
+        }
+      ]
+
+      expect(introspector.lastResult).toEqual(resultFirstRun)
+      expect(introspector.results).toEqual([resultFirstRun])
+    })
+  })
+
+  describe('with nameless branching nodes', () => {
+    beforeEach(() => {
+      blackboard = {
+        start: 0,
+        run: 0,
+        end: 0,
+        result: SUCCESS
+      }
+
+      bTree = new BehaviorTree({ tree: new Sequence({ nodes: ['simpleTask'] }), blackboard })
+    })
+
+    it('does not print a name', () => {
+      bTree.step({ introspector })
+
+      const resultFirstRun = [
+        {
+          children: [
+            {
+              name: 'The Task',
+              result: SUCCESS
+            }
+          ],
+          result: SUCCESS
+        }
+      ]
+
+      expect(introspector.lastResult).toEqual(resultFirstRun)
+      expect(introspector.results).toEqual([resultFirstRun])
     })
   })
 
