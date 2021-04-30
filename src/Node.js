@@ -9,11 +9,14 @@ export default class Node {
     this.blueprint = { run, start, end, ...props }
   }
 
-  run(blackboard, { rerun = false, runData, registryLookUp = (x) => x, ...config } = {}) {
+  run(blackboard, { introspector, rerun = false, runData, registryLookUp = (x) => x, ...config } = {}) {
     if (!rerun) this.blueprint.start(blackboard)
     const result = this.blueprint.run(blackboard, { ...config, rerun, runData, registryLookUp })
     if (result !== RUNNING) {
       this.blueprint.end(blackboard)
+    }
+    if (introspector) {
+      introspector.push(this, result, blackboard)
     }
     if (runData) {
       runData.push({
