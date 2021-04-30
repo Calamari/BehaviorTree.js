@@ -13,14 +13,23 @@ export default class Decorator extends Node {
     return run()
   }
 
-  run(blackboard, { runData, registryLookUp = (x) => x, ...config } = {}) {
+  run(blackboard, { introspector, runData, registryLookUp = (x) => x, ...config } = {}) {
     const subRunData = runData ? [] : null
     const result = this.decorate(
-      () => registryLookUp(this.blueprint.node).run(blackboard, { ...config, registryLookUp, runData: subRunData }),
+      () =>
+        registryLookUp(this.blueprint.node).run(blackboard, {
+          ...config,
+          introspector,
+          registryLookUp,
+          runData: subRunData
+        }),
       blackboard,
       this.config
     )
 
+    if (introspector) {
+      introspector.wrapLast(this, result, blackboard)
+    }
     if (runData) {
       runData.push({
         config: this.config,

@@ -18,6 +18,11 @@ export default class Introspector {
     this.currentResult.push({ name: node.name, result })
   }
 
+  wrapLast(node, result) {
+    const lastChild = this.currentResult.pop()
+    this.currentResult.push({ name: node.name, result, children: [lastChild] })
+  }
+
   get lastResult() {
     if (this.results.length === 0) {
       return null
