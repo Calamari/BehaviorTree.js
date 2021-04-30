@@ -326,52 +326,6 @@ describe('BehaviorTree', () => {
     })
   })
 
-  describe('debugging the tree', () => {
-    beforeEach(() => {
-      BehaviorTree.register('taskA', () => {
-        return SUCCESS
-      })
-      BehaviorTree.register('taskB', () => {
-        return FAILURE
-      })
-      BehaviorTree.register('taskC', () => {
-        return SUCCESS
-      })
-      BehaviorTree.register('taskD', () => {
-        return SUCCESS
-      })
-
-      bTree = new BehaviorTree({
-        blackboard,
-        tree: new Selector({
-          name: 'TestSelector',
-          nodes: ['taskB', new InvertDecorator({ name: 'inverting', node: 'taskA' }), 'taskB', 'taskC', 'taskD']
-        })
-      })
-    })
-
-    it('not using the debug option is not generating lastRunData', () => {
-      bTree.step()
-
-      expect(bTree.lastRunData).toEqual(null)
-    })
-
-    it('there is a debug option providing more output about that step', () => {
-      expect(bTree.lastRunData).toEqual(undefined)
-
-      bTree.step({ debug: true })
-
-      expect(bTree.lastRunData.length).toEqual(1)
-      expect(bTree.lastRunData[0].name).toEqual('TestSelector')
-      expect(bTree.lastRunData[0].result).toEqual(true)
-      const selectorNodes = bTree.lastRunData[0].nodes
-      expect(selectorNodes.length).toEqual(5)
-      expect(selectorNodes.map((x) => x.name)).toEqual(['taskB', 'inverting', 'taskB', 'taskC', 'taskD'])
-      expect(selectorNodes.map((x) => x.type)).toEqual(['Task', 'InvertDecorator', 'Task', 'Task', 'Task'])
-      expect(selectorNodes.map((x) => x.result)).toEqual([false, false, false, true, undefined])
-    })
-  })
-
   describe('behavior with running nodes', () => {
     it('calls start of all task where appropriate', () => {
       const task1 = new Task({
@@ -551,39 +505,6 @@ describe('BehaviorTree', () => {
         b1run: 1,
         b1end: 1
       })
-    })
-
-    it.only('running nodes don’t affect debugging', () => {
-      const a1 = createTask('a1')
-      const b1 = createTask('b1')
-
-      const aSeq = new Sequence({
-        name: 'aSeq',
-        nodes: [a1]
-      })
-      const bSeq = new Sequence({
-        name: 'bSeq',
-        nodes: [b1]
-      })
-      const cSeq = new Sequence({
-        name: 'cSeq',
-        nodes: [aSeq, bSeq]
-      })
-      const blackboard = {
-        result: {},
-        running: {}
-      }
-
-      const bTree = new BehaviorTree({
-        tree: cSeq,
-        blackboard
-      })
-
-      blackboard.running.a1 = true
-
-      bTree.step({ debug: true })
-
-      console.log(bTree.lastRunData)
     })
   })
 })

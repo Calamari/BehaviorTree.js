@@ -25,10 +25,9 @@ export default class BehaviorTree {
     this.lastResult = null
   }
 
-  step({ introspector, debug = false } = {}) {
+  step({ introspector } = {}) {
     const indexes = this.lastResult && typeof this.lastResult === 'object' ? this.lastResult : []
     const rerun = this.lastResult === RUNNING || indexes.length > 0
-    const runData = debug ? [] : null
     if (introspector) {
       introspector.start(this)
     }
@@ -36,10 +35,8 @@ export default class BehaviorTree {
       indexes,
       introspector,
       rerun,
-      registryLookUp,
-      runData
+      registryLookUp
     })
-    this.lastRunData = runData
     if (introspector) {
       introspector.end()
     }
