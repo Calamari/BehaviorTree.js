@@ -27,6 +27,10 @@ export default class Introspector {
     return { ...(node.name ? { name: node.name } : {}), result }
   }
 
+  reset() {
+    this.results = []
+  }
+
   get lastResult() {
     if (this.results.length === 0) {
       return null
