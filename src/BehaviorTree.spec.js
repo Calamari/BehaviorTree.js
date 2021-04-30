@@ -350,7 +350,7 @@ describe('BehaviorTree', () => {
       })
     })
 
-    it('not using the debug optino is not generating lastRunData', () => {
+    it('not using the debug option is not generating lastRunData', () => {
       bTree.step()
 
       expect(bTree.lastRunData).toEqual(null)
@@ -481,6 +481,7 @@ describe('BehaviorTree', () => {
   describe('some curious edge cases', () => {
     function createTask(name) {
       return new Task({
+        name,
         start: function (blackboard) {
           if (blackboard.result[`${name}start`]) {
             ++blackboard.result[`${name}start`]
@@ -550,6 +551,39 @@ describe('BehaviorTree', () => {
         b1run: 1,
         b1end: 1
       })
+    })
+
+    it.only('running nodes don’t affect debugging', () => {
+      const a1 = createTask('a1')
+      const b1 = createTask('b1')
+
+      const aSeq = new Sequence({
+        name: 'aSeq',
+        nodes: [a1]
+      })
+      const bSeq = new Sequence({
+        name: 'bSeq',
+        nodes: [b1]
+      })
+      const cSeq = new Sequence({
+        name: 'cSeq',
+        nodes: [aSeq, bSeq]
+      })
+      const blackboard = {
+        result: {},
+        running: {}
+      }
+
+      const bTree = new BehaviorTree({
+        tree: cSeq,
+        blackboard
+      })
+
+      blackboard.running.a1 = true
+
+      bTree.step({ debug: true })
+
+      console.log(bTree.lastRunData)
     })
   })
 })
