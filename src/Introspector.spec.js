@@ -352,4 +352,19 @@ describe('Introspector', () => {
       expect(introspector.results).toEqual([result])
     })
   })
+
+  describe('.reset method', () => {
+    it('cleans the results', () => {
+      bTree = new BehaviorTree({ tree: 'simpleTask', blackboard: {} })
+      bTree.step({ introspector })
+
+      expect(introspector.lastResult).not.toEqual(null)
+      expect(introspector.results).not.toEqual([])
+
+      introspector.reset()
+
+      expect(introspector.lastResult).toEqual(null)
+      expect(introspector.results).toEqual([])
+    })
+  })
 })
