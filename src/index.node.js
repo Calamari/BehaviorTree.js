@@ -15,6 +15,8 @@ module.exports = {
   Decorator: require('./Decorator').default,
   Task: require('./Task').default,
 
+  Introspector: require('./Introspector').default,
+
   decorators: { ...require('./decorators') },
 
   ...require('./constants')
