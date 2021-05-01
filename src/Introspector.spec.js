@@ -71,12 +71,10 @@ describe('Introspector', () => {
     it('puts in the result of the last run', () => {
       bTree.step({ introspector })
 
-      const resultFirstRun = [
-        {
-          name: 'The Task',
-          result: SUCCESS
-        }
-      ]
+      const resultFirstRun = {
+        name: 'The Task',
+        result: SUCCESS
+      }
 
       expect(introspector.lastResult).toEqual(resultFirstRun)
       expect(introspector.results).toEqual([resultFirstRun])
@@ -85,12 +83,10 @@ describe('Introspector', () => {
 
       bTree.step({ introspector })
 
-      const resultSecondRun = [
-        {
-          name: 'The Task',
-          result: FAILURE
-        }
-      ]
+      const resultSecondRun = {
+        name: 'The Task',
+        result: FAILURE
+      }
 
       expect(introspector.lastResult).toEqual(resultSecondRun)
       expect(introspector.results).toEqual([resultFirstRun, resultSecondRun])
@@ -99,12 +95,10 @@ describe('Introspector', () => {
 
       bTree.step({ introspector })
 
-      const resultThirdRun = [
-        {
-          name: 'The Task',
-          result: RUNNING
-        }
-      ]
+      const resultThirdRun = {
+        name: 'The Task',
+        result: RUNNING
+      }
 
       expect(introspector.lastResult).toEqual(resultThirdRun)
       expect(introspector.results).toEqual([resultFirstRun, resultSecondRun, resultThirdRun])
@@ -126,11 +120,9 @@ describe('Introspector', () => {
     it('does not print a name', () => {
       bTree.step({ introspector })
 
-      const resultFirstRun = [
-        {
-          result: RUNNING
-        }
-      ]
+      const resultFirstRun = {
+        result: RUNNING
+      }
 
       expect(introspector.lastResult).toEqual(resultFirstRun)
       expect(introspector.results).toEqual([resultFirstRun])
@@ -152,17 +144,15 @@ describe('Introspector', () => {
     it('does not print a name', () => {
       bTree.step({ introspector })
 
-      const resultFirstRun = [
-        {
-          children: [
-            {
-              name: 'The Task',
-              result: SUCCESS
-            }
-          ],
-          result: SUCCESS
-        }
-      ]
+      const resultFirstRun = {
+        children: [
+          {
+            name: 'The Task',
+            result: SUCCESS
+          }
+        ],
+        result: SUCCESS
+      }
 
       expect(introspector.lastResult).toEqual(resultFirstRun)
       expect(introspector.results).toEqual([resultFirstRun])
@@ -184,18 +174,16 @@ describe('Introspector', () => {
     it('shows Task and Decorator', () => {
       bTree.step({ introspector })
 
-      const result = [
-        {
-          name: 'inverter',
-          result: FAILURE,
-          children: [
-            {
-              name: 'The Task',
-              result: SUCCESS
-            }
-          ]
-        }
-      ]
+      const result = {
+        name: 'inverter',
+        result: FAILURE,
+        children: [
+          {
+            name: 'The Task',
+            result: SUCCESS
+          }
+        ]
+      }
 
       expect(introspector.lastResult).toEqual(result)
       expect(introspector.results).toEqual([result])
@@ -218,18 +206,16 @@ describe('Introspector', () => {
 
       bTree.step({ introspector })
 
-      const result = [
-        {
-          name: 'select',
-          result: SUCCESS,
-          children: [
-            {
-              name: 'The Task',
-              result: SUCCESS
-            }
-          ]
-        }
-      ]
+      const result = {
+        name: 'select',
+        result: SUCCESS,
+        children: [
+          {
+            name: 'The Task',
+            result: SUCCESS
+          }
+        ]
+      }
 
       expect(introspector.lastResult).toEqual(result)
       expect(introspector.results).toEqual([result])
@@ -241,22 +227,20 @@ describe('Introspector', () => {
 
       bTree.step({ introspector })
 
-      const result = [
-        {
-          name: 'select',
-          result: SUCCESS,
-          children: [
-            {
-              name: 'Bumm',
-              result: FAILURE
-            },
-            {
-              name: 'The Task',
-              result: SUCCESS
-            }
-          ]
-        }
-      ]
+      const result = {
+        name: 'select',
+        result: SUCCESS,
+        children: [
+          {
+            name: 'Bumm',
+            result: FAILURE
+          },
+          {
+            name: 'The Task',
+            result: SUCCESS
+          }
+        ]
+      }
 
       expect(introspector.lastResult).toEqual(result)
       expect(introspector.results).toEqual([result])
@@ -268,18 +252,16 @@ describe('Introspector', () => {
 
       bTree.step({ introspector })
 
-      const result = [
-        {
-          name: 'select',
-          result: RUNNING,
-          children: [
-            {
-              name: 'Forest',
-              result: RUNNING
-            }
-          ]
-        }
-      ]
+      const result = {
+        name: 'select',
+        result: RUNNING,
+        children: [
+          {
+            name: 'Forest',
+            result: RUNNING
+          }
+        ]
+      }
 
       expect(introspector.lastResult).toEqual(result)
       expect(introspector.results).toEqual([result])
@@ -306,47 +288,45 @@ describe('Introspector', () => {
 
       bTree.step({ introspector })
 
-      const result = [
-        {
-          name: 'sequence',
-          result: SUCCESS,
-          children: [
-            {
-              name: 'select1',
-              result: SUCCESS,
-              children: [
-                {
-                  name: 'Bumm',
-                  result: FAILURE
-                },
-                {
-                  name: 'The Task',
-                  result: SUCCESS
-                }
-              ]
-            },
-            {
-              name: 'select2',
-              result: SUCCESS,
-              children: [
-                {
-                  result: FAILURE,
-                  children: [
-                    {
-                      name: 'The Task',
-                      result: SUCCESS
-                    }
-                  ]
-                },
-                {
-                  name: 'The Task',
-                  result: SUCCESS
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      const result = {
+        name: 'sequence',
+        result: SUCCESS,
+        children: [
+          {
+            name: 'select1',
+            result: SUCCESS,
+            children: [
+              {
+                name: 'Bumm',
+                result: FAILURE
+              },
+              {
+                name: 'The Task',
+                result: SUCCESS
+              }
+            ]
+          },
+          {
+            name: 'select2',
+            result: SUCCESS,
+            children: [
+              {
+                result: FAILURE,
+                children: [
+                  {
+                    name: 'The Task',
+                    result: SUCCESS
+                  }
+                ]
+              },
+              {
+                name: 'The Task',
+                result: SUCCESS
+              }
+            ]
+          }
+        ]
+      }
 
       expect(introspector.lastResult).toEqual(result)
       expect(introspector.results).toEqual([result])
@@ -393,7 +373,7 @@ describe('Introspector', () => {
     it('also has the blackboard available', () => {
       bTree = new BehaviorTree({ tree: new Sequence({ nodes: ['simpleTask', 'failingTask'] }), blackboard })
       bTree.step({ introspector })
-      expect(introspector.lastResult[0].children.map((x) => x.blackboardChanged)).toEqual([true, false])
+      expect(introspector.lastResult.children.map((x) => x.blackboardChanged)).toEqual([true, false])
     })
   })
 })

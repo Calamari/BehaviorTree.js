@@ -91,9 +91,9 @@ describe('BehaviorTreeImporter', () => {
     it('works', () => {
       bTree.step({ introspector })
 
-      expect(introspector.lastResult[0].name).toEqual('the root')
+      expect(introspector.lastResult.name).toEqual('the root')
 
-      const selectorNodes = introspector.lastResult[0].children
+      const selectorNodes = introspector.lastResult.children
 
       expect(selectorNodes.length).toEqual(2)
       expect(selectorNodes.map((x) => x.name)).toEqual(['handling enemies', 'jumping around'])
@@ -103,19 +103,19 @@ describe('BehaviorTreeImporter', () => {
     it('passes in the config as it is supposed to', () => {
       bTree.step({ introspector })
       bTree.step({ introspector })
-      let selectorNodes = introspector.lastResult[0].children
+      let selectorNodes = introspector.lastResult.children
       expect(selectorNodes.map((x) => x.result)).toEqual([false, false, true])
 
       clock.tick(999)
       bTree.step({ introspector })
 
-      selectorNodes = introspector.lastResult[0].children
+      selectorNodes = introspector.lastResult.children
       expect(selectorNodes.map((x) => x.result)).toEqual([false, false, true])
 
       clock.tick(1)
       bTree.step({ introspector })
 
-      selectorNodes = introspector.lastResult[0].children
+      selectorNodes = introspector.lastResult.children
       expect(selectorNodes.map((x) => x.result)).toEqual([false, true])
     })
   })
