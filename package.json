@@ -10,12 +10,11 @@
     "prettier": "^2.2.1"
   },
   "devDependencies": {
-    "babel-eslint": "7",
-    "babel-loader": "^7",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-export-extensions": "^6.22.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-es2015": "^6.24.1",
+    "@babel/core": "^7",
+    "@babel/eslint-parser": "7",
+    "@babel/preset-env": "^7",
+    "babel-loader": "^8.2.2",
+    "benchmark": "^2.1.4",
     "eslint": "7.x",
     "eslint-config-standard": "^16.0.0",
     "eslint-plugin-babel": "^5.0.0",

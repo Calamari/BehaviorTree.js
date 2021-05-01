@@ -1,5 +1,7 @@
-export AlwaysFailDecorator from './AlwaysFailDecorator'
-export AlwaysSucceedDecorator from './AlwaysSucceedDecorator'
-export CooldownDecorator from './CooldownDecorator'
-export InvertDecorator from './InvertDecorator'
-export LoopDecorator from './LoopDecorator'
+import AlwaysFailDecorator from './AlwaysFailDecorator'
+import AlwaysSucceedDecorator from './AlwaysSucceedDecorator'
+import CooldownDecorator from './CooldownDecorator'
+import InvertDecorator from './InvertDecorator'
+import LoopDecorator from './LoopDecorator'
+
+export { AlwaysFailDecorator, AlwaysSucceedDecorator, CooldownDecorator, InvertDecorator, LoopDecorator }
