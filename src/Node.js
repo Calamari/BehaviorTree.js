@@ -21,13 +21,6 @@ export default class Node {
     return result
   }
 
-  collectData() {
-    return {
-      name: this.name,
-      type: this.nodeType
-    }
-  }
-
   get name() {
     return this._name || this.blueprint.name
   }
