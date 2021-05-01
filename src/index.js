@@ -13,6 +13,7 @@ export Sequence from './Sequence'
 export Random from './Random'
 export Decorator from './Decorator'
 export Task from './Task'
+export Introspector from './Introspector'
 
 export { decorators }
 
