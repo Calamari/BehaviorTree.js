@@ -1,5 +1,4 @@
 const path = require('path')
-const pkg = require('./package.json')
 
 const webpackModule = {
   rules: [
@@ -11,23 +10,9 @@ const webpackModule = {
   ]
 }
 
-module.exports = [
-  {
-    target: 'node',
-    mode: 'production',
-    entry: {
-      index: path.join(__dirname, '/src/index.node.js')
-    },
-    devtool: 'inline-source-map',
-    output: {
-      path: path.join(__dirname, '/dist'),
-      libraryTarget: 'commonjs',
-      filename: '[name].node.js'
-    },
-    module: webpackModule
-  },
-  {
-    target: 'node',
+function build(target, type, filename) {
+  return {
+    target,
     mode: 'production',
     entry: {
       index: path.join(__dirname, '/src/index.js')
@@ -35,8 +20,17 @@ module.exports = [
     devtool: 'inline-source-map',
     output: {
       path: path.join(__dirname, '/dist'),
-      filename: '[name].js'
+      library: {
+        type
+      },
+      filename
     },
     module: webpackModule
   }
+}
+
+module.exports = [
+  build('node', 'commonjs', 'index.js'),
+  build('node', 'commonjs', 'index.node.js'),
+  build('web', 'umd', 'index.umd.js')
 ]

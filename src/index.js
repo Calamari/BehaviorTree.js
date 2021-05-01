@@ -1,5 +1,5 @@
 import BehaviorTree, { getRegistry, registryLookUp } from './BehaviorTree'
-import decorators from './decorators'
+import * as decorators from './decorators'
 
 import BehaviorTreeImporter from './BehaviorTreeImporter'
 
