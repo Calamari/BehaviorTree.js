@@ -27,7 +27,7 @@ This package has no own dependencies.
 
 ## How to use
 
-First of all, I should mention that it is possible to use this library also in common-js environment like node v8. For this to work, you should switch all `import` statements with `require()` statements.
+First, I should mention that it is possible to use this library also in common-js environment like node v8. For this to work, you should switch all `import` statements with `require()` statements.
 
 So instead of
 
@@ -41,7 +41,7 @@ just use
 const { BehaviorTree, Sequence, Task, SUCCESS, FAILURE } = require('behaviortree')
 ```
 
-I use the new ES modules syntax, because I think it is very readable. So all the code is written like this. To see working examples of both versions visit/clone [the examples repo](https://github.com/Calamari/BehaviorTree.js-Examples).
+I use the new ES modules syntax, because I think it is very readable. So all the code is written like this. To see working examples of both versions visit/clone [the examples’ repo](https://github.com/Calamari/BehaviorTree.js-Examples).
 
 ### Creating a simple Task
 
@@ -74,13 +74,13 @@ const myTask = new Task({
 
 The methods:
 
-- `start` - Called before run is called. But not if task is resuming after ending with this.running()
-- `end` - Called after run is called. But not if task finished with this.running()
+- `start` - Called before run is called. But not if the task is resuming after ending with this.running()
+- `end` - Called after run is called. But not if the task finished with this.running()
 - `run` - Contains the main things you want the task to do
 
 ### Creating a Sequence
 
-A `Sequence` will call every of it's subnodes one after each other until one node fails (returns `FAILURE`) or all nodes were called. If one node calls fails the `Sequence` will return `FAILURE` itself, else it will call `SUCCESS`.
+A `Sequence` will call every of it's sub nodes one after each other until one node fails (returns `FAILURE`) or all nodes were called. If one node calls fails the `Sequence` will return `FAILURE` itself, else it will call `SUCCESS`.
 
 ```js
 import { Sequence } from 'behaviortree'
@@ -94,7 +94,7 @@ const mySequence = new Sequence({
 
 ### Creating a priority selector
 
-A `Selector` calls every node in it's list until one node returns `SUCCESS`, then itself returns as success. If none of it's subnode calls `SUCCESS` the selector returns `FAILURE`.
+A `Selector` calls every node in its list until one node returns `SUCCESS`, then itself returns as success. If none of it's sub node calls `SUCCESS` the selector returns `FAILURE`.
 
 ```js
 import { Selector } from 'behaviortree'
@@ -222,11 +222,11 @@ setInterval(function () {
 }, 1000 / 60)
 ```
 
-In this example the following happens: each pass on the `setInterval` (our game loop), the dog barks – we implemented this with a registered node, because we do this twice – then it walks randomly around, then it barks again and then if it find's itself standing beside a tree it pees on the tree.
+In this example the following happens: each pass on the `setInterval` (our game loop), the dog barks – we implemented this with a registered node, because we do this twice – then it walks randomly around, then it barks again and then if it finds itself standing beside a tree it pees on the tree.
 
 ### Decorators
 
-Every node can also be a `Decorator`, which wraps a regular (or another decorated) node and either control their value or calling, add some conditions or do something with their returned state. In the `src/decorators` directory you'll find some already implemented decorators for inspiration or use, like an `InvertDecorator` which negates the return value of the decorated node or a `CooldownDecorator` which ensures the node is only called once within a cool down time period.
+Every node can also be a `Decorator`, which wraps a regular (or another decorated) node and either control their value or calling, add some conditions or do something with their returned state. In the `src/decorators` directory you'll find some already implemented decorators for inspiration or use, like an `InvertDecorator` which negates the return value of the decorated node or a `CooldownDecorator` which ensures the node is only called once within a cool downtime period.
 
 ```js
 const decoratedSequence = new InvertDecorator({
@@ -236,13 +236,13 @@ const decoratedSequence = new InvertDecorator({
 
 ### Creating own Decorators
 
-To create an own decorator. You simple need a class that extends the `Decorator` class and overrides the decorate method. Simply look within the `src/decorators` sub folder to check some reference implementations.
+To create an own decorator. You simply need a class that extends the `Decorator` class and overrides the decorate method. Simply look within the `src/decorators` sub folder to check some reference implementations.
 
-Beware that you cannot simple instantiate the `Decorator` class and pass in the `decorate` methods as a blueprint as a dynamically decorator, because the way things works right now.
+Beware that you cannot simply instantiate the `Decorator` class and pass in the `decorate` methods as a blueprint as a dynamical decorator, because the way things works right now.
 
 ### Using built-in Decorators
 
-There are several "simple" decorators already built for your convenience. Check the `src/decorators` dir for more details (and the specs for what they are doing). Using them is as simple as:
+There are several "simple" decorators already built for your convenience. Check the `src/decorators` directory for more details (and the specs for what they are doing). Using them is as simple as:
 
 ```js
 import { BehaviorTree, Sequence, Task, SUCCESS, FAILURE, decorators } from 'behaviortree'
@@ -292,13 +292,36 @@ const {
 } = require('behaviortree')
 ```
 
-### Debugging option
+### Introspecting the Tree (debugging the Tree)
 
-If you call the `step`-method with the `debug` parameter set to `true`, the state of your last call will be available as `lastRunData` property. But don't do this on a production environment, because the work that is don there is simply not needed for regular evaluation.
+You can add a `introspector` parameter to the `step`-method containing an instance of the `Introspector` class or another class implementing a similar interface. Doing that allows you to gather useful statistics/data about every run of your behavior tree and shows you, which tasks did run and returned which results. Useful in gaining an understanding about the correctness of the tree.
+
+But don't do this on a production environment, because the work that is done there is simply not needed for regular evaluation.
 
 ```js
-bTree.step({ debug: true })
-console.log(bTree.lastRunData)
+const { Introspector } = require('behaviortree')
+const introspector = new Introspector()
+bTree.step({ introspector })
+console.log(introspector.lastResult)
+```
+
+That would result in something like:
+
+```js
+{
+  name: 'select',
+  result: Symbol(running),
+  children: [
+    {
+      name: 'targeting',
+      result: false
+    },
+    {
+      name: 'jump',
+      result: Symbol(running)
+    }
+  ]
+}
 ```
 
 ## Contributing
@@ -316,6 +339,7 @@ yarn test
 
 ## Version history
 
+- **2.1.0** - Rework debug handling and implement it as using an Introspector-Interface & -Module.
 - **2.0.5** - Fix edge case that did not call start on subsequent branching nodes after a running one
 - **2.0.4** - Fix bug that start not called after run in branching nodes
 - **2.0.3** - Add decorators to exports
