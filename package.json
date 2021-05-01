@@ -5,6 +5,7 @@
   "module": "dist/index.js",
   "main": "dist/index.node.js",
   "dependencies": {
+    "core-js": "^3.11.1",
     "eslint-config-prettier": "^8.2.0",
     "eslint-plugin-prettier": "^3.4.0",
     "prettier": "^2.2.1"
