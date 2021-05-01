@@ -12,7 +12,7 @@ export default class BranchNode extends Node {
   }
 
   run(blackboard = null, { indexes = [], introspector, rerun, registryLookUp = (x) => x } = {}) {
-    this.blueprint.start(blackboard)
+    if (!rerun) this.blueprint.start(blackboard)
     let overallResult = this.START_CASE
     let currentIndex = indexes.shift() || 0
     while (currentIndex < this.numNodes) {
@@ -35,9 +35,12 @@ export default class BranchNode extends Node {
         ++currentIndex
       }
     }
-    this.blueprint.end(blackboard)
+    const isRunning = overallResult === RUNNING || typeof overallResult === 'object'
+    if (!isRunning) {
+      this.blueprint.end(blackboard)
+    }
     if (introspector) {
-      const debugResult = typeof overallResult === 'object' ? RUNNING : overallResult
+      const debugResult = isRunning ? RUNNING : overallResult
       introspector.wrapLast(Math.min(currentIndex + 1, this.numNodes), this, debugResult, blackboard)
     }
     return overallResult

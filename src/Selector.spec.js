@@ -169,7 +169,7 @@ describe('Selector', () => {
         }
       })
 
-      const selector = new Selector({
+      let selector = new Selector({
         nodes: [
           aTask,
           aTask,
@@ -241,6 +241,36 @@ describe('Selector', () => {
         expect(blackboard.aCounter).toEqual(2)
         expect(blackboard.bCounter).toEqual(1)
         expect(result).toEqual(SUCCESS)
+      })
+
+      it('does not call start on rerunning running task', () => {
+        const blackboard = { start: 0, end: 0, switchResult: RUNNING }
+
+        selector = new Selector({
+          start: function (blackboard) {
+            ++blackboard.start
+          },
+          end: function (blackboard) {
+            ++blackboard.end
+          },
+          nodes: [aTask, switchTask]
+        })
+
+        selector.run(blackboard)
+
+        expect(blackboard.start).toEqual(1)
+        expect(blackboard.end).toEqual(0)
+
+        selector.run(blackboard, { rerun: true })
+
+        expect(blackboard.start).toEqual(1)
+        expect(blackboard.end).toEqual(0)
+
+        blackboard.switchResult = FAILURE
+        selector.run(blackboard, { rerun: true })
+
+        expect(blackboard.start).toEqual(1)
+        expect(blackboard.end).toEqual(1)
       })
     })
   })

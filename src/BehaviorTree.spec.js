@@ -366,6 +366,12 @@ describe('BehaviorTree', () => {
       })
 
       const sequence = new Sequence({
+        start: function (blackboard) {
+          ++blackboard.startSeq
+        },
+        end: function (blackboard) {
+          ++blackboard.endSeq
+        },
         nodes: [task1, task2, task3]
       })
       const blackboard = {
@@ -378,7 +384,9 @@ describe('BehaviorTree', () => {
         end2: 0,
         start3: 0,
         run3: 0,
-        end3: 0
+        end3: 0,
+        startSeq: 0,
+        endSeq: 0
       }
 
       const bTree = new BehaviorTree({
@@ -387,6 +395,9 @@ describe('BehaviorTree', () => {
       })
 
       bTree.step()
+
+      expect(blackboard.startSeq).toEqual(1)
+      expect(blackboard.endSeq).toEqual(0)
 
       expect(blackboard.start1).toEqual(1)
       expect(blackboard.run1).toEqual(1)
@@ -401,6 +412,9 @@ describe('BehaviorTree', () => {
       expect(blackboard.end3).toEqual(0)
 
       bTree.step()
+
+      expect(blackboard.startSeq).toEqual(1)
+      expect(blackboard.endSeq).toEqual(0)
 
       expect(blackboard.start1).toEqual(1)
       expect(blackboard.run1).toEqual(1)
@@ -417,6 +431,9 @@ describe('BehaviorTree', () => {
       blackboard.task2Result = SUCCESS
 
       bTree.step()
+
+      expect(blackboard.startSeq).toEqual(1)
+      expect(blackboard.endSeq).toEqual(1)
 
       expect(blackboard.start1).toEqual(1)
       expect(blackboard.run1).toEqual(1)

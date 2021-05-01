@@ -339,7 +339,9 @@ yarn test
 
 ## Version history
 
-- **2.1.0** - Rework debug handling and implement it as using an Introspector-Interface & -Module.
+- **2.1.0**
+  - Rework debug handling and implement it as using an Introspector-Interface & -Module
+  - Fix problem with start & end calling in `RUNNING` branching nodes
 - **2.0.5** - Fix edge case that did not call start on subsequent branching nodes after a running one
 - **2.0.4** - Fix bug that start not called after run in branching nodes
 - **2.0.3** - Add decorators to exports
