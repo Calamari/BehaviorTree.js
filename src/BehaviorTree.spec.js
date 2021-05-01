@@ -5,6 +5,7 @@ import Sequence from './Sequence'
 import Selector from './Selector'
 import Task from './Task'
 import InvertDecorator from './decorators/InvertDecorator'
+import Decorator from './Decorator'
 
 describe('BehaviorTree', () => {
   let bTree
@@ -365,6 +366,16 @@ describe('BehaviorTree', () => {
         }
       })
 
+      const decoratedTask2 = new Decorator({
+        start: function (blackboard) {
+          ++blackboard.startDeco
+        },
+        end: function (blackboard) {
+          ++blackboard.endDeco
+        },
+        node: task2
+      })
+
       const sequence = new Sequence({
         start: function (blackboard) {
           ++blackboard.startSeq
@@ -372,7 +383,7 @@ describe('BehaviorTree', () => {
         end: function (blackboard) {
           ++blackboard.endSeq
         },
-        nodes: [task1, task2, task3]
+        nodes: [task1, decoratedTask2, task3]
       })
       const blackboard = {
         task2Result: RUNNING,
@@ -386,7 +397,9 @@ describe('BehaviorTree', () => {
         run3: 0,
         end3: 0,
         startSeq: 0,
-        endSeq: 0
+        endSeq: 0,
+        startDeco: 0,
+        endDeco: 0
       }
 
       const bTree = new BehaviorTree({
@@ -398,6 +411,9 @@ describe('BehaviorTree', () => {
 
       expect(blackboard.startSeq).toEqual(1)
       expect(blackboard.endSeq).toEqual(0)
+
+      expect(blackboard.startDeco).toEqual(1)
+      expect(blackboard.endDeco).toEqual(0)
 
       expect(blackboard.start1).toEqual(1)
       expect(blackboard.run1).toEqual(1)
@@ -415,6 +431,9 @@ describe('BehaviorTree', () => {
 
       expect(blackboard.startSeq).toEqual(1)
       expect(blackboard.endSeq).toEqual(0)
+
+      expect(blackboard.startDeco).toEqual(1)
+      expect(blackboard.endDeco).toEqual(0)
 
       expect(blackboard.start1).toEqual(1)
       expect(blackboard.run1).toEqual(1)
@@ -434,6 +453,9 @@ describe('BehaviorTree', () => {
 
       expect(blackboard.startSeq).toEqual(1)
       expect(blackboard.endSeq).toEqual(1)
+
+      expect(blackboard.startDeco).toEqual(1)
+      expect(blackboard.endDeco).toEqual(1)
 
       expect(blackboard.start1).toEqual(1)
       expect(blackboard.run1).toEqual(1)
