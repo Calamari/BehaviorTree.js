@@ -48,6 +48,13 @@ describe('Introspector', () => {
   )
 
   beforeEach(() => {
+    blackboard = {
+      start: 0,
+      run: 0,
+      end: 0,
+      result: SUCCESS
+    }
+
     introspector = new Introspector()
   })
 
@@ -58,13 +65,6 @@ describe('Introspector', () => {
 
   describe('with the simplest tree possible', () => {
     beforeEach(() => {
-      blackboard = {
-        start: 0,
-        run: 0,
-        end: 0,
-        result: SUCCESS
-      }
-
       bTree = new BehaviorTree({ tree: 'simpleTask', blackboard })
     })
 
@@ -365,6 +365,35 @@ describe('Introspector', () => {
 
       expect(introspector.lastResult).toEqual(null)
       expect(introspector.results).toEqual([])
+    })
+  })
+
+  describe('having a custom introspector module', () => {
+    class BlackboardChangesIntrospector extends Introspector {
+      start(tree) {
+        this.blackboardSnap = JSON.stringify(tree.blackboard)
+        super.start(tree)
+      }
+
+      _toResult(node, result, blackboard) {
+        const newSnap = JSON.stringify(blackboard)
+        const blackboardChanged = newSnap !== this.blackboardSnap
+        this.blackboardSnap = newSnap
+        return {
+          ...(node.name ? { name: node.name } : {}),
+          result,
+          blackboardChanged
+        }
+      }
+    }
+    beforeEach(() => {
+      introspector = new BlackboardChangesIntrospector()
+    })
+
+    it('also has the blackboard available', () => {
+      bTree = new BehaviorTree({ tree: new Sequence({ nodes: ['simpleTask', 'failingTask'] }), blackboard })
+      bTree.step({ introspector })
+      expect(introspector.lastResult[0].children.map((x) => x.blackboardChanged)).toEqual([true, false])
     })
   })
 })

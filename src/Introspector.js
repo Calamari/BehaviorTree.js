@@ -14,13 +14,13 @@ export default class Introspector {
     delete this.currentResult
   }
 
-  push(node, result) {
-    this.currentResult.push(this._toResult(node, result))
+  push(node, result, blackboard) {
+    this.currentResult.push(this._toResult(node, result, blackboard))
   }
 
-  wrapLast(numResults, node, result) {
+  wrapLast(numResults, node, result, blackboard) {
     const children = this.currentResult.splice(this.currentResult.length - numResults, numResults)
-    this.currentResult.push({ ...this._toResult(node, result), children })
+    this.currentResult.push({ ...this._toResult(node, result, blackboard), children })
   }
 
   _toResult(node, result) {
