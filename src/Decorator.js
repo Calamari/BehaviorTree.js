@@ -1,3 +1,4 @@
+import { RUNNING } from './constants'
 import Node from './Node'
 
 export default class Decorator extends Node {
@@ -13,13 +14,15 @@ export default class Decorator extends Node {
     return run()
   }
 
-  run(blackboard, { introspector, registryLookUp = (x) => x, ...config } = {}) {
+  run(blackboard, { introspector, rerun, registryLookUp = (x) => x, ...config } = {}) {
+    if (!rerun) this.blueprint.start(blackboard)
     let runCount = 0
     const result = this.decorate(
       () => {
         ++runCount
         return registryLookUp(this.blueprint.node).run(blackboard, {
           ...config,
+          rerun,
           introspector,
           registryLookUp
         })
@@ -28,6 +31,9 @@ export default class Decorator extends Node {
       this.config
     )
 
+    if (result !== RUNNING) {
+      this.blueprint.end(blackboard)
+    }
     if (introspector) {
       introspector.wrapLast(runCount, this, result, blackboard)
     }
