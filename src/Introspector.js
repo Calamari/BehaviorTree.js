@@ -9,7 +9,7 @@ export default class Introspector {
   }
 
   end() {
-    this.results.push(this.currentResult)
+    this.results.push(this.currentResult.pop())
     delete this.tree
     delete this.currentResult
   }
