@@ -73,4 +73,36 @@ describe('Random', () => {
     expect(blackboard.callStack[1]).toEqual('task3')
     expect(blackboard.callStack[2]).toEqual('task3')
   })
+
+  it('does not call start on rerunning running task', () => {
+    blackboard.start = 0
+    blackboard.end = 0
+
+    const random = new Random({
+      start: function (blackboard) {
+        ++blackboard.start
+      },
+      end: function (blackboard) {
+        ++blackboard.end
+      },
+      nodes: [task1, task2, task3]
+    })
+
+    blackboard.result = RUNNING
+    random.run(blackboard)
+
+    expect(blackboard.start).toEqual(1)
+    expect(blackboard.end).toEqual(0)
+
+    random.run(blackboard, { rerun: true })
+
+    expect(blackboard.start).toEqual(1)
+    expect(blackboard.end).toEqual(0)
+
+    blackboard.result = FAILURE
+    random.run(blackboard, { rerun: true })
+
+    expect(blackboard.start).toEqual(1)
+    expect(blackboard.end).toEqual(1)
+  })
 })

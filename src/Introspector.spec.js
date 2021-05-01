@@ -6,6 +6,7 @@ import InvertDecorator from './decorators/InvertDecorator'
 import Introspector from './Introspector'
 import Selector from './Selector'
 import Sequence from './Sequence'
+import Random from './Random'
 
 describe('Introspector', () => {
   let bTree
@@ -330,6 +331,33 @@ describe('Introspector', () => {
 
       expect(introspector.lastResult).toEqual(result)
       expect(introspector.results).toEqual([result])
+    })
+  })
+
+  describe('with a Random node', () => {
+    beforeEach(() => {
+      blackboard = {
+        start: 0,
+        run: 0,
+        end: 0,
+        result: SUCCESS
+      }
+      bTree = new BehaviorTree({ tree: new Random({ nodes: ['simpleTask', 'failingTask'] }), blackboard })
+    })
+
+    it('cleans the results', () => {
+      for (let i = 10; i--; ) {
+        bTree.step({ introspector })
+      }
+      expect(introspector.lastResult).not.toEqual(null)
+      expect(introspector.results.length).toEqual(10)
+
+      expect(introspector.lastResult).toEqual(
+        expect.objectContaining({
+          children: [{ name: expect.any(String), result: expect.any(Boolean) }],
+          result: expect.any(Boolean)
+        })
+      )
     })
   })
 
