@@ -299,8 +299,6 @@ describe('Sequence', () => {
         expect(blackboard.run).toEqual(4)
         expect(blackboard.end).toEqual(2)
       })
-
-      it('first node running also works the same way')
     })
   })
 })
