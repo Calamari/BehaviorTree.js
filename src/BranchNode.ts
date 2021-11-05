@@ -1,48 +1,57 @@
-import { RUNNING } from './constants'
-import Node from './Node'
+import { SUCCESS, RUNNING } from './constants';
+import Node from './Node';
+import { Blackboard, Blueprint, RunConfig, Status } from './types';
 
 export default class BranchNode extends Node {
-  nodeType = 'BranchNode'
+  numNodes: number;
+  wasRunning: boolean;
+  nodes: Node[];
+  // Override this in subclasses
+  OPT_OUT_CASE: Status = SUCCESS;
+  START_CASE: Status = SUCCESS;
 
-  constructor(blueprint) {
-    super(blueprint)
+  nodeType = 'BranchNode';
 
-    this.numNodes = blueprint.nodes.length
-    this.wasRunning = false
+  constructor(blueprint: Blueprint) {
+    super(blueprint);
+
+    this.nodes = blueprint.nodes || [];
+    this.numNodes = this.nodes.length;
+    this.wasRunning = false;
   }
 
-  run(blackboard = null, { indexes = [], introspector, rerun, registryLookUp = (x) => x } = {}) {
-    if (!rerun) this.blueprint.start(blackboard)
-    let overallResult = this.START_CASE
-    let currentIndex = indexes.shift() || 0
+  run(blackboard: Blackboard = {}, { indexes = [], introspector, rerun, registryLookUp = (x) => x as Node }: RunConfig = {}) {
+    if (!rerun) this.blueprint.start(blackboard);
+    let overallResult: Status | any = this.START_CASE;
+    let currentIndex = indexes.shift() || 0;
     while (currentIndex < this.numNodes) {
-      const node = registryLookUp(this.blueprint.nodes[currentIndex])
-      const result = node.run(blackboard, { indexes, introspector, rerun, registryLookUp })
+      const node = registryLookUp(this.nodes[currentIndex]);
+      const result = node.run(blackboard, { indexes, introspector, rerun, registryLookUp });
       if (result === RUNNING) {
-        this.wasRunning = true
-        overallResult = [currentIndex, ...indexes]
-        break
+        this.wasRunning = true;
+        overallResult = [currentIndex, ...indexes];
+        break;
       } else if (typeof result === 'object') {
         // array
-        overallResult = [...indexes, currentIndex, ...result]
-        break
+        overallResult = [...indexes, currentIndex, ...result];
+        break;
       } else if (result === this.OPT_OUT_CASE) {
-        overallResult = result
-        break
+        overallResult = result;
+        break;
       } else {
-        this.wasRunning = false
-        rerun = false
-        ++currentIndex
+        this.wasRunning = false;
+        rerun = false;
+        ++currentIndex;
       }
     }
-    const isRunning = overallResult === RUNNING || typeof overallResult === 'object'
+    const isRunning = overallResult === RUNNING || typeof overallResult === 'object';
     if (!isRunning) {
-      this.blueprint.end(blackboard)
+      this.blueprint.end(blackboard);
     }
     if (introspector) {
-      const debugResult = isRunning ? RUNNING : overallResult
-      introspector.wrapLast(Math.min(currentIndex + 1, this.numNodes), this, debugResult, blackboard)
+      const debugResult = isRunning ? RUNNING : overallResult;
+      introspector.wrapLast(Math.min(currentIndex + 1, this.numNodes), this, debugResult, blackboard);
     }
-    return overallResult
+    return overallResult;
   }
 }

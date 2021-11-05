@@ -1,12 +1,13 @@
-import { RUNNING, SUCCESS } from '../constants'
-import Decorator from '../Decorator'
+import { RUNNING, SUCCESS } from '../constants';
+import Decorator from '../Decorator';
+import { Callback } from '../types';
 
 export default class AlwaysSucceedDecorator extends Decorator {
-  nodeType = 'AlwaysSucceedDecorator'
+  nodeType = 'AlwaysSucceedDecorator';
 
-  decorate(run) {
-    const result = run()
-    if (result === RUNNING) return RUNNING
-    return SUCCESS
+  decorate(run: Callback) {
+    const result = run();
+    if (result === RUNNING) return RUNNING;
+    return SUCCESS;
   }
 }

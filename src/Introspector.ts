@@ -1,40 +1,54 @@
+import BehaviorTree from '.';
+import Node from './Node';
+import { Blackboard, Status } from './types';
+
+export interface IntrospectionResult {}
+
 export default class Introspector {
+  currentResult: IntrospectionResult[];
+  results: IntrospectionResult[];
+  tree?: BehaviorTree;
+
   constructor() {
-    this.results = []
+    this.currentResult = [];
+    this.results = [];
   }
 
-  start(tree) {
-    this.tree = tree
-    this.currentResult = []
+  start(tree: BehaviorTree) {
+    this.tree = tree;
+    this.currentResult = [];
   }
 
   end() {
-    this.results.push(this.currentResult.pop())
-    delete this.tree
-    delete this.currentResult
+    const result = this.currentResult.pop();
+    if (result) {
+      this.results.push(result);
+    }
+    delete this.tree;
+    this.currentResult = [];
   }
 
-  push(node, result, blackboard) {
-    this.currentResult.push(this._toResult(node, result, blackboard))
+  push(node: Node, result: IntrospectionResult, blackboard: Blackboard) {
+    this.currentResult.push(this._toResult(node, result, blackboard));
   }
 
-  wrapLast(numResults, node, result, blackboard) {
-    const children = this.currentResult.splice(this.currentResult.length - numResults, numResults)
-    this.currentResult.push({ ...this._toResult(node, result, blackboard), children })
+  wrapLast(numResults: number, node: Node, result: Status, blackboard: Blackboard) {
+    const children = this.currentResult.splice(this.currentResult.length - numResults, numResults);
+    this.currentResult.push({ ...this._toResult(node, result, blackboard), children });
   }
 
-  _toResult(node, result) {
-    return { ...(node.name ? { name: node.name } : {}), result }
+  _toResult(node: Node, result: IntrospectionResult, _blackboard: Blackboard) {
+    return { ...(node.name ? { name: node.name } : {}), result };
   }
 
   reset() {
-    this.results = []
+    this.results = [];
   }
 
   get lastResult() {
     if (this.results.length === 0) {
-      return null
+      return null;
     }
-    return this.results[this.results.length - 1]
+    return this.results[this.results.length - 1];
   }
 }

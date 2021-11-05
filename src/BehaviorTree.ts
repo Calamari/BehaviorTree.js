@@ -1,52 +1,61 @@
-import { RUNNING } from './constants'
-import Task from './Task'
+import { Introspector } from '.';
+import { RUNNING } from './constants';
+import Node from './Node';
+import Task from './Task';
+import { Blackboard, Status, StepParameter } from './types';
 
-let registry = {}
+export type NodeRegistry = Record<string, Node>;
+
+let registry: NodeRegistry = {};
 
 export function getRegistry() {
-  return registry
+  return registry;
 }
 
-export function registryLookUp(node) {
+export function registryLookUp(node: string | Node) {
   if (typeof node === 'string') {
-    const lookedUpNode = registry[node]
+    const lookedUpNode = registry[node];
     if (!lookedUpNode) {
-      throw new Error(`No node with name ${node} registered.`)
+      throw new Error(`No node with name ${node} registered.`);
     }
-    return lookedUpNode
+    return lookedUpNode;
   }
-  return node
+  return node;
 }
 
 export default class BehaviorTree {
-  constructor({ tree, blackboard }) {
-    this.tree = tree
-    this.blackboard = blackboard
-    this.lastResult = null
+  tree: Node;
+  blackboard: Blackboard;
+  lastResult: Status | null;
+
+  constructor({ tree, blackboard }: { tree: Node; blackboard: Blackboard }) {
+    this.tree = tree;
+    this.blackboard = blackboard;
+    this.lastResult = null;
   }
 
-  step({ introspector } = {}) {
-    const indexes = this.lastResult && typeof this.lastResult === 'object' ? this.lastResult : []
-    const rerun = this.lastResult === RUNNING || indexes.length > 0
+  step({ introspector }: StepParameter = {}) {
+    const indexes = this.lastResult && typeof this.lastResult === 'object' ? this.lastResult : [];
+    const rerun = this.lastResult === RUNNING || indexes.length > 0;
     if (introspector) {
-      introspector.start(this)
+      introspector.start(this);
     }
     this.lastResult = registryLookUp(this.tree).run(this.blackboard, {
       indexes,
       introspector,
       rerun,
       registryLookUp
-    })
+    });
     if (introspector) {
-      introspector.end()
+      introspector.end();
     }
   }
 
-  static register(name, node) {
-    registry[name] = typeof node === 'function' ? new Task({ name, run: node }) : node
+  static register(name: string, node: Node) {
+    registry[name] = typeof node === 'function' ? new Task({ name, run: node }) : node;
   }
 
   static cleanRegistry() {
-    registry = {}
+    registry = {};
   }
 }
