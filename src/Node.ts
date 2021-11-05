@@ -1,14 +1,16 @@
 import { RUNNING } from './constants';
-import { Blackboard, Blueprint, Callback, RunConfig, Status } from './types';
+import { Blackboard, Blueprint, MinimalBlueprint, RunConfig, Status } from './types';
 
-const NOOP: Callback = () => false;
+const NOOP_RUN = () => false;
+const NOOP_START = () => {}; // eslint-disable-line @typescript-eslint/no-empty-function
+const NOOP_END = () => {}; // eslint-disable-line @typescript-eslint/no-empty-function
 
 export default class Node {
   _name?: string;
   blueprint: Blueprint;
   nodeType = 'Node';
 
-  constructor({ run = NOOP, start = NOOP, end = NOOP, ...props }) {
+  constructor({ run = NOOP_RUN, start = NOOP_START, end = NOOP_END, ...props }: MinimalBlueprint) {
     this.blueprint = { run, start, end, ...props };
   }
 

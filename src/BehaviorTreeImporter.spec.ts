@@ -1,62 +1,63 @@
 /* eslint-env jest */
-import sinon from 'sinon'
-import { SUCCESS, FAILURE } from './constants'
-import BehaviorTree from './BehaviorTree'
-import BehaviorTreeImporter from './BehaviorTreeImporter'
-import Decorator from './Decorator'
-import Task from './Task'
-import Introspector from './Introspector'
+import sinon from 'sinon';
+import { SUCCESS, FAILURE } from './constants';
+import BehaviorTree from './BehaviorTree';
+import BehaviorTreeImporter from './BehaviorTreeImporter';
+import Decorator from './Decorator';
+import Task from './Task';
+import Introspector from './Introspector';
+import { Blackboard } from './types';
 
 class EnemyInSightDecorator extends Decorator {
-  nodeType = 'EnemyInSightDecorator'
+  nodeType = 'EnemyInSightDecorator';
 
   decorate(run, blackboard) {
-    return blackboard.enemyInSight ? run() : FAILURE
+    return blackboard.enemyInSight ? run() : FAILURE;
   }
 }
 
 describe('BehaviorTreeImporter', () => {
-  let clock
-  let blackboard
-  let importer
+  let clock: sinon.SinonFakeTimers;
+  let blackboard: Blackboard;
+  let importer: BehaviorTreeImporter;
 
   beforeEach(() => {
-    clock = sinon.useFakeTimers()
+    clock = sinon.useFakeTimers();
     blackboard = {
       timesJumped: 0
-    }
+    };
     BehaviorTree.register(
       'walk',
       new Task({
         run: function (blackboard) {
-          blackboard.walking = true
-          return SUCCESS
+          blackboard.walking = true;
+          return SUCCESS;
         }
       })
-    )
+    );
 
     BehaviorTree.register(
       'idle',
       new Task({
         run: function (blackboard) {
-          blackboard.walking = false
-          return SUCCESS
+          blackboard.walking = false;
+          return SUCCESS;
         }
       })
-    )
+    );
 
     BehaviorTree.register(
       'jump',
       new Task({
         run: function (blackboard) {
-          blackboard.timesJumped++
-          return SUCCESS
+          blackboard.timesJumped++;
+          return SUCCESS;
         }
       })
-    )
-    importer = new BehaviorTreeImporter()
-    importer.defineType('ifEnemyInSight', EnemyInSightDecorator)
-  })
+    );
+    importer = new BehaviorTreeImporter();
+    importer.defineType('ifEnemyInSight', EnemyInSightDecorator);
+  });
 
   describe('importing a complex JSON tree into a usable behavior tree', () => {
     const json = {
@@ -76,47 +77,47 @@ describe('BehaviorTreeImporter', () => {
         },
         { type: 'idle', name: 'doing nothing' }
       ]
-    }
-    let bTree
-    let introspector
+    };
+    let bTree: BehaviorTree;
+    let introspector: Introspector;
 
     beforeEach(() => {
-      introspector = new Introspector()
+      introspector = new Introspector();
       bTree = new BehaviorTree({
         tree: importer.parse(json),
         blackboard
-      })
-    })
+      });
+    });
 
     it('works', () => {
-      bTree.step({ introspector })
+      bTree.step({ introspector });
 
-      expect(introspector.lastResult.name).toEqual('the root')
+      expect(introspector.lastResult.name).toEqual('the root');
 
-      const selectorNodes = introspector.lastResult.children
+      const selectorNodes = introspector.lastResult.children;
 
-      expect(selectorNodes.length).toEqual(2)
-      expect(selectorNodes.map((x) => x.name)).toEqual(['handling enemies', 'jumping around'])
-      expect(selectorNodes.map((x) => x.result)).toEqual([false, true])
-    })
+      expect(selectorNodes.length).toEqual(2);
+      expect(selectorNodes.map((x) => x.name)).toEqual(['handling enemies', 'jumping around']);
+      expect(selectorNodes.map((x) => x.result)).toEqual([false, true]);
+    });
 
     it('passes in the config as it is supposed to', () => {
-      bTree.step({ introspector })
-      bTree.step({ introspector })
-      let selectorNodes = introspector.lastResult.children
-      expect(selectorNodes.map((x) => x.result)).toEqual([false, false, true])
+      bTree.step({ introspector });
+      bTree.step({ introspector });
+      let selectorNodes = introspector.lastResult.children;
+      expect(selectorNodes.map((x) => x.result)).toEqual([false, false, true]);
 
-      clock.tick(999)
-      bTree.step({ introspector })
+      clock.tick(999);
+      bTree.step({ introspector });
 
-      selectorNodes = introspector.lastResult.children
-      expect(selectorNodes.map((x) => x.result)).toEqual([false, false, true])
+      selectorNodes = introspector.lastResult.children;
+      expect(selectorNodes.map((x) => x.result)).toEqual([false, false, true]);
 
-      clock.tick(1)
-      bTree.step({ introspector })
+      clock.tick(1);
+      bTree.step({ introspector });
 
-      selectorNodes = introspector.lastResult.children
-      expect(selectorNodes.map((x) => x.result)).toEqual([false, true])
-    })
-  })
-})
+      selectorNodes = introspector.lastResult.children;
+      expect(selectorNodes.map((x) => x.result)).toEqual([false, true]);
+    });
+  });
+});

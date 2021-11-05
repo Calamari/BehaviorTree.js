@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Introspector } from '.';
 import { RUNNING } from './constants';
 import Node from './Node';
@@ -6,17 +7,35 @@ export type Status = typeof RUNNING | boolean;
 
 export type Blackboard = Record<string, any>;
 export type DecoratorConfig = Record<string, any>;
-export type Callback = (...args: any[]) => Status;
-export type RegistryLookUp = (node: string | Node) => Node;
+export type EndCallback = (...args: any[]) => void;
+export type RunCallback = (...args: any[]) => Status;
+export type StartCallback = (...args: any[]) => void;
+export type RegistryLookUp = (node: NodeOrRegistration) => Node;
 
+export type IntrospectionResult = any;
+export type NodeOrRegistration = Node | string;
+export type NodeOrFunction = Node | RunCallback;
+
+export interface MinimalBlueprint {
+  name?: string;
+  end?: EndCallback;
+  introspector?: Introspector;
+  run?: RunCallback;
+  start?: StartCallback;
+  nodes?: NodeOrRegistration[];
+  node?: NodeOrRegistration;
+}
 export interface Blueprint {
   name?: string;
-  end: Callback;
+  end: EndCallback;
   introspector?: Introspector;
-  run: Callback;
-  start: Callback;
-  nodes?: Node[];
-  node?: Node;
+  run: RunCallback;
+  start: StartCallback;
+  nodes?: NodeOrRegistration[];
+  node?: NodeOrRegistration;
+}
+export interface DecoratorBlueprint extends MinimalBlueprint {
+  config?: DecoratorConfig;
 }
 
 export interface RunConfig {

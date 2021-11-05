@@ -1,18 +1,18 @@
 import { SUCCESS, RUNNING } from './constants';
 import Node from './Node';
-import { Blackboard, Blueprint, RunConfig, Status } from './types';
+import { Blackboard, MinimalBlueprint, NodeOrRegistration, RunConfig, Status } from './types';
 
 export default class BranchNode extends Node {
   numNodes: number;
   wasRunning: boolean;
-  nodes: Node[];
+  nodes: NodeOrRegistration[];
   // Override this in subclasses
   OPT_OUT_CASE: Status = SUCCESS;
   START_CASE: Status = SUCCESS;
 
   nodeType = 'BranchNode';
 
-  constructor(blueprint: Blueprint) {
+  constructor(blueprint: MinimalBlueprint) {
     super(blueprint);
 
     this.nodes = blueprint.nodes || [];
@@ -22,6 +22,7 @@ export default class BranchNode extends Node {
 
   run(blackboard: Blackboard = {}, { indexes = [], introspector, rerun, registryLookUp = (x) => x as Node }: RunConfig = {}) {
     if (!rerun) this.blueprint.start(blackboard);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let overallResult: Status | any = this.START_CASE;
     let currentIndex = indexes.shift() || 0;
     while (currentIndex < this.numNodes) {

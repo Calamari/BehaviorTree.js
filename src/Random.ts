@@ -6,7 +6,7 @@ import { Blackboard, RunConfig, Status } from './types';
 export default class Random extends BranchNode {
   nodeType = 'Random';
 
-  run(blackboard: Blackboard = null, { indexes = [], introspector, rerun, registryLookUp = (x) => x as Node }: RunConfig = {}) {
+  run(blackboard: Blackboard = {}, { indexes = [], introspector, rerun, registryLookUp = (x) => x as Node }: RunConfig = {}) {
     if (!rerun) this.blueprint.start(blackboard);
     let currentIndex = indexes.shift() || 0;
     if (!rerun) {
@@ -14,6 +14,7 @@ export default class Random extends BranchNode {
     }
     const node = registryLookUp(this.nodes[currentIndex]);
     const result = node.run(blackboard, { indexes, introspector, rerun, registryLookUp });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let overallResult: Status | any = result;
     if (result === RUNNING) {
       overallResult = [currentIndex, ...indexes];

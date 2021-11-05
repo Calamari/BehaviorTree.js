@@ -1,147 +1,148 @@
 /* eslint-env jest */
-import { RUNNING, SUCCESS, FAILURE } from './constants'
-import Selector from './Selector'
-import Task from './Task'
+import { RUNNING, SUCCESS, FAILURE } from './constants';
+import Selector from './Selector';
+import Task from './Task';
+import { Blackboard, Status } from './types';
 
 describe('Selector', () => {
-  let countSuccess = 0
+  let countSuccess = 0;
   const successTask = new Task({
     run: function () {
-      ++countSuccess
-      return SUCCESS
+      ++countSuccess;
+      return SUCCESS;
     }
-  })
+  });
 
-  let countFail = 0
+  let countFail = 0;
   const failTask = new Task({
     run: function () {
-      ++countFail
-      return FAILURE
+      ++countFail;
+      return FAILURE;
     }
-  })
+  });
 
-  let countRunning = 0
+  let countRunning = 0;
   const runningTask = new Task({
     run: function () {
-      ++countRunning
-      return RUNNING
+      ++countRunning;
+      return RUNNING;
     }
-  })
+  });
 
   beforeEach(() => {
-    countSuccess = 0
-    countFail = 0
-    countRunning = 0
-  })
+    countSuccess = 0;
+    countFail = 0;
+    countRunning = 0;
+  });
 
   it('stops immediately at a successfull node', () => {
     const selector = new Selector({
       nodes: [successTask, failTask]
-    })
+    });
 
-    selector.run()
+    selector.run();
 
-    expect(countSuccess).toEqual(1)
-    expect(countFail).toEqual(0)
-  })
+    expect(countSuccess).toEqual(1);
+    expect(countFail).toEqual(0);
+  });
 
   it('stops at a successfull node', () => {
     const selector = new Selector({
       nodes: [failTask, successTask, successTask, successTask, failTask]
-    })
+    });
 
-    selector.run()
+    selector.run();
 
-    expect(countSuccess).toEqual(1)
-    expect(countFail).toEqual(1)
-  })
+    expect(countSuccess).toEqual(1);
+    expect(countFail).toEqual(1);
+  });
 
   it('calls all tasks if all fail', () => {
     const selector = new Selector({
       nodes: [failTask, failTask, failTask, failTask]
-    })
+    });
 
-    selector.run()
+    selector.run();
 
-    expect(countSuccess).toEqual(0)
-    expect(countFail).toEqual(4)
-  })
+    expect(countSuccess).toEqual(0);
+    expect(countFail).toEqual(4);
+  });
 
   it('does not call tasks after running task', () => {
     const selector = new Selector({
       nodes: [failTask, failTask, runningTask, failTask]
-    })
+    });
 
-    selector.run()
-    expect(countFail).toEqual(2)
-    expect(countRunning).toEqual(1)
-  })
+    selector.run();
+    expect(countFail).toEqual(2);
+    expect(countRunning).toEqual(1);
+  });
 
   describe('result values', () => {
     it('returns SUCCESS if one task succeeds', () => {
       const selector = new Selector({
         nodes: [failTask, successTask, failTask]
-      })
+      });
 
-      expect(selector.run()).toEqual(SUCCESS)
-    })
+      expect(selector.run()).toEqual(SUCCESS);
+    });
 
     it('returns FAILURE if no task succeeds', () => {
       const selector = new Selector({
         nodes: [failTask, failTask, failTask, failTask]
-      })
+      });
 
-      expect(selector.run()).toEqual(FAILURE)
-    })
+      expect(selector.run()).toEqual(FAILURE);
+    });
 
     it('returns the index of still running task as array of running indexes', () => {
       const selector = new Selector({
         nodes: [failTask, failTask, runningTask, failTask]
-      })
+      });
 
-      expect(selector.run()).toEqual([2])
-    })
-  })
+      expect(selector.run()).toEqual([2]);
+    });
+  });
 
   describe('blackboard', () => {
     const aTask = new Task({
       run: function (blackboard) {
-        ++blackboard.counter
-        return FAILURE
+        ++blackboard.counter;
+        return FAILURE;
       }
-    })
+    });
     const bTask = new Task({
       run: function (blackboard) {
-        blackboard.counter += 10
-        return FAILURE
+        blackboard.counter += 10;
+        return FAILURE;
       }
-    })
+    });
 
     it('can be passed to a task, and stores data between different tasks', () => {
       const selector = new Selector({
         nodes: [aTask, bTask]
-      })
-      const blackboard = { counter: 0 }
+      });
+      const blackboard = { counter: 0 };
 
-      selector.run(blackboard)
+      selector.run(blackboard);
 
-      expect(blackboard.counter).toEqual(11)
-    })
-  })
+      expect(blackboard.counter).toEqual(11);
+    });
+  });
 
   describe('nested selectors', () => {
     const aTask = new Task({
       run: function (blackboard) {
-        ++blackboard.aCounter
-        return FAILURE
+        ++blackboard.aCounter;
+        return FAILURE;
       }
-    })
+    });
     const bTask = new Task({
       run: function (blackboard) {
-        ++blackboard.bCounter
-        return FAILURE
+        ++blackboard.bCounter;
+        return FAILURE;
       }
-    })
+    });
 
     it('calls all nested tasks if all are failing', () => {
       const selector = new Selector({
@@ -152,22 +153,22 @@ describe('Selector', () => {
             nodes: [bTask, bTask, bTask]
           })
         ]
-      })
-      const blackboard = { aCounter: 0, bCounter: 0 }
+      });
+      const blackboard = { aCounter: 0, bCounter: 0 };
 
-      selector.run(blackboard)
+      selector.run(blackboard);
 
-      expect(blackboard.aCounter).toEqual(2)
-      expect(blackboard.bCounter).toEqual(3)
-    })
+      expect(blackboard.aCounter).toEqual(2);
+      expect(blackboard.bCounter).toEqual(3);
+    });
 
     describe('running tasks', () => {
       const switchTask = new Task({
         run: function (blackboard) {
-          ++blackboard.switchCounter
-          return blackboard.switchResult
+          ++blackboard.switchCounter;
+          return blackboard.switchResult;
         }
-      })
+      });
 
       let selector = new Selector({
         nodes: [
@@ -178,100 +179,100 @@ describe('Selector', () => {
           }),
           aTask
         ]
-      })
+      });
 
       it('returns indexes if tasks are running', () => {
-        const blackboard = { aCounter: 0, bCounter: 0, switchCounter: 0, switchResult: RUNNING }
+        const blackboard = { aCounter: 0, bCounter: 0, switchCounter: 0, switchResult: RUNNING } as Blackboard;
 
-        const result = selector.run(blackboard)
+        const result = selector.run(blackboard);
 
-        expect(blackboard.aCounter).toEqual(2)
-        expect(blackboard.bCounter).toEqual(1)
-        expect(result).toEqual([2, 1])
-      })
+        expect(blackboard.aCounter).toEqual(2);
+        expect(blackboard.bCounter).toEqual(1);
+        expect(result).toEqual([2, 1]);
+      });
 
       it('resumes tasks where we left off', () => {
-        const blackboard = { aCounter: 0, bCounter: 0, switchCounter: 0, switchResult: RUNNING }
+        const blackboard = { aCounter: 0, bCounter: 0, switchCounter: 0, switchResult: RUNNING };
 
-        let result = selector.run(blackboard)
+        let result = selector.run(blackboard);
 
-        expect(blackboard.switchCounter).toEqual(1)
-        expect(result).toEqual([2, 1])
+        expect(blackboard.switchCounter).toEqual(1);
+        expect(result).toEqual([2, 1]);
 
-        result = selector.run(blackboard, { indexes: result })
+        result = selector.run(blackboard, { indexes: result });
 
-        expect(blackboard.switchCounter).toEqual(2)
-        expect(blackboard.aCounter).toEqual(2)
-        expect(blackboard.bCounter).toEqual(1)
-        expect(result).toEqual([2, 1])
-      })
-
-      it('after resuming in can progress, if tasks allow', () => {
-        const blackboard = { aCounter: 0, bCounter: 0, switchCounter: 0, switchResult: RUNNING }
-
-        let result = selector.run(blackboard)
-
-        expect(blackboard.switchCounter).toEqual(1)
-        expect(result).toEqual([2, 1])
-
-        blackboard.switchResult = FAILURE
-
-        result = selector.run(blackboard, { indexes: result })
-
-        expect(blackboard.switchCounter).toEqual(2)
-        expect(blackboard.aCounter).toEqual(3)
-        expect(blackboard.bCounter).toEqual(2)
-        expect(result).toEqual(FAILURE)
-      })
+        expect(blackboard.switchCounter).toEqual(2);
+        expect(blackboard.aCounter).toEqual(2);
+        expect(blackboard.bCounter).toEqual(1);
+        expect(result).toEqual([2, 1]);
+      });
 
       it('after resuming in can progress, if tasks allow', () => {
-        const blackboard = { aCounter: 0, bCounter: 0, switchCounter: 0, switchResult: RUNNING }
+        const blackboard = { aCounter: 0, bCounter: 0, switchCounter: 0, switchResult: RUNNING as Status };
 
-        let result = selector.run(blackboard)
+        let result = selector.run(blackboard);
 
-        expect(blackboard.switchCounter).toEqual(1)
-        expect(result).toEqual([2, 1])
+        expect(blackboard.switchCounter).toEqual(1);
+        expect(result).toEqual([2, 1]);
 
-        blackboard.switchResult = SUCCESS
+        blackboard.switchResult = FAILURE;
 
-        result = selector.run(blackboard, { indexes: result })
+        result = selector.run(blackboard, { indexes: result });
 
-        expect(blackboard.switchCounter).toEqual(2)
+        expect(blackboard.switchCounter).toEqual(2);
+        expect(blackboard.aCounter).toEqual(3);
+        expect(blackboard.bCounter).toEqual(2);
+        expect(result).toEqual(FAILURE);
+      });
+
+      it('after resuming in can progress, if tasks allow', () => {
+        const blackboard = { aCounter: 0, bCounter: 0, switchCounter: 0, switchResult: RUNNING as Status };
+
+        let result = selector.run(blackboard);
+
+        expect(blackboard.switchCounter).toEqual(1);
+        expect(result).toEqual([2, 1]);
+
+        blackboard.switchResult = SUCCESS;
+
+        result = selector.run(blackboard, { indexes: result });
+
+        expect(blackboard.switchCounter).toEqual(2);
         // No count increments because of success
-        expect(blackboard.aCounter).toEqual(2)
-        expect(blackboard.bCounter).toEqual(1)
-        expect(result).toEqual(SUCCESS)
-      })
+        expect(blackboard.aCounter).toEqual(2);
+        expect(blackboard.bCounter).toEqual(1);
+        expect(result).toEqual(SUCCESS);
+      });
 
       it('does not call start on rerunning running task', () => {
-        const blackboard = { start: 0, end: 0, switchResult: RUNNING }
+        const blackboard = { start: 0, end: 0, switchResult: RUNNING as Status };
 
         selector = new Selector({
           start: function (blackboard) {
-            ++blackboard.start
+            ++blackboard.start;
           },
           end: function (blackboard) {
-            ++blackboard.end
+            ++blackboard.end;
           },
           nodes: [aTask, switchTask]
-        })
+        });
 
-        selector.run(blackboard)
+        selector.run(blackboard);
 
-        expect(blackboard.start).toEqual(1)
-        expect(blackboard.end).toEqual(0)
+        expect(blackboard.start).toEqual(1);
+        expect(blackboard.end).toEqual(0);
 
-        selector.run(blackboard, { rerun: true })
+        selector.run(blackboard, { rerun: true });
 
-        expect(blackboard.start).toEqual(1)
-        expect(blackboard.end).toEqual(0)
+        expect(blackboard.start).toEqual(1);
+        expect(blackboard.end).toEqual(0);
 
-        blackboard.switchResult = FAILURE
-        selector.run(blackboard, { rerun: true })
+        blackboard.switchResult = FAILURE;
+        selector.run(blackboard, { rerun: true });
 
-        expect(blackboard.start).toEqual(1)
-        expect(blackboard.end).toEqual(1)
-      })
-    })
-  })
-})
+        expect(blackboard.start).toEqual(1);
+        expect(blackboard.end).toEqual(1);
+      });
+    });
+  });
+});

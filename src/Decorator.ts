@@ -1,19 +1,19 @@
 import { RUNNING } from './constants';
 import Node from './Node';
-import { Blackboard, Callback, DecoratorConfig, RunConfig } from './types';
+import { Blackboard, RunCallback, DecoratorConfig, RunConfig, DecoratorBlueprint } from './types';
 
 export default class Decorator extends Node {
   config!: DecoratorConfig;
   nodeType = 'Decorator';
 
-  constructor({ config = {}, ...props } = {}) {
+  constructor({ config = {}, ...props }: DecoratorBlueprint = { config: {} }) {
     super(props);
     this.setConfig(config);
   }
 
-  decorate(run: Callback, blackboard: Blackboard, config: DecoratorConfig) {
+  decorate(run: RunCallback, blackboard: Blackboard, config: DecoratorConfig) {
     // This method should be overridden to make it useful
-    return run();
+    return run(run, blackboard, config);
   }
 
   run(blackboard: Blackboard, { introspector, rerun, registryLookUp = (x) => x as Node, ...config }: RunConfig = {}) {

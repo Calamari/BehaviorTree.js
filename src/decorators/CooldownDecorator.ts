@@ -1,9 +1,9 @@
 import { FAILURE } from '../constants';
 import Decorator from '../Decorator';
-import { Callback } from '../types';
+import { RunCallback } from '../types';
 
 export default class CooldownDecorator extends Decorator {
-  lock: boolean = false;
+  lock = false;
   nodeType = 'CooldownDecorator';
 
   setConfig({ cooldown = 5 }) {
@@ -12,7 +12,7 @@ export default class CooldownDecorator extends Decorator {
     };
   }
 
-  decorate(run: Callback) {
+  decorate(run: RunCallback) {
     if (this.lock) {
       return FAILURE;
     }

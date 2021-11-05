@@ -1,20 +1,20 @@
-import BehaviorTree, { getRegistry, registryLookUp } from './BehaviorTree'
-import * as decorators from './decorators'
+import BehaviorTree, { getRegistry, registryLookUp } from './BehaviorTree';
+import * as decorators from './decorators';
 
-import BehaviorTreeImporter from './BehaviorTreeImporter'
+import BehaviorTreeImporter from './BehaviorTreeImporter';
 
-import BranchNode from './BranchNode'
-import Node from './Node'
-import Selector from './Selector'
-import Sequence from './Sequence'
-import Random from './Random'
-import Decorator from './Decorator'
-import Task from './Task'
-import Introspector from './Introspector'
+import BranchNode from './BranchNode';
+import Node from './Node';
+import Selector from './Selector';
+import Sequence from './Sequence';
+import Random from './Random';
+import Decorator from './Decorator';
+import Task from './Task';
+import Introspector from './Introspector';
 
-import { SUCCESS, FAILURE, RUNNING } from './constants'
+import { SUCCESS, FAILURE, RUNNING } from './constants';
 
-export default BehaviorTree
+export default BehaviorTree;
 
 export {
   BehaviorTree,
@@ -33,4 +33,4 @@ export {
   Task,
   Introspector,
   decorators
-}
+};

@@ -1,8 +1,6 @@
-import BehaviorTree from '.';
+import BehaviorTree from './BehaviorTree';
 import Node from './Node';
-import { Blackboard, Status } from './types';
-
-export interface IntrospectionResult {}
+import { Blackboard, IntrospectionResult, Status } from './types';
 
 export default class Introspector {
   currentResult: IntrospectionResult[];
@@ -37,6 +35,7 @@ export default class Introspector {
     this.currentResult.push({ ...this._toResult(node, result, blackboard), children });
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _toResult(node: Node, result: IntrospectionResult, _blackboard: Blackboard) {
     return { ...(node.name ? { name: node.name } : {}), result };
   }

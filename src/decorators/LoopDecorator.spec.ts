@@ -1,69 +1,70 @@
 /* eslint-env jest */
-import { SUCCESS, FAILURE } from '../constants'
-import LoopDecorator from './LoopDecorator'
-import Task from '../Task'
+import { SUCCESS, FAILURE } from '../constants';
+import LoopDecorator from './LoopDecorator';
+import Task from '../Task';
+import { Blackboard } from '../types';
 
 describe('LoopDecorator', () => {
   const task = new Task({
     run(blackboard) {
-      ++blackboard.count
-      return SUCCESS
+      ++blackboard.count;
+      return SUCCESS;
     }
-  })
+  });
   const endingTask = new Task({
     run(blackboard) {
-      ++blackboard.count
-      return blackboard.count === 2 ? FAILURE : SUCCESS
+      ++blackboard.count;
+      return blackboard.count === 2 ? FAILURE : SUCCESS;
     }
-  })
+  });
   const inifinityTask = new Task({
     run(blackboard) {
-      ++blackboard.count
-      return blackboard.count === 100 ? FAILURE : SUCCESS
+      ++blackboard.count;
+      return blackboard.count === 100 ? FAILURE : SUCCESS;
     }
-  })
-  let blackboard
-  let decoratedTask
-  let decoratedEndingTask
-  let decoratedInfinityTask
+  });
+  let blackboard: Blackboard;
+  let decoratedTask: LoopDecorator;
+  let decoratedEndingTask: LoopDecorator;
+  let decoratedInfinityTask: LoopDecorator;
 
   beforeEach(() => {
     blackboard = {
       count: 0
-    }
-    decoratedTask = new LoopDecorator({ node: task })
-  })
+    };
+    decoratedTask = new LoopDecorator({ node: task });
+  });
 
   it('has a nodeType', () => {
-    expect(decoratedTask.nodeType).toEqual('LoopDecorator')
-  })
+    expect(decoratedTask.nodeType).toEqual('LoopDecorator');
+  });
 
   describe('given a looping count', () => {
     beforeEach(() => {
-      const config = { loop: 3 }
-      decoratedTask = new LoopDecorator({ config, node: task })
-      decoratedEndingTask = new LoopDecorator({ config, node: endingTask })
-    })
+      const config = { loop: 3 };
+      decoratedTask = new LoopDecorator({ config, node: task });
+      decoratedEndingTask = new LoopDecorator({ config, node: endingTask });
+    });
 
     it('repeats the task that amount of times', () => {
-      decoratedTask.run(blackboard)
-      expect(blackboard.count).toEqual(3)
-    })
+      decoratedTask.run(blackboard);
+      expect(blackboard.count).toEqual(3);
+    });
 
     it('stops repeating if FAILURE is returned', () => {
-      decoratedEndingTask.run(blackboard)
-      expect(blackboard.count).toEqual(2)
-    })
-  })
+      decoratedEndingTask.run(blackboard);
+      expect(blackboard.count).toEqual(2);
+    });
+  });
 
   describe('without a looping count', () => {
     beforeEach(() => {
-      decoratedInfinityTask = new LoopDecorator({ node: inifinityTask })
-    })
+      decoratedInfinityTask = new LoopDecorator({ node: inifinityTask });
+    });
 
     it('is looped indefinetely or until FAILURE occures', () => {
-      decoratedInfinityTask.run(blackboard)
-      expect(blackboard.count).toEqual(100)
-    })
-  })
-})
+      decoratedInfinityTask.run(blackboard);
+      expect(blackboard.count).toEqual(100);
+    });
+  });
+});

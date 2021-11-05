@@ -1,30 +1,30 @@
 /* eslint-env jest */
-import { RUNNING, SUCCESS, FAILURE } from '../constants'
-import InvertDecorator from './InvertDecorator'
-import Task from '../Task'
+import { RUNNING, SUCCESS, FAILURE } from '../constants';
+import InvertDecorator from './InvertDecorator';
+import Task from '../Task';
 
 describe('InvertDecorator', () => {
   const task = new Task({
     run(blackboard) {
-      return blackboard.result
+      return blackboard.result;
     }
-  })
-  let invertedTask
+  });
+  let invertedTask: InvertDecorator;
 
   beforeEach(() => {
-    invertedTask = new InvertDecorator({ node: task })
-  })
+    invertedTask = new InvertDecorator({ node: task });
+  });
 
   it('has a nodeType', () => {
-    expect(invertedTask.nodeType).toEqual('InvertDecorator')
-  })
+    expect(invertedTask.nodeType).toEqual('InvertDecorator');
+  });
 
   it('inverts SUCCESS and FAILURES', () => {
-    expect(invertedTask.run({ result: SUCCESS })).toEqual(FAILURE)
-    expect(invertedTask.run({ result: FAILURE })).toEqual(SUCCESS)
-  })
+    expect(invertedTask.run({ result: SUCCESS })).toEqual(FAILURE);
+    expect(invertedTask.run({ result: FAILURE })).toEqual(SUCCESS);
+  });
 
   it('does not change RUNNING responses', () => {
-    expect(invertedTask.run({ result: RUNNING })).toEqual(RUNNING)
-  })
-})
+    expect(invertedTask.run({ result: RUNNING })).toEqual(RUNNING);
+  });
+});

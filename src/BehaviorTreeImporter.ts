@@ -19,6 +19,7 @@ export interface ImportableJson {
 }
 
 export default class BehaviorTreeImporter {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   types: Record<string, any> = {
     task: Task,
     decorator: Decorator,
@@ -32,6 +33,7 @@ export default class BehaviorTreeImporter {
     loop: LoopDecorator
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   defineType(type: string, Klass: any) {
     this.types[type] = Klass;
   }

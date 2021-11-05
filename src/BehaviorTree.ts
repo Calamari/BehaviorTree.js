@@ -1,8 +1,7 @@
-import { Introspector } from '.';
 import { RUNNING } from './constants';
 import Node from './Node';
 import Task from './Task';
-import { Blackboard, Status, StepParameter } from './types';
+import { Blackboard, NodeOrFunction, NodeOrRegistration, Status, StepParameter } from './types';
 
 export type NodeRegistry = Record<string, Node>;
 
@@ -24,7 +23,7 @@ export function registryLookUp(node: string | Node) {
 }
 
 export default class BehaviorTree {
-  tree: Node;
+  tree: NodeOrRegistration;
   blackboard: Blackboard;
   lastResult: Status | null;
 
@@ -51,7 +50,7 @@ export default class BehaviorTree {
     }
   }
 
-  static register(name: string, node: Node) {
+  static register(name: string, node: NodeOrFunction) {
     registry[name] = typeof node === 'function' ? new Task({ name, run: node }) : node;
   }
 
