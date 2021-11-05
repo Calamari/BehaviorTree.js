@@ -6,12 +6,12 @@ import BehaviorTreeImporter from './BehaviorTreeImporter';
 import Decorator from './Decorator';
 import Task from './Task';
 import Introspector from './Introspector';
-import { Blackboard } from './types';
+import { Blackboard, IntrospectionResult, RunCallback } from './types';
 
 class EnemyInSightDecorator extends Decorator {
   nodeType = 'EnemyInSightDecorator';
 
-  decorate(run, blackboard) {
+  decorate(run: RunCallback, blackboard: Blackboard) {
     return blackboard.enemyInSight ? run() : FAILURE;
   }
 }
@@ -92,31 +92,31 @@ describe('BehaviorTreeImporter', () => {
     it('works', () => {
       bTree.step({ introspector });
 
-      expect(introspector.lastResult.name).toEqual('the root');
+      expect(introspector.lastResult?.name).toEqual('the root');
 
-      const selectorNodes = introspector.lastResult.children;
+      const selectorNodes = introspector.lastResult?.children || [];
 
       expect(selectorNodes.length).toEqual(2);
-      expect(selectorNodes.map((x) => x.name)).toEqual(['handling enemies', 'jumping around']);
+      expect(selectorNodes.map((x: IntrospectionResult) => x.name)).toEqual(['handling enemies', 'jumping around']);
       expect(selectorNodes.map((x) => x.result)).toEqual([false, true]);
     });
 
     it('passes in the config as it is supposed to', () => {
       bTree.step({ introspector });
       bTree.step({ introspector });
-      let selectorNodes = introspector.lastResult.children;
+      let selectorNodes = introspector.lastResult?.children || [];
       expect(selectorNodes.map((x) => x.result)).toEqual([false, false, true]);
 
       clock.tick(999);
       bTree.step({ introspector });
 
-      selectorNodes = introspector.lastResult.children;
+      selectorNodes = introspector.lastResult?.children || [];
       expect(selectorNodes.map((x) => x.result)).toEqual([false, false, true]);
 
       clock.tick(1);
       bTree.step({ introspector });
 
-      selectorNodes = introspector.lastResult.children;
+      selectorNodes = introspector.lastResult?.children || [];
       expect(selectorNodes.map((x) => x.result)).toEqual([false, true]);
     });
   });

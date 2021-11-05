@@ -34,3 +34,4 @@ export {
   Introspector,
   decorators
 };
+export * from './types';

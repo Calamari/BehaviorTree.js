@@ -400,9 +400,8 @@ describe('Introspector', () => {
     it('also has the blackboard available', () => {
       bTree = new BehaviorTree({ tree: new Sequence({ nodes: ['simpleTask', 'failingTask'] }), blackboard });
       bTree.step({ introspector });
-      // FIXME: Is there a nice way to describe introspection results?
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect(introspector.lastResult.children.map((x: any) => x.blackboardChanged)).toEqual([true, false]);
+      expect((introspector.lastResult?.children || []).map((x: any) => x.blackboardChanged)).toEqual([true, false]);
     });
   });
 });

@@ -3,12 +3,13 @@
   "version": "3.0.0",
   "description": "A JavaScript implementation of Behavior Trees. They are useful for implementing AIs. For Browsers and NodeJS.",
   "module": "dist/index.js",
-  "main": "dist/index.node.js",
+  "main": "dist/index.js",
   "files": [
     "dist/index.js",
     "dist/index.node.js",
     "dist/index.umd.js"
   ],
+  "types": "lib/index.d.ts",
   "dependencies": {
     "core-js": "^3.11.1"
   },
@@ -29,10 +30,11 @@
     "typescript": "^4.4.4"
   },
   "scripts": {
-    "build": "node bin/build.js",
+    "build": "rm -rf dist && node bin/build.js && npm run ts-types",
     "lint": "eslint src --ext .ts",
+    "prepublish": "npm run build",
     "test": "jest --config jest.config.json",
-    "prepublish": "npm run build"
+    "ts-types": "tsc --emitDeclarationOnly --outDir dist"
   },
   "repository": {
     "type": "git",

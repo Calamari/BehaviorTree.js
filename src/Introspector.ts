@@ -26,7 +26,7 @@ export default class Introspector {
     this.currentResult = [];
   }
 
-  push(node: Node, result: IntrospectionResult, blackboard: Blackboard) {
+  push(node: Node, result: Status, blackboard: Blackboard) {
     this.currentResult.push(this._toResult(node, result, blackboard));
   }
 
@@ -36,7 +36,7 @@ export default class Introspector {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _toResult(node: Node, result: IntrospectionResult, _blackboard: Blackboard) {
+  _toResult(node: Node, result: Status, _blackboard: Blackboard): IntrospectionResult {
     return { ...(node.name ? { name: node.name } : {}), result };
   }
 
@@ -44,7 +44,7 @@ export default class Introspector {
     this.results = [];
   }
 
-  get lastResult() {
+  get lastResult(): IntrospectionResult | null {
     if (this.results.length === 0) {
       return null;
     }

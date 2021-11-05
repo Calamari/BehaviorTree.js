@@ -27,7 +27,7 @@ export default class BehaviorTree {
   blackboard: Blackboard;
   lastResult: Status | null;
 
-  constructor({ tree, blackboard }: { tree: Node; blackboard: Blackboard }) {
+  constructor({ tree, blackboard }: { tree: NodeOrRegistration; blackboard: Blackboard }) {
     this.tree = tree;
     this.blackboard = blackboard;
     this.lastResult = null;

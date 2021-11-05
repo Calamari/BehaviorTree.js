@@ -10,13 +10,7 @@ import CooldownDecorator from './decorators/CooldownDecorator';
 import InvertDecorator from './decorators/InvertDecorator';
 import LoopDecorator from './decorators/LoopDecorator';
 import { registryLookUp } from './BehaviorTree';
-
-export interface ImportableJson {
-  type: string;
-  name?: string;
-  node?: ImportableJson;
-  nodes?: ImportableJson[];
-}
+import { ImportableJson } from './types';
 
 export default class BehaviorTreeImporter {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

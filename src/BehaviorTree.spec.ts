@@ -386,7 +386,7 @@ describe('BehaviorTree', () => {
         },
         nodes: [task1, decoratedTask2, task3]
       });
-      const blackboard = {
+      const blackboard: Blackboard = {
         task2Result: RUNNING,
         start1: 0,
         run1: 0,
@@ -473,7 +473,7 @@ describe('BehaviorTree', () => {
   });
 
   describe('some curious edge cases', () => {
-    function createTask(name) {
+    function createTask(name: string) {
       return new Task({
         name,
         start: function (blackboard) {
@@ -516,7 +516,7 @@ describe('BehaviorTree', () => {
       });
       const blackboard = {
         result: {},
-        running: {}
+        running: {} as Record<string, boolean>
       };
 
       const bTree = new BehaviorTree({

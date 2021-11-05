@@ -1,8 +1,8 @@
 #!/bin/env/node
-const esbuild = require('esbuild')
+const esbuild = require('esbuild');
 
 // Automatically exclude all node_modules from the bundled version
-const { nodeExternalsPlugin } = require('esbuild-node-externals')
+const { nodeExternalsPlugin } = require('esbuild-node-externals');
 
 esbuild
   .build({
@@ -10,15 +10,15 @@ esbuild
     outfile: 'dist/index.umd.js',
     bundle: true,
     minify: true,
-    platform: 'browser',
+    format: 'esm',
     sourcemap: true,
-    target: 'es2015',
+    target: 'esnext',
     plugins: [nodeExternalsPlugin()]
   })
   .catch((err) => {
-    console.error(err)
-    process.exit(1)
-  })
+    console.error(err);
+    process.exit(1);
+  });
 
 esbuild
   .build({
@@ -32,6 +32,6 @@ esbuild
     plugins: [nodeExternalsPlugin()]
   })
   .catch((err) => {
-    console.error(err)
-    process.exit(1)
-  })
+    console.error(err);
+    process.exit(1);
+  });

@@ -12,7 +12,12 @@ export type RunCallback = (...args: any[]) => Status;
 export type StartCallback = (...args: any[]) => void;
 export type RegistryLookUp = (node: NodeOrRegistration) => Node;
 
-export type IntrospectionResult = any;
+export interface IntrospectionResult {
+  name?: string;
+  result: Status;
+  children?: IntrospectionResult[];
+}
+
 export type NodeOrRegistration = Node | string;
 export type NodeOrFunction = Node | RunCallback;
 
@@ -47,4 +52,11 @@ export interface RunConfig {
 
 export interface StepParameter {
   introspector?: Introspector;
+}
+
+export interface ImportableJson {
+  type: string;
+  name?: string;
+  node?: ImportableJson;
+  nodes?: ImportableJson[];
 }
