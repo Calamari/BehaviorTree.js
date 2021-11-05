@@ -1,4 +1,3 @@
-#!/bin/env/node
 const esbuild = require('esbuild');
 
 // Automatically exclude all node_modules from the bundled version
