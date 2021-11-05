@@ -2,12 +2,12 @@
   "name": "behaviortree",
   "version": "3.0.0",
   "description": "A JavaScript implementation of Behavior Trees. They are useful for implementing AIs. For Browsers and NodeJS.",
-  "module": "dist/index.js",
-  "main": "dist/index.js",
+  "module": "lib/index.js",
+  "main": "lib/index.js",
   "files": [
-    "dist/index.js",
-    "dist/index.node.js",
-    "dist/index.umd.js"
+    "lib/index.js",
+    "lib/index.node.js",
+    "lib/index.umd.js"
   ],
   "types": "lib/index.d.ts",
   "dependencies": {
@@ -30,11 +30,11 @@
     "typescript": "^4.4.4"
   },
   "scripts": {
-    "build": "rm -rf dist && node bin/build.js && npm run ts-types",
+    "build": "rm -rf lib && node bin/build.js && npm run ts-types",
     "lint": "eslint src --ext .ts",
     "prepublish": "npm run build",
     "test": "jest --config jest.config.json",
-    "ts-types": "tsc --emitDeclarationOnly --outDir dist"
+    "ts-types": "tsc --emitDeclarationOnly --outDir lib"
   },
   "repository": {
     "type": "git",

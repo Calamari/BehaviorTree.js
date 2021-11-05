@@ -6,7 +6,7 @@ const { nodeExternalsPlugin } = require('esbuild-node-externals');
 esbuild
   .build({
     entryPoints: ['./src/index.ts'],
-    outfile: 'dist/index.umd.js',
+    outfile: 'lib/index.umd.js',
     bundle: true,
     minify: true,
     format: 'esm',
@@ -22,7 +22,7 @@ esbuild
 esbuild
   .build({
     entryPoints: ['./src/index.ts'],
-    outfile: 'dist/index.js',
+    outfile: 'lib/index.js',
     bundle: true,
     minify: true,
     platform: 'node',
