@@ -5,6 +5,11 @@ import Node from './Node';
 
 export type Status = typeof RUNNING | boolean;
 
+export interface StatusWithState {
+  total: Status;
+  state: Array<Status | StatusWithState>;
+}
+
 export type Blackboard = Record<string, any>;
 export type DecoratorConfig = Record<string, any>;
 export type EndCallback = (...args: any[]) => void;
@@ -47,7 +52,7 @@ export interface RunConfig {
   introspector?: Introspector;
   registryLookUp?: RegistryLookUp;
   rerun?: boolean;
-  indexes?: number[];
+  lastRun?: Status | StatusWithState;
 }
 
 export interface StepParameter {

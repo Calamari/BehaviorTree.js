@@ -95,12 +95,12 @@ describe('Selector', () => {
       expect(selector.run()).toEqual(FAILURE);
     });
 
-    it('returns the index of still running task as array of running indexes', () => {
+    it('returns the index of still running task as array of running lastRun', () => {
       const selector = new Selector({
         nodes: [failTask, failTask, runningTask, failTask]
       });
 
-      expect(selector.run()).toEqual([2]);
+      expect(selector.run()).toEqual({ total: RUNNING, state: [FAILURE, FAILURE, RUNNING] });
     });
   });
 
@@ -181,14 +181,14 @@ describe('Selector', () => {
         ]
       });
 
-      it('returns indexes if tasks are running', () => {
+      it('returns lastRun if tasks are running', () => {
         const blackboard = { aCounter: 0, bCounter: 0, switchCounter: 0, switchResult: RUNNING } as Blackboard;
 
         const result = selector.run(blackboard);
 
         expect(blackboard.aCounter).toEqual(2);
         expect(blackboard.bCounter).toEqual(1);
-        expect(result).toEqual([2, 1]);
+        expect(result).toEqual({ total: RUNNING, state: [FAILURE, FAILURE, { total: RUNNING, state: [FAILURE, RUNNING] }] });
       });
 
       it('resumes tasks where we left off', () => {
@@ -197,14 +197,14 @@ describe('Selector', () => {
         let result = selector.run(blackboard);
 
         expect(blackboard.switchCounter).toEqual(1);
-        expect(result).toEqual([2, 1]);
+        expect(result).toEqual({ total: RUNNING, state: [FAILURE, FAILURE, { total: RUNNING, state: [FAILURE, RUNNING] }] });
 
-        result = selector.run(blackboard, { indexes: result });
+        result = selector.run(blackboard, { lastRun: result });
 
         expect(blackboard.switchCounter).toEqual(2);
         expect(blackboard.aCounter).toEqual(2);
         expect(blackboard.bCounter).toEqual(1);
-        expect(result).toEqual([2, 1]);
+        expect(result).toEqual({ total: RUNNING, state: [FAILURE, FAILURE, { total: RUNNING, state: [FAILURE, RUNNING] }] });
       });
 
       it('after resuming in can progress, if tasks allow', () => {
@@ -213,11 +213,11 @@ describe('Selector', () => {
         let result = selector.run(blackboard);
 
         expect(blackboard.switchCounter).toEqual(1);
-        expect(result).toEqual([2, 1]);
+        expect(result).toEqual({ total: RUNNING, state: [FAILURE, FAILURE, { total: RUNNING, state: [FAILURE, RUNNING] }] });
 
         blackboard.switchResult = FAILURE;
 
-        result = selector.run(blackboard, { indexes: result });
+        result = selector.run(blackboard, { lastRun: result });
 
         expect(blackboard.switchCounter).toEqual(2);
         expect(blackboard.aCounter).toEqual(3);
@@ -231,11 +231,11 @@ describe('Selector', () => {
         let result = selector.run(blackboard);
 
         expect(blackboard.switchCounter).toEqual(1);
-        expect(result).toEqual([2, 1]);
+        expect(result).toEqual({ total: RUNNING, state: [FAILURE, FAILURE, { total: RUNNING, state: [FAILURE, RUNNING] }] });
 
         blackboard.switchResult = SUCCESS;
 
-        result = selector.run(blackboard, { indexes: result });
+        result = selector.run(blackboard, { lastRun: result });
 
         expect(blackboard.switchCounter).toEqual(2);
         // No count increments because of success
