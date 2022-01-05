@@ -1,5 +1,6 @@
 import { StatusWithState } from '.';
 import { SUCCESS, RUNNING } from './constants';
+import { isRunning } from './helper';
 import Node from './Node';
 import { Blackboard, MinimalBlueprint, NodeOrRegistration, RunConfig, Status } from './types';
 
@@ -26,6 +27,7 @@ export default class BranchNode extends Node {
     const results: Array<Status | StatusWithState> = [];
     const lastRunStates: Array<Status | StatusWithState> = (typeof lastRun === 'object' && lastRun.state) || [];
     const startingIndex = Math.max(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       lastRunStates.findIndex((x: any) => typeof x === 'object' || x === RUNNING),
       0
     );
@@ -49,12 +51,12 @@ export default class BranchNode extends Node {
         rerun = false;
       }
     }
-    const isRunning = overallResult === RUNNING || typeof overallResult === 'object';
-    if (!isRunning) {
+    const running = isRunning(overallResult);
+    if (!running) {
       this.blueprint.end(blackboard);
     }
     if (introspector) {
-      const debugResult = isRunning ? RUNNING : overallResult;
+      const debugResult = running ? RUNNING : overallResult;
       introspector.wrapLast(Math.min(startingIndex + 1, this.numNodes), this, debugResult, blackboard);
     }
     return overallResult === RUNNING ? { total: overallResult, state: results } : overallResult;
