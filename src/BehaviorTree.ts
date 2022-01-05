@@ -1,4 +1,6 @@
+import { StatusWithState } from '.';
 import { RUNNING } from './constants';
+import { isRunning } from './helper';
 import Node from './Node';
 import Task from './Task';
 import { Blackboard, NodeOrFunction, NodeOrRegistration, Status, StepParameter } from './types';
@@ -25,22 +27,22 @@ export function registryLookUp(node: string | Node) {
 export default class BehaviorTree {
   tree: NodeOrRegistration;
   blackboard: Blackboard;
-  lastResult: Status | null;
+  lastResult?: Status | StatusWithState;
 
   constructor({ tree, blackboard }: { tree: NodeOrRegistration; blackboard: Blackboard }) {
     this.tree = tree;
     this.blackboard = blackboard;
-    this.lastResult = null;
+    this.lastResult = undefined;
   }
 
   step({ introspector }: StepParameter = {}) {
-    const indexes = this.lastResult && typeof this.lastResult === 'object' ? this.lastResult : [];
-    const rerun = this.lastResult === RUNNING || indexes.length > 0;
+    const lastRun = this.lastResult && typeof this.lastResult === 'object' ? this.lastResult : undefined;
+    const rerun = isRunning(this.lastResult);
     if (introspector) {
       introspector.start(this);
     }
     this.lastResult = registryLookUp(this.tree).run(this.blackboard, {
-      indexes,
+      lastRun,
       introspector,
       rerun,
       registryLookUp
