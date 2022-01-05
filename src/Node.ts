@@ -1,3 +1,4 @@
+import { StatusWithState } from '.';
 import { RUNNING } from './constants';
 import { Blackboard, Blueprint, MinimalBlueprint, RunConfig, Status } from './types';
 
@@ -14,7 +15,10 @@ export default class Node {
     this.blueprint = { run, start, end, ...props };
   }
 
-  run(blackboard: Blackboard, { introspector, rerun = false, registryLookUp = (x) => x as Node, ...config }: RunConfig = {}): Status {
+  run(
+    blackboard: Blackboard,
+    { introspector, rerun = false, registryLookUp = (x) => x as Node, ...config }: RunConfig = {}
+  ): Status | StatusWithState {
     if (!rerun) this.blueprint.start(blackboard);
     const result = this.blueprint.run(blackboard, { ...config, rerun, registryLookUp });
     if (result !== RUNNING) {

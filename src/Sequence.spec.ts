@@ -95,12 +95,12 @@ describe('Sequence', () => {
       expect(selector.run()).toEqual(FAILURE);
     });
 
-    it('returns the index of still running task as array of running indexes', () => {
+    it('returns the index of still running task as array of running lastRun', () => {
       const selector = new Sequence({
         nodes: [successTask, successTask, runningTask, successTask]
       });
 
-      expect(selector.run()).toEqual([2]);
+      expect(selector.run()).toEqual({ total: RUNNING, state: [SUCCESS, SUCCESS, RUNNING] });
     });
   });
 
@@ -181,14 +181,14 @@ describe('Sequence', () => {
         ]
       });
 
-      it('returns indexes if tasks are running', () => {
+      it('returns lastRun if tasks are running', () => {
         const blackboard = { aCounter: 0, bCounter: 0, switchCounter: 0, switchResult: RUNNING };
 
         const result = selector.run(blackboard);
 
         expect(blackboard.aCounter).toEqual(2);
         expect(blackboard.bCounter).toEqual(1);
-        expect(result).toEqual([2, 1]);
+        expect(result).toEqual({ total: RUNNING, state: [SUCCESS, SUCCESS, { total: RUNNING, state: [SUCCESS, RUNNING] }] });
       });
 
       it('resumes tasks where we left off', () => {
@@ -197,14 +197,14 @@ describe('Sequence', () => {
         let result = selector.run(blackboard);
 
         expect(blackboard.switchCounter).toEqual(1);
-        expect(result).toEqual([2, 1]);
+        expect(result).toEqual({ total: RUNNING, state: [SUCCESS, SUCCESS, { total: RUNNING, state: [SUCCESS, RUNNING] }] });
 
-        result = selector.run(blackboard, { indexes: result });
+        result = selector.run(blackboard, { lastRun: result });
 
         expect(blackboard.switchCounter).toEqual(2);
         expect(blackboard.aCounter).toEqual(2);
         expect(blackboard.bCounter).toEqual(1);
-        expect(result).toEqual([2, 1]);
+        expect(result).toEqual({ total: RUNNING, state: [SUCCESS, SUCCESS, { total: RUNNING, state: [SUCCESS, RUNNING] }] });
       });
 
       it('after resuming in can progress, if tasks allow', () => {
@@ -213,16 +213,20 @@ describe('Sequence', () => {
         let result = selector.run(blackboard);
 
         expect(blackboard.switchCounter).toEqual(1);
-        expect(result).toEqual([2, 1]);
+        expect(result).toEqual({ total: RUNNING, state: [SUCCESS, SUCCESS, { total: RUNNING, state: [SUCCESS, RUNNING] }] });
 
         blackboard.switchResult = SUCCESS;
 
-        result = selector.run(blackboard, { indexes: result });
+        result = selector.run(blackboard, { lastRun: result });
 
         expect(blackboard.switchCounter).toEqual(2);
         expect(blackboard.aCounter).toEqual(3);
         expect(blackboard.bCounter).toEqual(2);
         expect(result).toEqual(SUCCESS);
+        // expect(result).toEqual({
+        //   total: SUCCESS,
+        //   state: [SUCCESS, SUCCESS, { total: SUCCESS, state: [SUCCESS, SUCCESS, SUCCESS] }, SUCCESS]
+        // });
       });
 
       it('after resuming in can progress, if tasks allow it', () => {
@@ -231,17 +235,18 @@ describe('Sequence', () => {
         let result = selector.run(blackboard);
 
         expect(blackboard.switchCounter).toEqual(1);
-        expect(result).toEqual([2, 1]);
+        expect(result).toEqual({ total: RUNNING, state: [SUCCESS, SUCCESS, { total: RUNNING, state: [SUCCESS, RUNNING] }] });
 
         blackboard.switchResult = FAILURE;
 
-        result = selector.run(blackboard, { indexes: result });
+        result = selector.run(blackboard, { lastRun: result });
 
         expect(blackboard.switchCounter).toEqual(2);
         // No count increments because of success
         expect(blackboard.aCounter).toEqual(2);
         expect(blackboard.bCounter).toEqual(1);
         expect(result).toEqual(FAILURE);
+        // expect(result).toEqual({ total: FAILURE, state: [SUCCESS, SUCCESS, { total: FAILURE, state: [SUCCESS, FAILURE] }] });
       });
     });
 
@@ -281,14 +286,14 @@ describe('Sequence', () => {
         expect(blackboard.run).toEqual(1);
         expect(blackboard.end).toEqual(0);
 
-        const result2 = selector.run(blackboard, { indexes: result, rerun: true });
+        const result2 = selector.run(blackboard, { lastRun: result, rerun: true });
 
         expect(blackboard.start).toEqual(1);
         expect(blackboard.run).toEqual(2);
         expect(blackboard.end).toEqual(0);
 
         blackboard.switchResult = SUCCESS;
-        selector.run(blackboard, { indexes: result2, rerun: true });
+        selector.run(blackboard, { lastRun: result2, rerun: true });
 
         expect(blackboard.start).toEqual(1);
         expect(blackboard.run).toEqual(3);
