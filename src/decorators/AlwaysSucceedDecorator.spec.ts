@@ -19,4 +19,9 @@ describe('AlwaysSuccessDecorator', () => {
   it('does not change RUNNING responses', () => {
     expect(decoratedTask.run({ result: RUNNING })).toEqual(RUNNING);
   });
+
+  it('does not change RUNNING response on Branch nodes', () => {
+    const result = { total: RUNNING, state: [FAILURE, RUNNING] };
+    expect(decoratedTask.run({ result })).toEqual(result);
+  });
 });

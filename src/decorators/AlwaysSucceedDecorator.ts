@@ -1,5 +1,6 @@
-import { RUNNING, SUCCESS } from '../constants';
+import { SUCCESS } from '../constants';
 import Decorator from '../Decorator';
+import { isRunning } from '../helper';
 import { RunCallback } from '../types';
 
 export default class AlwaysSucceedDecorator extends Decorator {
@@ -7,7 +8,7 @@ export default class AlwaysSucceedDecorator extends Decorator {
 
   decorate(run: RunCallback) {
     const result = run();
-    if (result === RUNNING) return RUNNING;
+    if (isRunning(result)) return result;
     return SUCCESS;
   }
 }
