@@ -4,10 +4,11 @@ import { RUNNING } from './constants';
 import Node from './Node';
 
 export type Status = typeof RUNNING | boolean;
+export type RunResult = Status | StatusWithState;
 
 export interface StatusWithState {
   total: Status;
-  state: Array<Status | StatusWithState>;
+  state: Array<RunResult>;
 }
 
 export type Blackboard = Record<string, any>;
