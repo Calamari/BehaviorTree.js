@@ -1,4 +1,4 @@
-import { StatusWithState } from '.';
+import { RunResult, StatusWithState } from '.';
 import { SUCCESS, RUNNING } from './constants';
 import { isRunning } from './helper';
 import Node from './Node';
@@ -24,11 +24,10 @@ export default class BranchNode extends Node {
     if (!rerun) this.blueprint.start(blackboard);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let overallResult: Status | any = this.START_CASE;
-    const results: Array<Status | StatusWithState> = [];
-    const lastRunStates: Array<Status | StatusWithState> = (typeof lastRun === 'object' && lastRun.state) || [];
+    const results: Array<RunResult> = [];
+    const lastRunStates: Array<RunResult> = (typeof lastRun === 'object' && lastRun.state) || [];
     const startingIndex = Math.max(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      lastRunStates.findIndex((x: any) => typeof x === 'object' || x === RUNNING),
+      lastRunStates.findIndex((x) => isRunning(x)),
       0
     );
     for (let currentIndex = 0; currentIndex < this.numNodes; ++currentIndex) {
