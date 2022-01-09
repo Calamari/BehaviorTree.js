@@ -1,8 +1,7 @@
-import { RunResult, StatusWithState } from '.';
 import { SUCCESS, RUNNING } from './constants';
 import { isRunning } from './helper';
 import Node from './Node';
-import { Blackboard, MinimalBlueprint, NodeOrRegistration, RunConfig, Status } from './types';
+import { Blackboard, MinimalBlueprint, NodeOrRegistration, RunConfig, RunResult, Status } from './types';
 
 export default class BranchNode extends Node {
   numNodes: number;
