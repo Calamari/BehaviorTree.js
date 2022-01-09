@@ -2,20 +2,15 @@ import { FAILURE, SUCCESS, RUNNING } from './constants';
 import BranchNode from './BranchNode';
 import Node from './Node';
 import { isRunning } from './helper';
-import { Blackboard, MinimalBlueprint, NodeOrRegistration, RunConfig, Status, StatusWithState } from './types';
-import { RunResult } from '.';
+import { ParallelRunConfig, RunResult, StatusWithState, Blackboard, MinimalBlueprint, NodeOrRegistration } from './types';
 
-interface ParallelRunConfig extends RunConfig {
-  lastRun?: StatusWithState | undefined;
-}
-
+/**
+ * The Parallel node runs all of its children in parallel and stops running if all of the children are
+ * successful or the first one returns failure.
+ */
 export default class Parallel extends BranchNode {
   numNodes: number;
-  wasRunning: boolean;
   nodes: NodeOrRegistration[];
-  // Override this in subclasses
-  OPT_OUT_CASE: Status = SUCCESS;
-  START_CASE: Status = SUCCESS;
 
   nodeType = 'Parallel';
 
@@ -24,29 +19,33 @@ export default class Parallel extends BranchNode {
 
     this.nodes = blueprint.nodes || [];
     this.numNodes = this.nodes.length;
-    this.wasRunning = false;
   }
 
   run(blackboard: Blackboard = {}, { lastRun, introspector, rerun, registryLookUp = (x) => x as Node }: ParallelRunConfig = {}) {
     if (!rerun) this.blueprint.start(blackboard);
     const results: Array<RunResult> = [];
     for (let currentIndex = 0; currentIndex < this.numNodes; ++currentIndex) {
-      if (lastRun && !isRunning(lastRun.state[currentIndex])) {
-        results[currentIndex] = lastRun.state[currentIndex];
+      const lastRunForIndex = lastRun && (lastRun as StatusWithState).state[currentIndex];
+      if (lastRunForIndex && !isRunning(lastRunForIndex)) {
+        results[currentIndex] = lastRunForIndex;
         continue;
       }
       const node = registryLookUp(this.nodes[currentIndex]);
-      const result = node.run(blackboard, { lastRun, introspector, rerun, registryLookUp });
+      const result = node.run(blackboard, { lastRun: lastRunForIndex, introspector, rerun, registryLookUp });
       results[currentIndex] = result;
     }
-    const running = results.includes(RUNNING);
-    if (!running) {
+    const endResult = this.calcResult(results);
+    if (!isRunning(endResult)) {
       this.blueprint.end(blackboard);
     }
-    return running ? { total: RUNNING, state: results } : this.getResult(results);
+    return endResult;
   }
 
-  protected getResult(results: Array<Status | StatusWithState>) {
-    return results.includes(FAILURE) ? FAILURE : SUCCESS;
+  protected calcResult(results: Array<RunResult>): RunResult {
+    if (results.includes(FAILURE)) {
+      return FAILURE;
+    }
+    const running = !!results.find((x) => isRunning(x));
+    return running ? { total: RUNNING, state: results } : SUCCESS;
   }
 }

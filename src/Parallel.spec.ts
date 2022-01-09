@@ -30,34 +30,53 @@ describe('Parallel', () => {
     }
   });
 
+  const switchTask = new Task({
+    run: function (blackboard) {
+      ++blackboard.switchCounter;
+      return blackboard.switchResult;
+    }
+  });
+  const switchTask2 = new Task({
+    run: function (blackboard) {
+      ++blackboard.switchCounter2;
+      return blackboard.switchResult2;
+    }
+  });
+  const switchTask3 = new Task({
+    run: function (blackboard) {
+      ++blackboard.switchCounter3;
+      return blackboard.switchResult3;
+    }
+  });
+
   beforeEach(() => {
     countSuccess = 0;
     countFail = 0;
     countRunning = 0;
   });
 
-  it('runs all child nodes and returns running child index as long as one node is running', () => {
+  it('runs all child nodes and returns running child index as long as one node is running and none are failing', () => {
     const parallel = new Parallel({
-      nodes: [failTask, successTask, runningTask]
+      nodes: [successTask, runningTask, successTask]
     });
 
     const result = parallel.run();
 
     expect(countRunning).toEqual(1);
-    expect(countSuccess).toEqual(1);
-    expect(countFail).toEqual(1);
+    expect(countSuccess).toEqual(2);
 
-    expect(result).toEqual({ total: RUNNING, state: [FAILURE, SUCCESS, RUNNING] });
+    expect(result).toEqual({ total: RUNNING, state: [SUCCESS, RUNNING, SUCCESS] });
   });
 
   it('returns failure if one task is failing', () => {
     const parallel = new Parallel({
-      nodes: [successTask, failTask]
+      nodes: [successTask, runningTask, failTask]
     });
 
     const result = parallel.run();
 
     expect(countSuccess).toEqual(1);
+    expect(countRunning).toEqual(1);
     expect(countFail).toEqual(1);
 
     expect(result).toEqual(FAILURE);
@@ -76,52 +95,124 @@ describe('Parallel', () => {
   });
 
   describe('running tasks', () => {
-    const switchTask = new Task({
-      run: function (blackboard) {
-        ++blackboard.switchCounter;
-        return blackboard.switchResult;
-      }
-    });
-    const switchTask2 = new Task({
-      run: function (blackboard) {
-        ++blackboard.switchCounter2;
-        return blackboard.switchResult2;
-      }
-    });
-
     const parallel = new Parallel({
-      nodes: [failTask, successTask, switchTask, switchTask2]
+      nodes: [switchTask, switchTask2, switchTask3]
     });
 
-    it('resumes tasks that where running and remembers if one task was a failure', () => {
-      const blackboard = { switchCounter: 0, switchResult: RUNNING as any, switchCounter2: 0, switchResult2: RUNNING as any };
+    it('resumes tasks that where running and stops as soon as one task returns failure', () => {
+      const blackboard = {
+        switchCounter: 0,
+        switchResult: RUNNING as any,
+        switchCounter2: 0,
+        switchResult2: RUNNING as any,
+        switchCounter3: 0,
+        switchResult3: RUNNING as any
+      };
 
       let result = parallel.run(blackboard);
 
-      expect(countSuccess).toEqual(1);
-      expect(countFail).toEqual(1);
       expect(blackboard.switchCounter).toEqual(1);
       expect(blackboard.switchCounter2).toEqual(1);
-      expect(result).toEqual({ total: RUNNING, state: [FAILURE, SUCCESS, RUNNING, RUNNING] });
+      expect(blackboard.switchCounter3).toEqual(1);
+      expect(result).toEqual({ total: RUNNING, state: [RUNNING, RUNNING, RUNNING] });
 
       blackboard.switchResult2 = SUCCESS;
 
       result = parallel.run(blackboard, { lastRun: result });
 
-      expect(countSuccess).toEqual(1);
-      expect(countFail).toEqual(1);
       expect(blackboard.switchCounter).toEqual(2);
       expect(blackboard.switchCounter2).toEqual(2);
-      expect(result).toEqual({ total: RUNNING, state: [FAILURE, SUCCESS, RUNNING, SUCCESS] });
+      expect(blackboard.switchCounter3).toEqual(2);
+      expect(result).toEqual({ total: RUNNING, state: [RUNNING, SUCCESS, RUNNING] });
 
-      blackboard.switchResult = SUCCESS;
+      blackboard.switchResult3 = FAILURE;
 
       result = parallel.run(blackboard, { lastRun: result });
 
       // counter 2 did not run anymore
       expect(blackboard.switchCounter).toEqual(3);
       expect(blackboard.switchCounter2).toEqual(2);
+      expect(blackboard.switchCounter3).toEqual(3);
       expect(result).toEqual(FAILURE);
+    });
+  });
+
+  describe('deeper nesting', () => {
+    it('works as with shallow nodes', () => {
+      const innerParallel = new Parallel({
+        nodes: [switchTask, switchTask2]
+      });
+      const parallel = new Parallel({
+        nodes: [innerParallel, switchTask3]
+      });
+
+      const blackboard = {
+        switchCounter: 0,
+        switchResult: RUNNING as any,
+        switchCounter2: 0,
+        switchResult2: RUNNING as any,
+        switchCounter3: 0,
+        switchResult3: RUNNING as any
+      };
+
+      let result = parallel.run(blackboard);
+
+      expect(blackboard.switchCounter).toEqual(1);
+      expect(blackboard.switchCounter2).toEqual(1);
+      expect(blackboard.switchCounter3).toEqual(1);
+      expect(result).toEqual({ total: RUNNING, state: [{ total: RUNNING, state: [RUNNING, RUNNING] }, RUNNING] });
+
+      blackboard.switchResult2 = SUCCESS;
+
+      result = parallel.run(blackboard, { lastRun: result });
+
+      expect(blackboard.switchCounter).toEqual(2);
+      expect(blackboard.switchCounter2).toEqual(2);
+      expect(blackboard.switchCounter3).toEqual(2);
+      expect(result).toEqual({ total: RUNNING, state: [{ total: RUNNING, state: [RUNNING, SUCCESS] }, RUNNING] });
+
+      blackboard.switchResult = FAILURE;
+
+      result = parallel.run(blackboard, { lastRun: result });
+
+      expect(blackboard.switchCounter).toEqual(3);
+      expect(blackboard.switchCounter2).toEqual(2);
+      expect(blackboard.switchCounter3).toEqual(3);
+      expect(result).toEqual(FAILURE);
+    });
+
+    it('works when only one node is running', () => {
+      const innerParallel = new Parallel({
+        nodes: [switchTask, switchTask2]
+      });
+      const parallel = new Parallel({
+        nodes: [innerParallel, switchTask3]
+      });
+
+      const blackboard = {
+        switchCounter: 0,
+        switchResult: RUNNING as any,
+        switchCounter2: 0,
+        switchResult2: SUCCESS as any,
+        switchCounter3: 0,
+        switchResult3: SUCCESS as any
+      };
+
+      let result = parallel.run(blackboard);
+
+      expect(blackboard.switchCounter).toEqual(1);
+      expect(blackboard.switchCounter2).toEqual(1);
+      expect(blackboard.switchCounter3).toEqual(1);
+      expect(result).toEqual({ total: RUNNING, state: [{ total: RUNNING, state: [RUNNING, SUCCESS] }, SUCCESS] });
+
+      blackboard.switchResult = SUCCESS;
+
+      result = parallel.run(blackboard, { lastRun: result });
+
+      expect(blackboard.switchCounter).toEqual(2);
+      expect(blackboard.switchCounter2).toEqual(1);
+      expect(blackboard.switchCounter3).toEqual(1);
+      expect(result).toEqual(SUCCESS);
     });
   });
 

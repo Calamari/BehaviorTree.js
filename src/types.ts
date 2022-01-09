@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Introspector } from '.';
+import Introspector from './Introspector';
 import { RUNNING } from './constants';
 import Node from './Node';
 
@@ -53,7 +53,11 @@ export interface RunConfig {
   introspector?: Introspector;
   registryLookUp?: RegistryLookUp;
   rerun?: boolean;
-  lastRun?: Status | StatusWithState;
+  lastRun?: RunResult;
+}
+
+export interface ParallelRunConfig extends RunConfig {
+  lastRun?: RunResult | undefined;
 }
 
 export interface StepParameter {
