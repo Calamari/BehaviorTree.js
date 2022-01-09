@@ -1,35 +1,37 @@
 import { RUNNING } from './constants';
 import BranchNode from './BranchNode';
 import Node from './Node';
-import { Blackboard, RunConfig, Status } from './types';
+import { Blackboard, RunConfig, StatusWithState } from './types';
+import { isRunning } from './helper';
 
 export default class Random extends BranchNode {
   nodeType = 'Random';
 
-  run(blackboard: Blackboard = {}, { indexes = [], introspector, rerun, registryLookUp = (x) => x as Node }: RunConfig = {}) {
-    if (!rerun) this.blueprint.start(blackboard);
-    let currentIndex = indexes.shift() || 0;
-    if (!rerun) {
+  run(blackboard: Blackboard = {}, { lastRun, introspector, rerun, registryLookUp = (x) => x as Node }: RunConfig = {}) {
+    let currentIndex = 0;
+    if (rerun) {
+      console.log(lastRun, rerun);
+      currentIndex = (lastRun as StatusWithState).state.findIndex((x) => isRunning(x));
+    } else {
+      this.blueprint.start(blackboard);
       currentIndex = Math.floor(Math.random() * this.numNodes);
     }
+    console.log(currentIndex);
     const node = registryLookUp(this.nodes[currentIndex]);
-    const result = node.run(blackboard, { indexes, introspector, rerun, registryLookUp });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let overallResult: Status | any = result;
-    if (result === RUNNING) {
-      overallResult = [currentIndex, ...indexes];
-    } else if (typeof result === 'object') {
-      // array
-      overallResult = [...indexes, currentIndex, ...result];
-    }
-    const isRunning = overallResult === RUNNING || typeof overallResult === 'object';
-    if (!isRunning) {
+    const result = node.run(blackboard, { lastRun, introspector, rerun, registryLookUp });
+    const running = isRunning(result);
+    if (!running) {
       this.blueprint.end(blackboard);
     }
     if (introspector) {
-      const debugResult = isRunning ? RUNNING : overallResult;
+      const debugResult = running ? RUNNING : result;
       introspector.wrapLast(1, this, debugResult, blackboard);
     }
-    return overallResult;
+    if (running) {
+      const returningResult = { total: RUNNING, state: new Array(this.numNodes).fill(undefined) };
+      returningResult.state[currentIndex] = result;
+      return returningResult;
+    }
+    return result;
   }
 }
