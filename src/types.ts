@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Introspector from './Introspector';
-import { RUNNING } from './constants';
 import Node from './Node';
 
-export type Status = typeof RUNNING | boolean;
-export type RunResult = Status | StatusWithState;
+export type Status = symbol | boolean;
+export type RunResult = Status | StatusWithState | undefined;
 
 export interface StatusWithState {
   total: Status;
