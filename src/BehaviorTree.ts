@@ -1,9 +1,7 @@
-import { StatusWithState } from '.';
-import { RUNNING } from './constants';
 import { isRunning } from './helper';
 import Node from './Node';
 import Task from './Task';
-import { Blackboard, NodeOrFunction, NodeOrRegistration, Status, StepParameter } from './types';
+import { Blackboard, NodeOrFunction, NodeOrRegistration, Status, StatusWithState, StepParameter } from './types';
 
 export type NodeRegistry = Record<string, Node>;
 

@@ -1,6 +1,5 @@
-import { RunResult } from '.';
 import { RUNNING } from './constants';
-import { Blackboard, Blueprint, MinimalBlueprint, RunConfig } from './types';
+import { Blackboard, Blueprint, MinimalBlueprint, RunConfig, RunResult } from './types';
 
 const NOOP_RUN = () => false;
 const NOOP_START = () => {}; // eslint-disable-line @typescript-eslint/no-empty-function
