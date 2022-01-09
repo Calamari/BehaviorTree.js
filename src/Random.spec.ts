@@ -1,4 +1,5 @@
 /* eslint-env jest */
+import { StatusWithState } from '.';
 import { RUNNING, SUCCESS, FAILURE } from './constants';
 import Random from './Random';
 import Task from './Task';
@@ -58,7 +59,10 @@ describe('Random', () => {
     expect(random.run(blackboard)).toEqual(FAILURE);
 
     blackboard.result = RUNNING;
-    expect(random.run(blackboard).constructor).toEqual(Array);
+    const result = random.run(blackboard) as StatusWithState;
+    expect(result.total).toEqual(RUNNING);
+    expect(result.state.reduce((acc, state) => (state === RUNNING ? acc + 1 : acc), 0)).toEqual(1);
+    expect(result.state.reduce((acc, state) => (state === undefined ? acc + 1 : acc), 0)).toEqual(2);
   });
 
   it('calls the the same task all over again when it is running', () => {
@@ -67,9 +71,12 @@ describe('Random', () => {
     });
 
     blackboard.result = RUNNING;
-    random.run(blackboard, { indexes: [2], rerun: true });
-    random.run(blackboard, { indexes: [2], rerun: true });
-    random.run(blackboard, { indexes: [2], rerun: true });
+
+    const lastRun = { total: RUNNING, state: [undefined, undefined, RUNNING] };
+
+    random.run(blackboard, { lastRun, rerun: true });
+    random.run(blackboard, { lastRun, rerun: true });
+    random.run(blackboard, { lastRun, rerun: true });
     expect(blackboard.callStack[0]).toEqual('task3');
     expect(blackboard.callStack[1]).toEqual('task3');
     expect(blackboard.callStack[2]).toEqual('task3');
@@ -95,13 +102,13 @@ describe('Random', () => {
     expect(blackboard.start).toEqual(1);
     expect(blackboard.end).toEqual(0);
 
-    random.run(blackboard, { rerun: true });
+    random.run(blackboard, { lastRun: { total: RUNNING, state: [undefined, undefined, RUNNING] }, rerun: true });
 
     expect(blackboard.start).toEqual(1);
     expect(blackboard.end).toEqual(0);
 
     blackboard.result = FAILURE;
-    random.run(blackboard, { rerun: true });
+    random.run(blackboard, { lastRun: { total: RUNNING, state: [undefined, undefined, RUNNING] }, rerun: true });
 
     expect(blackboard.start).toEqual(1);
     expect(blackboard.end).toEqual(1);
