@@ -10,13 +10,11 @@ export default class Random extends BranchNode {
   run(blackboard: Blackboard = {}, { lastRun, introspector, rerun, registryLookUp = (x) => x as Node }: RunConfig = {}) {
     let currentIndex = 0;
     if (rerun) {
-      console.log(lastRun, rerun);
       currentIndex = (lastRun as StatusWithState).state.findIndex((x) => isRunning(x));
     } else {
       this.blueprint.start(blackboard);
       currentIndex = Math.floor(Math.random() * this.numNodes);
     }
-    console.log(currentIndex);
     const node = registryLookUp(this.nodes[currentIndex]);
     const result = node.run(blackboard, { lastRun, introspector, rerun, registryLookUp });
     const running = isRunning(result);
