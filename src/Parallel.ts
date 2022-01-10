@@ -38,6 +38,12 @@ export default class Parallel extends BranchNode {
     if (!isRunning(endResult)) {
       this.blueprint.end(blackboard);
     }
+    if (introspector) {
+      const running = !!results.find((x) => isRunning(x));
+      const debugResult = running ? RUNNING : (endResult as boolean);
+      introspector.wrapLast(this.numNodes, this, debugResult, blackboard);
+    }
+
     return endResult;
   }
 
