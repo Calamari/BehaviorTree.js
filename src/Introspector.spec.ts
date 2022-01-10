@@ -4,6 +4,7 @@ import BehaviorTree from './BehaviorTree';
 import Task from './Task';
 import InvertDecorator from './decorators/InvertDecorator';
 import Introspector from './Introspector';
+import Parallel from './Parallel';
 import Selector from './Selector';
 import Sequence from './Sequence';
 import Random from './Random';
@@ -256,6 +257,42 @@ describe('Introspector', () => {
           {
             name: 'Forest',
             result: RUNNING
+          }
+        ]
+      };
+
+      expect(introspector.lastResult).toEqual(result);
+      expect(introspector.results).toEqual([result]);
+    });
+  });
+
+  describe.only('with a parallel node', () => {
+    beforeEach(() => {
+      blackboard = {
+        start: 0,
+        run: 0,
+        end: 0,
+        result: SUCCESS
+      };
+    });
+
+    it('shows all tasks that did and did not run', () => {
+      const tree = new Parallel({ name: 'parallel', nodes: ['runningTask', 'simpleTask'] });
+      bTree = new BehaviorTree({ tree, blackboard });
+
+      bTree.step({ introspector });
+
+      const result = {
+        name: 'parallel',
+        result: RUNNING,
+        children: [
+          {
+            name: 'Forest',
+            result: RUNNING
+          },
+          {
+            name: 'The Task',
+            result: SUCCESS
           }
         ]
       };
