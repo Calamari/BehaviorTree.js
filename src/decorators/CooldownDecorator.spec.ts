@@ -1,6 +1,6 @@
 /* eslint-env jest */
 import sinon from 'sinon';
-import { SUCCESS, FAILURE } from '../constants';
+import { RUNNING, SUCCESS, FAILURE } from '../constants';
 import CooldownDecorator from './CooldownDecorator';
 import Task from '../Task';
 import { Blackboard } from '../types';
@@ -12,8 +12,15 @@ describe('CooldownDecorator', () => {
       return SUCCESS;
     }
   });
+  const switchTask = new Task({
+    run(blackboard) {
+      ++blackboard.count;
+      return blackboard.switchResult;
+    }
+  });
   let decoratedTask: CooldownDecorator;
   let decoratedTask5sec: CooldownDecorator;
+  let decoratedSwitchTask: CooldownDecorator;
   let blackboard: Blackboard;
   let clock: sinon.SinonFakeTimers;
 
@@ -24,6 +31,7 @@ describe('CooldownDecorator', () => {
     };
     decoratedTask = new CooldownDecorator({ config: { cooldown: 3 }, node: task });
     decoratedTask5sec = new CooldownDecorator({ config: { cooldown: 5 }, node: task });
+    decoratedSwitchTask = new CooldownDecorator({ config: { cooldown: 5 }, node: switchTask });
   });
 
   afterEach(() => {
@@ -68,6 +76,30 @@ describe('CooldownDecorator', () => {
     clock.tick(2000);
     expect(decoratedTask.run(blackboard)).toEqual(FAILURE);
     expect(decoratedTask5sec.run(blackboard)).toEqual(SUCCESS);
+    expect(blackboard.count).toEqual(4);
+  });
+
+  it('does not start cooldown as long as task is running', () => {
+    blackboard.switchResult = RUNNING;
+    expect(decoratedSwitchTask.run(blackboard)).toEqual(RUNNING);
+    expect(blackboard.count).toEqual(1);
+
+    clock.tick(100);
+    expect(decoratedSwitchTask.run(blackboard)).toEqual(RUNNING);
+    expect(blackboard.count).toEqual(2);
+
+    clock.tick(100);
+    blackboard.switchResult = SUCCESS;
+    expect(decoratedSwitchTask.run(blackboard)).toEqual(SUCCESS);
+    expect(blackboard.count).toEqual(3);
+
+    clock.tick(4900);
+    blackboard.switchResult = RUNNING;
+    expect(decoratedSwitchTask.run(blackboard)).toEqual(FAILURE);
+    expect(blackboard.count).toEqual(3);
+
+    clock.tick(100);
+    expect(decoratedSwitchTask.run(blackboard)).toEqual(RUNNING);
     expect(blackboard.count).toEqual(4);
   });
 });
