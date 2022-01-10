@@ -29,7 +29,8 @@ export default class BranchNode extends Node {
       lastRunStates.findIndex((x) => isRunning(x)),
       0
     );
-    for (let currentIndex = 0; currentIndex < this.numNodes; ++currentIndex) {
+    let currentIndex = 0;
+    for (; currentIndex < this.numNodes; ++currentIndex) {
       if (currentIndex < startingIndex) {
         // Keep last result
         results[currentIndex] = lastRunStates[currentIndex];
@@ -55,7 +56,7 @@ export default class BranchNode extends Node {
     }
     if (introspector) {
       const debugResult = running ? RUNNING : overallResult;
-      introspector.wrapLast(Math.min(startingIndex + 1, this.numNodes), this, debugResult, blackboard);
+      introspector.wrapLast(Math.min(currentIndex + 1, this.numNodes), this, debugResult, blackboard);
     }
     return overallResult === RUNNING ? { total: overallResult, state: results } : overallResult;
   }
