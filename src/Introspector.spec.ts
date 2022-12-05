@@ -266,7 +266,7 @@ describe('Introspector', () => {
     });
   });
 
-  describe.only('with a parallel node', () => {
+  describe('with a parallel node', () => {
     beforeEach(() => {
       blackboard = {
         start: 0,

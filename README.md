@@ -385,15 +385,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## TODO:
 
-- Tests and implementation der Parallel Typen
+- Rewrite README to be typescripty
+- Tests and implementation of Parallel Typs
 - Benchmarking
-- Adden der Parallel Arten zur README
-
-x
-x
-x
-x
-x
-
-x
-x
+- Add Parallel to README
