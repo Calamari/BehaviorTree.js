@@ -1,6 +1,6 @@
 import { RUNNING } from './constants';
 import Node from './Node';
-import { Blackboard, RunCallback, DecoratorConfig, RunConfig, DecoratorBlueprint } from './types';
+import { Blackboard, RunCallback, DecoratorConfig, RunConfig, DecoratorBlueprint, RunResult } from './types';
 
 export default class Decorator extends Node {
   config!: DecoratorConfig;
@@ -11,7 +11,7 @@ export default class Decorator extends Node {
     this.setConfig(config);
   }
 
-  decorate(run: RunCallback, blackboard: Blackboard, config: DecoratorConfig) {
+  decorate(run: RunCallback, blackboard: Blackboard, config: DecoratorConfig): RunResult {
     // This method should be overridden to make it useful
     return run(run, blackboard, config);
   }

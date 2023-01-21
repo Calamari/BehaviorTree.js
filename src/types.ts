@@ -13,13 +13,13 @@ export interface StatusWithState {
 export type Blackboard = Record<string, any>;
 export type DecoratorConfig = Record<string, any>;
 export type EndCallback = (...args: any[]) => void;
-export type RunCallback = (...args: any[]) => Status;
+export type RunCallback = (...args: any[]) => RunResult;
 export type StartCallback = (...args: any[]) => void;
 export type RegistryLookUp = (node: NodeOrRegistration) => Node;
 
 export interface IntrospectionResult {
   name?: string;
-  result: Status;
+  result: RunResult;
   children?: IntrospectionResult[];
 }
 

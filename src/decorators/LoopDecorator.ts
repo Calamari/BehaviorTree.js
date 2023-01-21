@@ -1,6 +1,6 @@
 import { FAILURE } from '../constants';
 import Decorator from '../Decorator';
-import { RunCallback, Status } from '../types';
+import { RunCallback, RunResult } from '../types';
 
 export default class LoopDecorator extends Decorator {
   nodeType = 'LoopDecorator';
@@ -13,7 +13,7 @@ export default class LoopDecorator extends Decorator {
 
   decorate(run: RunCallback) {
     let i = 0;
-    let result: Status = FAILURE;
+    let result: RunResult = FAILURE;
     while (i++ < this.config.loop) {
       result = run();
       if (result === FAILURE) return FAILURE;
