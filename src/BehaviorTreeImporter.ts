@@ -12,9 +12,10 @@ import LoopDecorator from './decorators/LoopDecorator';
 import { getRegistry } from './DefaultRegistry';
 import { ImportableJson } from './types';
 
+type NodeConstructor = typeof Node;
+
 export default class BehaviorTreeImporter {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  types: Record<string, any> = {
+  types: Record<string, NodeConstructor> = {
     task: Task,
     decorator: Decorator,
     selector: Selector,
@@ -27,8 +28,7 @@ export default class BehaviorTreeImporter {
     loop: LoopDecorator
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  defineType(type: string, Klass: any) {
+  defineType(type: string, Klass: NodeConstructor) {
     this.types[type] = Klass;
   }
 
@@ -44,11 +44,12 @@ export default class BehaviorTreeImporter {
       throw new Error(`Don't know how to handle type ${type}. Please register this first.`);
     }
 
-    return new Klass({
-      name: name,
-      node: json.node ? this.parse(json.node) : null,
-      nodes: json.nodes ? json.nodes.map((subJson: ImportableJson) => this.parse(subJson)) : null,
+    const blueprint = {
+      name,
+      node: json.node ? this.parse(json.node) : undefined,
+      nodes: json.nodes ? json.nodes.map((subJson: ImportableJson) => this.parse(subJson)) : undefined,
       config
-    });
+    };
+    return new Klass(blueprint);
   }
 }

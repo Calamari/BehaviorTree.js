@@ -56,10 +56,6 @@ export interface RunConfig {
   lastRun?: RunResult;
 }
 
-export interface ParallelRunConfig extends RunConfig {
-  lastRun?: RunResult | undefined;
-}
-
 export interface StepParameter {
   introspector?: Introspector;
 }

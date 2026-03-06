@@ -4,7 +4,7 @@ import { RunResult } from './types';
 
 /**
  * The Parallel node runs all of its children in parallel and is running until the first children is
- * returning a result and that result will be retuend. In a tie a FAILURE would win over a SUCCESS.
+ * returning a result and that result will be returned. In a tie a FAILURE would win over a SUCCESS.
  */
 export default class ParallelComplete extends Parallel {
   nodeType = 'ParallelComplete';

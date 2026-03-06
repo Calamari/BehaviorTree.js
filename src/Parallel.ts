@@ -2,7 +2,7 @@ import { FAILURE, SUCCESS, RUNNING } from './constants';
 import BranchNode from './BranchNode';
 import { registryLookUp as defaultRegistryLookUp } from './DefaultRegistry';
 import { isRunning } from './helper';
-import { ParallelRunConfig, RunResult, StatusWithState, Blackboard, MinimalBlueprint, NodeOrRegistration } from './types';
+import { RunConfig, RunResult, StatusWithState, Blackboard, MinimalBlueprint, NodeOrRegistration } from './types';
 
 /**
  * The Parallel node runs all of its children in parallel and stops running if all of the children are
@@ -21,7 +21,7 @@ export default class Parallel extends BranchNode {
     this.numNodes = this.nodes.length;
   }
 
-  run(blackboard: Blackboard = {}, { lastRun, introspector, rerun, registryLookUp = defaultRegistryLookUp }: ParallelRunConfig = {}) {
+  run(blackboard: Blackboard = {}, { lastRun, introspector, rerun, registryLookUp = defaultRegistryLookUp }: RunConfig = {}) {
     if (!rerun) this.blueprint.start(blackboard);
     const results: Array<RunResult> = [];
     for (let currentIndex = 0; currentIndex < this.numNodes; ++currentIndex) {
