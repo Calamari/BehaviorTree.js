@@ -1,4 +1,5 @@
 import { RUNNING } from './constants';
+import { registryLookUp as defaultRegistryLookUp } from './DefaultRegistry';
 import Node from './Node';
 import { Blackboard, RunCallback, DecoratorConfig, RunConfig, DecoratorBlueprint, RunResult } from './types';
 
@@ -6,7 +7,7 @@ export default class Decorator extends Node {
   config!: DecoratorConfig;
   nodeType = 'Decorator';
 
-  constructor({ config = {}, ...props }: DecoratorBlueprint = { config: {} }) {
+  constructor({ config = {}, ...props }: DecoratorBlueprint) {
     super(props);
     this.setConfig(config);
   }
@@ -16,7 +17,7 @@ export default class Decorator extends Node {
     return run(run, blackboard, config);
   }
 
-  run(blackboard: Blackboard, { introspector, rerun, registryLookUp = (x) => x as Node, ...config }: RunConfig = {}) {
+  run(blackboard: Blackboard, { introspector, rerun, registryLookUp = defaultRegistryLookUp, ...config }: RunConfig = {}) {
     if (!rerun) this.blueprint.start(blackboard);
     let runCount = 0;
     const result = this.decorate(

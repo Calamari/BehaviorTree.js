@@ -1,26 +1,6 @@
 import { isRunning } from './helper';
-import Node from './Node';
-import Task from './Task';
 import { Blackboard, NodeOrFunction, NodeOrRegistration, Status, StatusWithState, StepParameter } from './types';
-
-export type NodeRegistry = Record<string, Node>;
-
-let registry: NodeRegistry = {};
-
-export function getRegistry() {
-  return registry;
-}
-
-export function registryLookUp(node: string | Node) {
-  if (typeof node === 'string') {
-    const lookedUpNode = registry[node];
-    if (!lookedUpNode) {
-      throw new Error(`No node with name ${node} registered.`);
-    }
-    return lookedUpNode;
-  }
-  return node;
-}
+import { getRegistry, registryLookUp } from './DefaultRegistry';
 
 export default class BehaviorTree {
   tree: NodeOrRegistration;
@@ -51,10 +31,10 @@ export default class BehaviorTree {
   }
 
   static register(name: string, node: NodeOrFunction) {
-    registry[name] = typeof node === 'function' ? new Task({ name, run: node }) : node;
+    getRegistry().register(name, node);
   }
 
   static cleanRegistry() {
-    registry = {};
+    getRegistry().clean();
   }
 }

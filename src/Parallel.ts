@@ -1,6 +1,6 @@
 import { FAILURE, SUCCESS, RUNNING } from './constants';
 import BranchNode from './BranchNode';
-import Node from './Node';
+import { registryLookUp as defaultRegistryLookUp } from './DefaultRegistry';
 import { isRunning } from './helper';
 import { ParallelRunConfig, RunResult, StatusWithState, Blackboard, MinimalBlueprint, NodeOrRegistration } from './types';
 
@@ -21,7 +21,7 @@ export default class Parallel extends BranchNode {
     this.numNodes = this.nodes.length;
   }
 
-  run(blackboard: Blackboard = {}, { lastRun, introspector, rerun, registryLookUp = (x) => x as Node }: ParallelRunConfig = {}) {
+  run(blackboard: Blackboard = {}, { lastRun, introspector, rerun, registryLookUp = defaultRegistryLookUp }: ParallelRunConfig = {}) {
     if (!rerun) this.blueprint.start(blackboard);
     const results: Array<RunResult> = [];
     for (let currentIndex = 0; currentIndex < this.numNodes; ++currentIndex) {

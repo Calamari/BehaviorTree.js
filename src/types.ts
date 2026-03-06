@@ -46,6 +46,7 @@ export interface Blueprint {
 }
 export interface DecoratorBlueprint extends MinimalBlueprint {
   config?: DecoratorConfig;
+  node: NodeOrRegistration;
 }
 
 export interface RunConfig {

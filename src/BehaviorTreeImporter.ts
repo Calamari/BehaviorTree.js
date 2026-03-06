@@ -9,7 +9,7 @@ import AlwaysSucceedDecorator from './decorators/AlwaysSucceedDecorator';
 import CooldownDecorator from './decorators/CooldownDecorator';
 import InvertDecorator from './decorators/InvertDecorator';
 import LoopDecorator from './decorators/LoopDecorator';
-import { registryLookUp } from './BehaviorTree';
+import { getRegistry } from './DefaultRegistry';
 import { ImportableJson } from './types';
 
 export default class BehaviorTreeImporter {
@@ -36,7 +36,7 @@ export default class BehaviorTreeImporter {
     const { type, name, ...config } = json;
     const Klass = this.types[type];
     if (!Klass) {
-      const registeredNode = registryLookUp(type);
+      const registeredNode = getRegistry().lookUp(type);
       if (registeredNode) {
         registeredNode.name = name;
         return registeredNode;

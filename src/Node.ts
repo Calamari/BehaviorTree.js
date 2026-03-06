@@ -1,4 +1,5 @@
 import { RUNNING } from './constants';
+import { registryLookUp as defaultRegistryLookUp } from './DefaultRegistry';
 import { Blackboard, Blueprint, MinimalBlueprint, RunConfig, RunResult } from './types';
 
 const NOOP_RUN = () => false;
@@ -14,7 +15,10 @@ export default class Node {
     this.blueprint = { run, start, end, ...props };
   }
 
-  run(blackboard: Blackboard, { introspector, rerun = false, registryLookUp = (x) => x as Node, ...config }: RunConfig = {}): RunResult {
+  run(
+    blackboard: Blackboard,
+    { introspector, rerun = false, registryLookUp = defaultRegistryLookUp, ...config }: RunConfig = {}
+  ): RunResult {
     if (!rerun) this.blueprint.start(blackboard);
     const result = this.blueprint.run(blackboard, { ...config, rerun, registryLookUp });
     if (result !== RUNNING) {

@@ -2,6 +2,7 @@ import { SUCCESS, RUNNING } from './constants';
 import { isRunning } from './helper';
 import Node from './Node';
 import { Blackboard, MinimalBlueprint, NodeOrRegistration, RunConfig, RunResult, Status } from './types';
+import { registryLookUp as defaultRegistryLookUp } from './DefaultRegistry';
 
 export default class BranchNode extends Node {
   numNodes: number;
@@ -19,10 +20,9 @@ export default class BranchNode extends Node {
     this.numNodes = this.nodes.length;
   }
 
-  run(blackboard: Blackboard = {}, { lastRun, introspector, rerun, registryLookUp = (x) => x as Node }: RunConfig = {}) {
+  run(blackboard: Blackboard = {}, { lastRun, introspector, rerun, registryLookUp = defaultRegistryLookUp }: RunConfig = {}): RunResult {
     if (!rerun) this.blueprint.start(blackboard);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let overallResult: Status | any = this.START_CASE;
+    let overallResult: Status = this.START_CASE;
     const results: Array<RunResult> = [];
     const lastRunStates: Array<RunResult> = (typeof lastRun === 'object' && lastRun.state) || [];
     const startingIndex = Math.max(

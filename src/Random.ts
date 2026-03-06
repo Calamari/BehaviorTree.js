@@ -1,13 +1,13 @@
 import { RUNNING } from './constants';
 import BranchNode from './BranchNode';
-import Node from './Node';
+import { registryLookUp as defaultRegistryLookUp } from './DefaultRegistry';
 import { Blackboard, RunConfig, StatusWithState } from './types';
 import { isRunning } from './helper';
 
 export default class Random extends BranchNode {
   nodeType = 'Random';
 
-  run(blackboard: Blackboard = {}, { lastRun, introspector, rerun, registryLookUp = (x) => x as Node }: RunConfig = {}) {
+  run(blackboard: Blackboard = {}, { lastRun, introspector, rerun, registryLookUp = defaultRegistryLookUp }: RunConfig = {}) {
     let currentIndex = 0;
     if (rerun) {
       currentIndex = (lastRun as StatusWithState).state.findIndex((x) => isRunning(x));
