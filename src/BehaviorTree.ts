@@ -2,6 +2,8 @@ import { isRunning } from './helper';
 import { Blackboard, NodeOrFunction, NodeOrRegistration, Status, StatusWithState, StepParameter } from './types';
 import { getRegistry, registryLookUp } from './DefaultRegistry';
 
+export { getRegistry, registryLookUp };
+
 export default class BehaviorTree {
   tree: NodeOrRegistration;
   blackboard: Blackboard;
