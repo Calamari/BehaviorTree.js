@@ -9,17 +9,7 @@ import { RunConfig, RunResult, StatusWithState, Blackboard, MinimalBlueprint, No
  * successful or the first one returns failure.
  */
 export default class Parallel extends BranchNode {
-  numNodes: number;
-  nodes: NodeOrRegistration[];
-
   nodeType = 'Parallel';
-
-  constructor(blueprint: MinimalBlueprint) {
-    super(blueprint);
-
-    this.nodes = blueprint.nodes || [];
-    this.numNodes = this.nodes.length;
-  }
 
   run(blackboard: Blackboard = {}, { lastRun, introspector, rerun, registryLookUp = defaultRegistryLookUp }: RunConfig = {}) {
     if (!rerun) this.blueprint.start(blackboard);
