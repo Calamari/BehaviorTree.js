@@ -1,5 +1,5 @@
 import { RUNNING } from './constants';
-import { registryLookUp as defaultRegistryLookUp } from './DefaultRegistry';
+import { defaultRegistryLookUp } from './helper';
 import { Blackboard, Blueprint, MinimalBlueprint, RunConfig, RunResult } from './types';
 
 const NOOP_RUN = () => false;

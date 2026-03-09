@@ -1,6 +1,6 @@
 import { RUNNING } from './constants';
 import BranchNode from './BranchNode';
-import { registryLookUp as defaultRegistryLookUp } from './DefaultRegistry';
+import { defaultRegistryLookUp } from './helper';
 import { Blackboard, RunConfig, StatusWithState } from './types';
 import { isRunning } from './helper';
 

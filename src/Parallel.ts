@@ -1,6 +1,6 @@
 import { FAILURE, SUCCESS, RUNNING } from './constants';
 import BranchNode from './BranchNode';
-import { registryLookUp as defaultRegistryLookUp } from './DefaultRegistry';
+import { defaultRegistryLookUp } from './helper';
 import { isRunning } from './helper';
 import { RunConfig, RunResult, StatusWithState, Blackboard, MinimalBlueprint, NodeOrRegistration } from './types';
 

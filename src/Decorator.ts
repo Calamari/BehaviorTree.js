@@ -1,5 +1,5 @@
 import { RUNNING } from './constants';
-import { registryLookUp as defaultRegistryLookUp } from './DefaultRegistry';
+import { defaultRegistryLookUp } from './helper';
 import Node from './Node';
 import { Blackboard, RunCallback, DecoratorConfig, RunConfig, DecoratorBlueprint, RunResult } from './types';
 
